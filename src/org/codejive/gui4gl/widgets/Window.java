@@ -12,10 +12,11 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 78 $
+ * @version $Revision: 95 $
  */
 public class Window extends Container {
 	private String m_sTitle;
+	private int m_nTitlebarHeight;
 	private GLColor m_titlebarColor;
 	private float m_fTitlebarTransparancy;
 	private Font m_captionFont;
@@ -37,6 +38,7 @@ public class Window extends Container {
 
 	public Window(String _sTitle) {
 		m_sTitle = _sTitle;
+		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), "titlebarHeight");
 		m_titlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor");
 		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy");
 		m_captionFont = (Font)Theme.getValue(getClass(), "captionFont");
@@ -61,6 +63,14 @@ public class Window extends Container {
 	
 	public void setTitle(String _sTitle) {
 		m_sTitle = _sTitle;
+	}
+	
+	public int getTitlebarHeight() {
+		return m_nTitlebarHeight;
+	}
+	
+	public void setTitlebarHeight(int _nHeight) {
+		m_nTitlebarHeight = _nHeight;
 	}
 	
 	public GLColor getTitlebarColor() {
@@ -203,17 +213,36 @@ public class Window extends Container {
 		}
 	}
 	
-	public void updateBounds(int _parentWidth, int _parentHeight) {
+	public void updateBounds() {
+		super.updateBounds();
 		if (isCenterParent()) {
+			Rectangle inner = getParent().getInnerBounds();
 			Rectangle rect = getRectangle();
-			rect.x = (_parentWidth - rect.width) / 2;
-			rect.y = (_parentHeight - rect.height) / 2;
+			rect.x = (inner.width - rect.width) / 2;
+			rect.y = (inner.height - rect.height) / 2;
+		}
+	}
+
+	protected void updateInnerBounds() {
+		super.updateInnerBounds();
+		if (getTitle() != null) {
+			Rectangle rect = getInnerBounds();
+			int nTitleBarHeight = getTitlebarHeight();
+			rect.y += nTitleBarHeight;
+			rect.height -= nTitleBarHeight;
 		}
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/20 00:34:19  tako
+ * Code change because of change from getPadding() to
+ * updateInnerBounds().
+ * Because of that change it is no longer possible to automatically adjust
+ * the size of the title bar to the font size so a new property was added
+ * to get/set the height of the title bar.
+ *
  * Revision 1.5  2003/11/19 00:17:42  tako
  * Added support for seperate X and Y padding.
  * Removed as much widget-specific paddings and replaced them by the
