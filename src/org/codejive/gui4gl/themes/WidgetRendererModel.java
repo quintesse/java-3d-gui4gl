@@ -9,7 +9,7 @@ import org.codejive.gui4gl.widgets.*;
 /**
  * @author tako
  */
-public interface AbstractWidgetRenderer {
-	public void initRendering(AbstractWidget _widget, RenderContext _context); 
-	public void render(AbstractWidget _widget, RenderContext _context);
+public interface WidgetRendererModel {
+	public void initRendering(Widget _widget, RenderContext _context); 
+	public void render(Widget _widget, RenderContext _context);
 }
