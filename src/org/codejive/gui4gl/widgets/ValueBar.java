@@ -17,7 +17,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 128 $
+ * @version $Revision: 151 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -147,6 +147,15 @@ public class ValueBar extends Widget {
 	
 	protected void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
+		handleBarChangeEvent(_event);
+	}
+	
+	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+		super.processMouseDraggedEvent(_event);
+		handleBarChangeEvent(_event);
+	}
+	
+	protected void handleBarChangeEvent(GuiMouseEvent _event) {
 		if (!_event.isConsumed()) {
 			Rectangle bounds = getInnerBounds();
 			float fPct = (float)(_event.getX() - bounds.x) / bounds.width;
@@ -160,6 +169,9 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.9  2003/11/24 17:19:33  tako
+ * Dragging the bar is now also supported.
+ *
  * Revision 1.8  2003/11/23 02:04:27  tako
  * Added mouse support.
  *
