@@ -27,8 +27,9 @@ import java.util.List;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 import org.codejive.utils4gl.Renderable;
-import org.codejive.utils4gl.Texture;
+import org.codejive.utils4gl.textures.Texture;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiKeyListener;
 import org.codejive.gui4gl.events.GuiMouseEvent;
@@ -38,7 +39,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 223 $
  */
 public class Widget implements Renderable {
 	private CompoundWidget m_parent;
@@ -135,7 +136,7 @@ public class Widget implements Renderable {
 		String sName;
 		if (getParent() != null) {
 			String sFullParentName = getParent().getFullName();
-			if (sFullParentName.length() > 0) {
+			if ((sFullParentName.length() > 0) && (getName() != null)) {
 				sName = sFullParentName + "." + getName();
 			} else {
 				sName = getName();
@@ -473,11 +474,11 @@ public class Widget implements Renderable {
 		return m_innerBounds;
 	}
 
-	protected void calculateBounds() {
+	protected void calculateBounds(RenderContext _context) {
 		Rectangle r = getBounds();
 		if (m_parent != null) {
 			m_currentBounds.setBounds(m_parent.getInnerBounds());
-			updateBounds();
+			updateBounds(_context);
 			int x, y;
 			if (r.x >= 0) {
 				x = m_currentBounds.x + r.x;
@@ -491,20 +492,20 @@ public class Widget implements Renderable {
 			}
 			m_currentBounds.setBounds(x, y, r.width, r.height);
 		} else {
-			updateBounds();
+			updateBounds(_context);
 			m_currentBounds.setBounds(r);
 		}
 		
 		// Calculate inner bounds
 		m_innerBounds.setBounds(m_currentBounds);
-		updateInnerBounds();
+		updateInnerBounds(_context);
 	}
 	
-	protected void updateBounds() {
+	protected void updateBounds(RenderContext _context) {
 		// Override in subclass if needed
 	}
 	
-	protected void updateInnerBounds() {
+	protected void updateInnerBounds(RenderContext _context) {
 		// Substract the padding from the inner bounds
 		int nXPad, nYPad;
 		if (hasFocus()) {
@@ -592,7 +593,7 @@ public class Widget implements Renderable {
 	}
 	
 	protected void initWidget(RenderContext _context) {
-		calculateBounds();
+		calculateBounds(_context);
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
 			renderer.initRendering(this, _context);
@@ -600,19 +601,16 @@ public class Widget implements Renderable {
 	}
 	
 	protected void updateWidget(RenderContext _context) {
-		calculateBounds();
+		calculateBounds(_context);
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
 			renderer.updateRendering(this, _context);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.codejive.world3d.Renderable#render(org.codejive.world3d.RenderContext)
-	 */
-	public void render(RenderContext _context) {
+	public void render(RenderContext _context, RenderObserver _observer) {
 		if (isVisible()) {
-			calculateBounds();
+			calculateBounds(_context);
 			renderWidget(_context);
 		}
 	}
@@ -627,6 +625,11 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.19  2004/03/07 18:22:58  tako
+ * Bounds calculations and render functions now all have a RenderContext argument.
+ * The methods getFullName() now won't return illegal names anymore if the
+ * widget has no name.
+ *
  * Revision 1.18  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor
