@@ -15,7 +15,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 75 $
  */
 public class Container extends Widget {
 	private List m_children;
@@ -161,7 +161,7 @@ public class Container extends Widget {
 		return nextWidget;
 	}
 	
-	public void processKeyPressedEvent(KeyEvent _event) {
+	protected void processKeyPressedEvent(KeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_UP:
 				getFocusWidget().previousFocus().setFocus();
@@ -185,7 +185,7 @@ public class Container extends Widget {
 		}
 	}
 	
-	public void initChildren(RenderContext _context) {
+	protected void initChildren(RenderContext _context) {
 		Iterator i = getChildren();
 		while (i.hasNext()) {
 			Widget w = (Widget)i.next();
@@ -203,7 +203,7 @@ public class Container extends Widget {
 		}
 	}
 	
-	public void renderChildren(RenderContext _context) {
+	protected void renderChildren(RenderContext _context) {
 		Iterator i = getChildren();
 		while (i.hasNext()) {
 			Widget w = (Widget)i.next();
@@ -214,6 +214,9 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:12:57  tako
+ * Made several methods protected instead of public.
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
