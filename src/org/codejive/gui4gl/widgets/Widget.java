@@ -23,51 +23,37 @@ package org.codejive.gui4gl.widgets;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.codejive.utils4gl.GLColor;
+import net.java.games.jogl.GL;
+
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.RenderObserver;
 import org.codejive.utils4gl.Renderable;
-import org.codejive.utils4gl.textures.Texture;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiKeyListener;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.events.GuiMouseListener;
-import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 233 $
+ * @version $Revision: 245 $
  */
 public class Widget implements Renderable {
+	private Screen m_screen;
+	private Toplevel m_toplevel;
 	private CompoundWidget m_parent;
 	private String m_sName;
 	private Rectangle m_bounds;
-	private GLColor m_backgroundColor;
-	private float m_fTransparancy;
-	private Texture m_backgroundImage;
-	private int m_nXPadding, m_nYPadding;
-	private Font m_textFont;
-	private GLColor m_textFontColor;
-	private int m_nTextAlignment;	
-	private GLColor m_focusedBackgroundColor;
-	private float m_fFocusedTransparancy;
-	private Texture m_focusedBackgroundImage;
-	private int m_nFocusedXPadding, m_nFocusedYPadding;
-	private Font m_focusedTextFont;
-	private GLColor m_focusedTextFontColor;
-	private GLColor m_disabledBackgroundColor;
-	private float m_fDisabledTransparancy;
-	private Texture m_disabledBackgroundImage;
-	private int m_nDisabledXPadding, m_nDisabledYPadding;
-	private Font m_disabledTextFont;
-	private GLColor m_disabledTextFontColor;
 	private boolean m_bEnabled;
 	private boolean m_bVisible;
 	private boolean m_bCanHaveFocus;
 
+	private Map m_attributes;
+	
 	private List m_keyListeners;
 	private List m_mouseListeners;
 
@@ -84,47 +70,27 @@ public class Widget implements Renderable {
 	
 	private Rectangle m_currentBounds;
 	private Rectangle m_innerBounds;
+	private Rectangle m_clippingBounds;
 	protected Padding m_padding;
 	
 	public Widget() {
-		this(null);
-	}
-	
-	public Widget(String _sName) {
+		m_screen = null;
+		m_toplevel = null;
 		m_parent = null;
-		m_sName = _sName;
+		m_sName = null;
 		m_bounds = new Rectangle();
-		m_backgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor"));
-		m_fTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy");
-		m_backgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage");
-		m_nXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding");
-		m_nYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding");
-		m_textFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont");
-		m_textFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor"));
-		m_nTextAlignment = Theme.getIntegerValue(getClass(), getFullName(), "textAlignment");
-		m_focusedBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#focused"));
-		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#focused");
-		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage#focused");
-		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#focused");
-		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#focused");
-		m_focusedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#focused");
-		m_focusedTextFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#focused"));
-		m_disabledBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#disabled"));
-		m_fDisabledTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#disabled");
-		m_disabledBackgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage#disabled");
-		m_nDisabledXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#disabled");
-		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#disabled");
-		m_disabledTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#disabled");
-		m_disabledTextFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#disabled"));
 		m_bEnabled = true;
 		m_bVisible = true;
 		m_bCanHaveFocus = false;
+		
+		m_attributes = new HashMap();
 		
 		m_keyListeners = new ArrayList();
 		m_mouseListeners = new ArrayList();
 
 		m_currentBounds = new Rectangle();
 		m_innerBounds = new Rectangle();
+		m_clippingBounds = new Rectangle();
 		m_padding = new Padding();
 	}
 	
@@ -132,23 +98,17 @@ public class Widget implements Renderable {
 		return m_sName;
 	}
 	
-	public String getFullName() {
-		String sName;
+	public void setName(String _sName) {
 		if (getParent() != null) {
-			String sFullParentName = getParent().getFullName();
-			if ((sFullParentName.length() > 0) && (getName() != null)) {
-				sName = sFullParentName + "." + getName();
-			} else {
-				sName = getName();
-			}
-		} else {
-			sName = getName();
+			throw new RuntimeException("Widget name can't be changed anymore after it has been added to a CompoundWidget");
 		}
-		return (sName != null) ? sName : "";
+		m_sName = _sName;
 	}
 	
 	protected void setParent(CompoundWidget _parent) {
 		m_parent = _parent;
+		m_toplevel = _parent.getToplevel();
+		m_screen = _parent.getScreen();
 	}
 	
 	public CompoundWidget getParent() {
@@ -156,22 +116,17 @@ public class Widget implements Renderable {
 	}
 	
 	public Toplevel getToplevel() {
-		return getParent().getToplevel();
+		if ((m_toplevel == null) && (getParent() != null)) {
+			m_toplevel = getParent().getToplevel();
+		}
+		return m_toplevel;
 	}
 	
 	public Screen getScreen() {
-		Screen screen;
-		CompoundWidget parent = getParent();
-		if (parent != null) {
-			screen = parent.getScreen();
-		} else {
-			if (this instanceof Screen) {
-				screen = (Screen)this;
-			} else {
-				throw new RuntimeException("Widget not part of a Screen's widget tree");
-			}
+		if (m_screen == null && (getParent() != null)) {
+			m_screen = getParent().getScreen();
 		}
-		return screen;
+		return m_screen;
 	}
 	
 	public boolean isFocusable() {
@@ -254,194 +209,6 @@ public class Widget implements Renderable {
 		m_bounds.setBounds(_nLeft, _nTop, _nWidth, _nHeight);
 	}
 	
-	public GLColor getBackgroundColor() {
-		return m_backgroundColor;
-	}
-	
-	public void setBackgroundColor(float _fRed, float _fGreen, float _fBlue) {
-		setBackgroundColor(new GLColor(_fRed, _fGreen, _fBlue));
-	}
-	
-	public void setBackgroundColor(GLColor _color) {
-		m_backgroundColor.set(_color);
-	}
-	
-	public float getTransparancy() {
-		return m_fTransparancy;
-	}
-	
-	public void setTransparancy(float _fTransparancy) {
-		m_fTransparancy = _fTransparancy;
-	}
-	
-	public Texture getBackgroundImage() {
-		return m_backgroundImage;
-	}
-	
-	public void setBackgroundImage(Texture _image) {
-		m_backgroundImage = _image;
-	}
-	
-	public int getXPadding() {
-		return m_nXPadding;
-	}
-	
-	public void setXPadding(int _nPadding) {
-		m_nXPadding = _nPadding;
-	}
-	
-	public int getYPadding() {
-		return m_nYPadding;
-	}
-	
-	public void setYPadding(int _nPadding) {
-		m_nYPadding = _nPadding;
-	}
-	
-	public Font getTextFont() {
-		return m_textFont;
-	}
-	
-	public void setTextFont(Font _font) {
-		m_textFont = _font;
-	}
-
-	public GLColor getTextFontColor() {
-		return m_textFontColor;
-	}
-	
-	public void setTextFontColor(GLColor _color) {
-		m_textFontColor = _color;
-	}
-	
-	public int getTextAlignment() {
-		return m_nTextAlignment;
-	}
-	
-	public void setTextAlignment(int _nTextAlignment) {
-		m_nTextAlignment = _nTextAlignment;
-	}	
-	
-	public GLColor getFocusedBackgroundColor() {
-		return m_focusedBackgroundColor;
-	}
-	
-	public void setFocusedBackgroundColor(float _fRed, float _fGreen, float _fBlue) {
-		m_focusedBackgroundColor.set(_fRed, _fGreen, _fBlue);
-	}
-	
-	public void setFocusedBackgroundColor(GLColor _color) {
-		m_focusedBackgroundColor.set(_color);
-	}
-	
-	public float getFocusedTransparancy() {
-		return m_fFocusedTransparancy;
-	}
-	
-	public void setFocusedTransparancy(float _fTransparancy) {
-		m_fFocusedTransparancy = _fTransparancy;
-	}
-	
-	public Texture getFocusedBackgroundImage() {
-		return m_focusedBackgroundImage;
-	}
-	
-	public void setFocusedBackgroundImage(Texture _image) {
-		m_focusedBackgroundImage = _image;
-	}
-	
-	public int getFocusedXPadding() {
-		return m_nFocusedXPadding;
-	}
-	
-	public void setFocusedXPadding(int _nPadding) {
-		m_nFocusedXPadding = _nPadding;
-	}
-	
-	public int getFocusedYPadding() {
-		return m_nFocusedYPadding;
-	}
-	
-	public void setFocusedYPadding(int _nPadding) {
-		m_nFocusedYPadding = _nPadding;
-	}
-
-	public Font getFocusedTextFont() {
-		return m_focusedTextFont;
-	}
-	
-	public void setFocusedTextFont(Font _font) {
-		m_focusedTextFont = _font;
-	}
-
-	public GLColor getFocusedTextFontColor() {
-		return m_focusedTextFontColor;
-	}
-	
-	public void setFocusedTextFontColor(GLColor _color) {
-		m_focusedTextFontColor = _color;
-	}
-	
-	public GLColor getDisabledBackgroundColor() {
-		return m_disabledBackgroundColor;
-	}
-	
-	public void setDisabledBackgroundColor(float _fRed, float _fGreen, float _fBlue) {
-		m_disabledBackgroundColor.set(_fRed, _fGreen, _fBlue);
-	}
-	
-	public void setDisabledBackgroundColor(GLColor _color) {
-		m_disabledBackgroundColor.set(_color);
-	}
-	
-	public float getDisabledTransparancy() {
-		return m_fDisabledTransparancy;
-	}
-	
-	public void setDisabledTransparancy(float _fTransparancy) {
-		m_fDisabledTransparancy = _fTransparancy;
-	}
-	
-	public Texture getDisabledBackgroundImage() {
-		return m_disabledBackgroundImage;
-	}
-	
-	public void setDisabledBackgroundImage(Texture _image) {
-		m_disabledBackgroundImage = _image;
-	}
-	
-	public int getDisabledXPadding() {
-		return m_nDisabledXPadding;
-	}
-	
-	public void setDisabledXPadding(int _nPadding) {
-		m_nDisabledXPadding = _nPadding;
-	}
-	
-	public int getDisabledYPadding() {
-		return m_nDisabledYPadding;
-	}
-	
-	public void setDisabledYPadding(int _nPadding) {
-		m_nDisabledYPadding = _nPadding;
-	}
-
-	public Font getDisabledTextFont() {
-		return m_disabledTextFont;
-	}
-	
-	public void setDisabledTextFont(Font _font) {
-		m_disabledTextFont = _font;
-	}
-
-	public GLColor getDisabledTextFontColor() {
-		return m_disabledTextFontColor;
-	}
-	
-	public void setDisabledTextFontColor(GLColor _color) {
-		m_disabledTextFontColor = _color;
-	}
-	
 	public boolean isEnabled() {
 		return m_bEnabled && ((getParent() == null) || getParent().isEnabled());
 	}
@@ -472,6 +239,10 @@ public class Widget implements Renderable {
 	
 	public Rectangle getInnerBounds() {
 		return m_innerBounds;
+	}
+
+	public Rectangle getClippingBounds() {
+		return m_clippingBounds;
 	}
 
 	protected void calculateBounds(RenderContext _context) {
@@ -509,16 +280,65 @@ public class Widget implements Renderable {
 		// Substract the padding from the inner bounds
 		int nXPad, nYPad;
 		if (hasFocus()) {
-			nXPad = getFocusedXPadding();
-			nYPad = getFocusedYPadding();
+// FIXME: should handle padding!!
+			nXPad = getIntegerAttribute("xPadding#focused");
+			nYPad = getIntegerAttribute("yPadding#focused");
 		} else {
-			nXPad = getXPadding();
-			nYPad = getYPadding();
+			nXPad = getIntegerAttribute("xPadding");
+			nYPad = getIntegerAttribute("yPadding");
 		}
 		m_innerBounds.x += nXPad;
 		m_innerBounds.y += nYPad;
 		m_innerBounds.width -= 2 * nXPad;
 		m_innerBounds.height -= 2 * nYPad;
+		
+		if (getParent() != null) {
+			Rectangle.intersect(m_innerBounds, getParent().getClippingBounds(), m_clippingBounds);
+		} else {
+			m_clippingBounds.setBounds(m_innerBounds);
+		}
+	}
+	
+	public Object getAttribute(String _sName) {
+		Object value;
+		if (!m_attributes.containsKey(_sName)) {
+			value = Theme.getValue(this, _sName);
+			m_attributes.put(_sName, value);
+		} else {
+			value = m_attributes.get(_sName);
+		}
+		return value;
+	}
+	
+	public void setAttribute(String _sName, Object _value) {
+		m_attributes.put(_sName, _value);
+	}
+	
+	public int getIntegerAttribute(String _sName) {
+		Integer value = (Integer)getAttribute(_sName);
+		return value.intValue();
+	}
+	
+	public void setIntegerAttribute(String _sName, int _nValue) {
+		setAttribute(_sName, new Integer(_nValue));
+	}
+	
+	public float getFloatAttribute(String _sName) {
+		Float value = (Float)getAttribute(_sName);
+		return value.floatValue();
+	}
+	
+	public void setFloatAttribute(String _sName, float _fValue) {
+		setAttribute(_sName, new Float(_fValue));
+	}
+	
+	public boolean getBooleanAttribute(String _sName) {
+		Boolean value = (Boolean)getAttribute(_sName);
+		return value.booleanValue();
+	}
+	
+	public void setBooleanAttribute(String _sName, boolean _bValue) {
+		setAttribute(_sName, new Boolean(_bValue));
 	}
 	
 	public void addKeyListener(GuiKeyListener _listener) {
@@ -594,7 +414,7 @@ public class Widget implements Renderable {
 	
 	protected void initWidget(RenderContext _context) {
 		calculateBounds(_context);
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(this, "renderer");
 		if (renderer != null) {
 			renderer.initRendering(this, _context);
 		}
@@ -602,7 +422,7 @@ public class Widget implements Renderable {
 	
 	protected void updateWidget(RenderContext _context) {
 		calculateBounds(_context);
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(this, "renderer");
 		if (renderer != null) {
 			renderer.updateRendering(this, _context);
 		}
@@ -611,12 +431,26 @@ public class Widget implements Renderable {
 	public void render(RenderContext _context, RenderObserver _observer) {
 		if (isVisible()) {
 			calculateBounds(_context);
-			renderWidget(_context);
+			Widget parent = getParent();
+			// Make sure at least part of the widget is visible within the parent's clipping bounds
+			if ((parent == null) || parent.getClippingBounds().intersects(getCurrentBounds())) {
+				if (parent != null) {
+					Rectangle rect = new Rectangle(parent.getClippingBounds());
+					rect.y = getScreen().getHeight() - rect.y - rect.height;
+					_context.pushClippingRegion(rect);
+				}
+
+				renderWidget(_context, _observer);
+
+				if (parent != null) {
+					_context.popClippingRegion();
+				}
+			}
 		}
 	}
 	
-	protected void renderWidget(RenderContext _context) {
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
+	protected void renderWidget(RenderContext _context, RenderObserver _observer) {
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(this, "renderer");
 		if (renderer != null) {
 			renderer.render(this, _context);
 		}
@@ -625,6 +459,16 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.21  2004/05/04 22:26:26  tako
+ * Removed all visually oriented attribute getters and setters and implemented a dynamic attribute map.
+ * Removed the widget name from the constructor, if you want a named widget just set it explicitly with setName().
+ * Removed now unnecessary getFullName().
+ * Tried to make getScreen() and getToplevel() more efficient.
+ * Added getClippingBounds().
+ * Added methods for getting and setting attribute values in the attribute map.
+ * Clipping is now enabled before a widget is rendered to make sure it doesn't draw outside its bounds.
+ * renderWidget() now also needs a RenderObserver argument.
+ *
  * Revision 1.20  2004/03/17 00:50:46  tako
  * Colors are now cloned during initialization to prevent others from messing
  * up the Themes.
