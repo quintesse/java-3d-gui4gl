@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 103 $
+ * @version $Revision: 106 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
@@ -29,25 +29,18 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 		Font captionFont;
 		GLColor captionFontColor;
-		int nXPadding, nYPadding;
 		
 		Button button = (Button)_widget;
 		if (button.isSelected()) {
 			captionFont = button.getSelectedCaptionFont();
 			captionFontColor = button.getSelectedCaptionFontColor();
-			nXPadding = button.getSelectedXPadding();
-			nYPadding = button.getSelectedYPadding();
 		} else {
 			if (button.hasFocus()) {
 				captionFont = button.getFocusedCaptionFont();
 				captionFontColor = button.getFocusedCaptionFontColor();
-				nXPadding = button.getFocusedXPadding();
-				nYPadding = button.getFocusedYPadding();
 			} else {
 				captionFont = button.getCaptionFont();
 				captionFontColor = button.getCaptionFontColor();
-				nXPadding = button.getXPadding();
-				nYPadding = button.getYPadding();
 			}
 		}
 
@@ -71,7 +64,7 @@ public class ButtonRenderer implements WidgetRendererModel {
 		if (sCaption != null) {
 			// Caption text
 			int nCaptionAlignment = button.getCaptionAlignment();
-			GLText.drawText(_context, _widget.getBounds(), nXPadding, nYPadding, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
+			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -80,6 +73,9 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 01:26:37  tako
+ * Removed padding code, now using getInnerBounds().
+ *
  * Revision 1.6  2003/11/21 00:19:18  tako
  * Minor code change because GLText signature was changed.
  *
