@@ -12,7 +12,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 78 $
  */
 public class Window extends Container {
 	private String m_sTitle;
@@ -20,13 +20,15 @@ public class Window extends Container {
 	private float m_fTitlebarTransparancy;
 	private Font m_captionFont;
 	private GLColor m_captionFontColor;
-	private int m_nCaptionPadding;
+	private int m_nCaptionXPadding;
+	private int m_nCaptionYPadding;
 	private int m_nCaptionAlignment;
 	private GLColor m_activeTitlebarColor;
 	private float m_fActiveTitlebarTransparancy;
 	private Font m_activeCaptionFont;
 	private GLColor m_activeCaptionFontColor;
-	private int m_nActiveCaptionPadding;
+	private int m_nActiveCaptionXPadding;
+	private int m_nActiveCaptionYPadding;
 	private boolean m_bCenterParent;
 	
 	public Window() {
@@ -39,13 +41,15 @@ public class Window extends Container {
 		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy");
 		m_captionFont = (Font)Theme.getValue(getClass(), "captionFont");
 		m_captionFontColor = (GLColor)Theme.getValue(getClass(), "captionFontColor");
-		m_nCaptionPadding = Theme.getIntegerValue(getClass(), "captionPadding");
+		m_nCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding");
+		m_nCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding");
 		m_nCaptionAlignment = Theme.getIntegerValue(getClass(), "captionAlignment");
 		m_activeTitlebarColor = (GLColor)Theme.getValue(getClass(), "activeTitlebarColor");
 		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), "activeTitlebarTransparancy");
 		m_activeCaptionFont = (Font)Theme.getValue(getClass(), "activeCaptionFont");
 		m_activeCaptionFontColor = (GLColor)Theme.getValue(getClass(), "activeCaptionFontColor");
-		m_nActiveCaptionPadding = Theme.getIntegerValue(getClass(), "activeCaptionPadding");
+		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), "activeCaptionXPadding");
+		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), "activeCaptionYPadding");
 		m_bCenterParent = false;
 		setVisible(false);
 		setFocusable(true);
@@ -91,12 +95,20 @@ public class Window extends Container {
 		m_captionFontColor = _color;
 	}
 	
-	public int getCaptionPadding() {
-		return m_nCaptionPadding;
+	public int getCaptionXPadding() {
+		return m_nCaptionXPadding;
 	}
 	
-	public void setCaptionPadding(int _nPadding) {
-		m_nCaptionPadding = _nPadding;
+	public void setCaptionXPadding(int _nPadding) {
+		m_nCaptionXPadding = _nPadding;
+	}
+	
+	public int getCaptionYPadding() {
+		return m_nCaptionYPadding;
+	}
+	
+	public void setCaptionYPadding(int _nPadding) {
+		m_nCaptionYPadding = _nPadding;
 	}
 	
 	public int getCaptionAlignment() {
@@ -139,12 +151,20 @@ public class Window extends Container {
 		m_activeCaptionFontColor = _color;
 	}
 	
-	public int getActiveCaptionPadding() {
-		return m_nActiveCaptionPadding;
+	public int getActiveCaptionXPadding() {
+		return m_nActiveCaptionXPadding;
 	}
 	
-	public void setActiveCaptionPadding(int _nPadding) {
-		m_nActiveCaptionPadding = _nPadding;
+	public void setActiveCaptionXPadding(int _nPadding) {
+		m_nActiveCaptionXPadding = _nPadding;
+	}
+	
+	public int getActiveCaptionYPadding() {
+		return m_nActiveCaptionYPadding;
+	}
+	
+	public void setActiveCaptionYPadding(int _nPadding) {
+		m_nActiveCaptionYPadding = _nPadding;
 	}
 	
 	public boolean isCenterParent() {
@@ -194,6 +214,11 @@ public class Window extends Container {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:17:42  tako
+ * Added support for seperate X and Y padding.
+ * Removed as much widget-specific paddings and replaced them by the
+ * ones in the Widget base class.
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
