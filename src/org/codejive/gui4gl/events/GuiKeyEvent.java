@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 158 $
+ * @version $Revision: 236 $
  */
 public class GuiKeyEvent extends GuiEvent {
 	private int m_nModifiers;
@@ -59,7 +59,7 @@ public class GuiKeyEvent extends GuiEvent {
 	}
 	
 	public static void fireKeyPressed(List _listeners, GuiKeyEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiKeyListener listener = (GuiKeyListener)i.next();
@@ -69,7 +69,7 @@ public class GuiKeyEvent extends GuiEvent {
 	}
 	
 	public static void fireKeyReleased(List _listeners, GuiKeyEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiKeyListener listener = (GuiKeyListener)i.next();
@@ -91,6 +91,9 @@ public class GuiKeyEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.5  2004/05/04 21:54:13  tako
+ * Made sure that the fireEvent methods handle null listeners gracefully.
+ *
  * Revision 1.4  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

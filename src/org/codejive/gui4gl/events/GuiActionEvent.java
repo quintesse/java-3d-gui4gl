@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 158 $
+ * @version $Revision: 236 $
  */
 public class GuiActionEvent extends GuiEvent {
 
@@ -37,7 +37,7 @@ public class GuiActionEvent extends GuiEvent {
 	}
 
 	public static void fireActionPerformed(List _listeners, GuiActionEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiActionListener listener = (GuiActionListener)i.next();
@@ -49,6 +49,9 @@ public class GuiActionEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.3  2004/05/04 21:54:13  tako
+ * Made sure that the fireEvent methods handle null listeners gracefully.
+ *
  * Revision 1.2  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

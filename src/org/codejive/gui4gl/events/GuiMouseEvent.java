@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 189 $
+ * @version $Revision: 236 $
  */
 public class GuiMouseEvent extends GuiEvent {
 	private int m_nButton;
@@ -83,7 +83,7 @@ public class GuiMouseEvent extends GuiEvent {
 	}
 	
 	public static void fireMousePressed(List _listeners, GuiMouseEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiMouseListener listener = (GuiMouseListener)i.next();
@@ -93,7 +93,7 @@ public class GuiMouseEvent extends GuiEvent {
 	}
 	
 	public static void fireMouseReleased(List _listeners, GuiMouseEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiMouseListener listener = (GuiMouseListener)i.next();
@@ -103,7 +103,7 @@ public class GuiMouseEvent extends GuiEvent {
 	}
 	
 	public static void fireMouseClicked(List _listeners, GuiMouseEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiMouseListener listener = (GuiMouseListener)i.next();
@@ -113,7 +113,7 @@ public class GuiMouseEvent extends GuiEvent {
 	}
 	
 	public static void fireMouseMoved(List _listeners, GuiMouseEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiMouseListener listener = (GuiMouseListener)i.next();
@@ -123,7 +123,7 @@ public class GuiMouseEvent extends GuiEvent {
 	}
 	
 	public static void fireMouseDragged(List _listeners, GuiMouseEvent _event) {
-		if (!_listeners.isEmpty()) {
+		if ((_listeners != null) && !_listeners.isEmpty()) {
 			Iterator i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
 				GuiMouseListener listener = (GuiMouseListener)i.next();
@@ -135,6 +135,9 @@ public class GuiMouseEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.6  2004/05/04 21:54:13  tako
+ * Made sure that the fireEvent methods handle null listeners gracefully.
+ *
  * Revision 1.5  2003/12/11 10:48:18  tako
  * Added the 1.4 getButton() method to the event.
  *
