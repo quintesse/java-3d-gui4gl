@@ -16,7 +16,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 100 $
+ * @version $Revision: 126 $
  */
 public class Container extends Widget {
 	private List m_children;
@@ -162,6 +162,19 @@ public class Container extends Widget {
 		return nextWidget;
 	}
 	
+	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
+		Widget result = null;
+		Iterator i = getChildren();
+		while ((result == null) && i.hasNext()) {
+			Widget w = (Widget)i.next();
+			result = w.getWidgetUnderPoint(_nXPos, _nYPos);
+		}
+		if (result == null) {
+			result = super.getWidgetUnderPoint(_nXPos, _nYPos);
+		}
+		return result;
+	}
+	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
 		if (getFocusWidget() != null) {
 			Widget w;
@@ -226,6 +239,9 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/23 02:02:33  tako
+ * Added getWidgetUnderPoint(int, int), necessary for the mouse support.
+ *
  * Revision 1.8  2003/11/20 14:20:58  tako
  * Fixed problem with unfocused containers throwing away their key events.
  *
