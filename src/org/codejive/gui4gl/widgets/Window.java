@@ -5,13 +5,15 @@ package org.codejive.gui4gl.widgets;
 
 import java.awt.Rectangle;
 
+import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
+import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 112 $
+ * @version $Revision: 153 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -30,6 +32,7 @@ public class Window extends Toplevel {
 	private int m_nActiveCaptionXPadding;
 	private int m_nActiveCaptionYPadding;
 	private boolean m_bCenterParent;
+	private boolean m_bDragging;
 	
 	public Window() {
 		this(null);
@@ -53,7 +56,6 @@ public class Window extends Toplevel {
 		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), "activeCaptionYPadding");
 		m_bCenterParent = false;
 		setVisible(false);
-		setFocusable(true);
 	}
 
 	public String getTitle() {
@@ -191,16 +193,35 @@ public class Window extends Toplevel {
 		}
 	}
 	
-	public void updateBounds() {
-		super.updateBounds();
-		if (isCenterParent()) {
-			Rectangle inner = getParent().getInnerBounds();
-			Rectangle rect = getRectangle();
-			rect.x = (inner.width - rect.width) / 2;
-			rect.y = (inner.height - rect.height) / 2;
+	protected void processMousePressedEvent(GuiMouseEvent _event) {
+		super.processMousePressedEvent(_event);
+		if (!_event.isConsumed()) {
+			Rectangle r = new Rectangle();
+			r.setBounds(getCurrentBounds());
+			r.height = getTitlebarHeight();
+			if (isDraggable() && r.contains(_event.getX(), _event.getY())) {
+				m_bDragging = true;
+			}
 		}
 	}
 
+	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+		super.processMouseReleasedEvent(_event);
+		m_bDragging = false;
+	}
+
+	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+		super.processMouseDraggedEvent(_event);
+		if (!_event.isConsumed()) {
+			if (m_bDragging) {
+				Rectangle rect = getBounds();
+				int x = rect.x + _event.getDeltaX();
+				int y = rect.y + _event.getDeltaY();
+				setBounds(x, y, rect.width, rect.height);
+			}
+		}
+	}
+	
 	protected void updateInnerBounds() {
 		super.updateInnerBounds();
 		if (getTitle() != null) {
@@ -210,10 +231,28 @@ public class Window extends Toplevel {
 			rect.height -= nTitleBarHeight;
 		}
 	}
+
+	protected void initWidget(RenderContext _context) {
+		super.initWidget(_context);
+		if (isCenterParent()) {
+			centerParent();
+		}
+	}
+	
+	protected void centerParent() {
+		Rectangle inner = getParent().getInnerBounds();
+		Rectangle rect = getBounds();
+		int x = (inner.width - rect.width) / 2;
+		int y = (inner.height - rect.height) / 2;
+		setBounds(x, y, rect.width, rect.height);
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/24 17:24:14  tako
+ * Implemented window dragging.
+ *
  * Revision 1.7  2003/11/21 01:32:56  tako
  * Window now extends Toplevel instead of Container.
  * Moved isActive() and activate() methods to the Toplevel class.
