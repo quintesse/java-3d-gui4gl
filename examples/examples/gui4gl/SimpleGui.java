@@ -36,7 +36,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 64 $
+ * @version $Revision: 87 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -196,8 +196,12 @@ b.addKeyListener(new KeyAdapter() {
 					}
 				}
 			});
+			
+			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f);
+			vb.setBounds(5, 110, 290, 10);
+			add(vb);
 		}
-	}
+}
 
 	class InfoWindow extends Window {
 		Text m_fps, m_objectCount, m_liveCount, m_mortalCount;
@@ -444,6 +448,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/19 09:27:22  tako
+ * Added ValueBar as slider to the menu window.
+ *
  * Revision 1.3  2003/11/18 16:01:08  steven
  * Added example for a horizontal and vertical bar which showing the fps
  *
