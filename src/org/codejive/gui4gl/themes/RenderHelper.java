@@ -30,7 +30,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 209 $
  */
 public class RenderHelper {
 	
@@ -39,13 +39,13 @@ public class RenderHelper {
 	}
 	
 	public static void drawRectangle(GL _gl, int _left, int _top, int _width, int _height) {
-		_gl.glTexCoord2f(0.0f, 0.0f);
-		_gl.glVertex2f(_left, _top);
 		_gl.glTexCoord2f(0.0f, 1.0f);
+		_gl.glVertex2f(_left, _top);
+		_gl.glTexCoord2f(0.0f, 0.0f);
 		_gl.glVertex2f(_left, _top + _height);
-		_gl.glTexCoord2f(1.0f, 1.0f);
-		_gl.glVertex2f(_left + _width, _top + _height);
 		_gl.glTexCoord2f(1.0f, 0.0f);
+		_gl.glVertex2f(_left + _width, _top + _height);
+		_gl.glTexCoord2f(1.0f, 1.0f);
 		_gl.glVertex2f(_left + _width, _top);
 	}
 
@@ -85,6 +85,9 @@ public class RenderHelper {
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/27 13:29:51  steven
+ * image widget patch by gertjan
+ *
  * Revision 1.8  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within
