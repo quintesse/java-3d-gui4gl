@@ -27,7 +27,7 @@ import org.codejive.gui4gl.themes.blues.BluesThemeConfig;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 185 $
  */
 public class Theme {
 	private HashMap m_values;
@@ -44,10 +44,27 @@ public class Theme {
 		return getTheme().getValues().get(_class.getName() + ":" + _sKey);
 	}
 	
-	public static Object getValue(Class _class, String _sKey) {
+	public static Object getClassesValue(Class _class, String _sKey) {
+		// First try to find an exact match for class and key
 		Object value = getClassValue(_class, _sKey);
 		if ((value == null) && (_class.getSuperclass() != null)) {
-			value = getValue(_class.getSuperclass(), _sKey);
+			// Then try all the super classes
+			value = getClassesValue(_class.getSuperclass(), _sKey);
+		}
+		return value;
+	}
+	
+	public static Object getValue(Class _class, String _sKey) {
+		// First try to find an exact match for the key
+		Object value = getClassesValue(_class, _sKey);
+		if (value == null) {
+			// Then see if the key contains a # and try
+			// again using only the part before the #
+			int p = _sKey.lastIndexOf('#');
+			if (p > 0) {
+				String sName = _sKey.substring(0, p);
+				value = getClassesValue(_class, sName);
+			}
 		}
 		return value;
 	}
@@ -105,6 +122,9 @@ public class Theme {
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/05 01:07:40  tako
+ * Implemented property classes.
+ *
  * Revision 1.5  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *
