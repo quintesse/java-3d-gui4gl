@@ -5,7 +5,7 @@ package org.codejive.gui4gl.themes;
 
 import java.awt.Rectangle;
 
-import org.codejive.gui4gl.widgets.AbstractWidget;
+import org.codejive.gui4gl.widgets.Widget;
 import org.codejive.utils4gl.RenderContext;
 
 import net.java.games.jogl.GL;
@@ -26,11 +26,11 @@ public class RenderHelper {
 		_gl.glVertex2f(_rect.x + _rect.width, _rect.y);
 	}
 
-	protected static AbstractWidgetRenderer findFirstSuperClassRenderer(Class _widgetClass) {
-		AbstractWidgetRenderer renderer = null;
+	protected static WidgetRendererModel findFirstSuperClassRenderer(Class _widgetClass) {
+		WidgetRendererModel renderer = null;
 		Class superClass = _widgetClass.getSuperclass();
 		if (superClass != null) {
-			renderer = (AbstractWidgetRenderer)Theme.getValue(superClass, "renderer");
+			renderer = (WidgetRendererModel)Theme.getValue(superClass, "renderer");
 			if (renderer == null) {
 				renderer = findFirstSuperClassRenderer(superClass);
 			}
@@ -38,15 +38,15 @@ public class RenderHelper {
 		return renderer;
 	}
 	
-	public static void initSuperClass(Class _widgetClass, AbstractWidget _widget, RenderContext _context) {
-		AbstractWidgetRenderer renderer = findFirstSuperClassRenderer(_widgetClass);
+	public static void initSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
 		if (renderer != null) {
 			renderer.initRendering(_widget, _context);
 		}
 	}
 
-	public static void renderSuperClass(Class _widgetClass, AbstractWidget _widget, RenderContext _context) {
-		AbstractWidgetRenderer renderer = findFirstSuperClassRenderer(_widgetClass);
+	public static void renderSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
 		if (renderer != null) {
 			renderer.render(_widget, _context);
 		}

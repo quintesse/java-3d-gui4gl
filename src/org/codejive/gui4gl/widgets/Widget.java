@@ -19,8 +19,8 @@ import org.codejive.gui4gl.themes.*;
 /**
  * @author tako
  */
-public class Widget implements Renderable, AbstractWidget {
-	private AbstractContainer m_parent;
+public class Widget implements Renderable {
+	private Container m_parent;
 	private Rectangle m_rectangle;
 	private GLColor m_backgroundColor;
 	private float m_fTransparancy;
@@ -52,17 +52,17 @@ public class Widget implements Renderable, AbstractWidget {
 		m_bounds = new Rectangle();
 	}
 	
-	public void setParent(AbstractContainer _parent) {
+	public void setParent(Container _parent) {
 		m_parent = _parent;
 	}
 	
-	public AbstractContainer getParent() {
+	public Container getParent() {
 		return m_parent;
 	}
 	
 	public Screen getScreen() {
 		Screen screen;
-		AbstractContainer parent = getParent();
+		Container parent = getParent();
 		if (parent != null) {
 			screen = parent.getScreen();
 		} else {
@@ -93,11 +93,11 @@ public class Widget implements Renderable, AbstractWidget {
 		}
 	}
 	
-	public AbstractWidget nextFocus() {
+	public Widget nextFocus() {
 		return getParent().getNextFocusWidget(this);
 	}
 	
-	public AbstractWidget previousFocus() {
+	public Widget previousFocus() {
 		return getParent().getPreviousFocusWidget(this);
 	}
 	
@@ -256,7 +256,7 @@ public class Widget implements Renderable, AbstractWidget {
 	}
 	
 	public void initWidget(RenderContext _context) {
-		AbstractWidgetRenderer renderer = (AbstractWidgetRenderer)Theme.getValue(getClass(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
 		if (renderer != null) {
 			renderer.initRendering(this, _context);
 		}
@@ -319,7 +319,7 @@ public class Widget implements Renderable, AbstractWidget {
 	}
 	
 	public void renderWidget(RenderContext _context) {
-		AbstractWidgetRenderer renderer = (AbstractWidgetRenderer)Theme.getValue(getClass(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
 		if (renderer != null) {
 			renderer.render(this, _context);
 		}

@@ -170,7 +170,7 @@ public class Window extends Container {
 			if (getFocusWidget() == null) {
 				Iterator i = getChildren();
 				while (i.hasNext()) {
-					AbstractWidget w = (AbstractWidget)i.next();
+					Widget w = (Widget)i.next();
 					if (w.isFocusable()) {
 						w.setFocus();
 						break;

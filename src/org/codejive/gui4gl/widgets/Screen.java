@@ -21,19 +21,19 @@ public class Screen extends Container implements KeyListener {
 		m_keyListener = null;
 	}
 	
-	public AbstractWidget getPreviousFocusWidget(AbstractWidget _widget) {
+	public Widget getPreviousFocusWidget(Widget _widget) {
 		return null;
 	}
 
-	public AbstractWidget getNextFocusWidget(AbstractWidget _widget) {
+	public Widget getNextFocusWidget(Widget _widget) {
 		return null;
 	}
 	
-	public AbstractWidget nextFocus() {
+	public Widget nextFocus() {
 		return null;
 	}
 	
-	public AbstractWidget previousFocus() {
+	public Widget previousFocus() {
 		return null;
 	}
 	
@@ -42,7 +42,7 @@ public class Screen extends Container implements KeyListener {
 	}
 	
 	public void keyPressed(KeyEvent _event) {
-		AbstractWidget w = getFocusWidget();
+		Widget w = getFocusWidget();
 		if (w != null) {
 			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
 			w.processKeyPressedEvent(e);
@@ -52,7 +52,7 @@ public class Screen extends Container implements KeyListener {
 	}
 		
 	public void keyReleased(KeyEvent _event) {
-		AbstractWidget w = getFocusWidget();
+		Widget w = getFocusWidget();
 		if (w != null) {
 			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
 			w.processKeyReleasedEvent(e);
@@ -62,7 +62,7 @@ public class Screen extends Container implements KeyListener {
 	}
 		
 	public void keyTyped(KeyEvent _event) {
-		AbstractWidget w = getFocusWidget();
+		Widget w = getFocusWidget();
 		if (w != null) {
 			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
 			w.processKeyTypedEvent(e);
