@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 63 $
+ * @version $Revision: 72 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -28,8 +28,12 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Widget.class, "renderer", new WidgetRenderer());
 		Theme.setValue(Widget.class, "backgroundColor", new GLColor(0.45f, 0.45f, 1.0f));
 		Theme.setFloatValue(Widget.class, "transparancy", 1.0f);
+		Theme.setIntegerValue(Widget.class, "xPadding", 0);
+		Theme.setIntegerValue(Widget.class, "yPadding", 0);
 		Theme.setValue(Widget.class, "focusedBackgroundColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setFloatValue(Widget.class, "focusedTransparancy", 0.6f);
+		Theme.setIntegerValue(Widget.class, "focusedXPadding", 0);
+		Theme.setIntegerValue(Widget.class, "focusedYPadding", 0);
 	
 		// Screen
 		Theme.setFloatValue(Screen.class, "transparancy", 1.0f);
@@ -45,7 +49,8 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setFloatValue(Window.class, "titlebarTransparancy", 0.3f);
 		Theme.setValue(Window.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_18));
 		Theme.setValue(Window.class, "captionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setIntegerValue(Window.class, "captionPadding", 2);
+		Theme.setIntegerValue(Window.class, "captionXPadding", 2);
+		Theme.setIntegerValue(Window.class, "captionYPadding", 2);
 		Theme.setIntegerValue(Window.class, "captionAlignment", GLText.ALIGN_LEFT);
 
 		Theme.setFloatValue(Window.class, "activeTransparancy", 0.4f);
@@ -53,20 +58,25 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setFloatValue(Window.class, "activeTitlebarTransparancy", 0.1f);
 		Theme.setValue(Window.class, "activeCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_18));
 		Theme.setValue(Window.class, "activeCaptionFontColor", new GLColor(.96f, 1.0f, 0.2f));
+		Theme.setIntegerValue(Window.class, "activeCaptionXPadding", 2);
+		Theme.setIntegerValue(Window.class, "activeCaptionYPadding", 2);
 		Theme.setIntegerValue(Window.class, "activeCaptionPadding", 2);
 		
 		// Button
 		Theme.setValue(Button.class, "renderer", new ButtonRenderer());
 		Theme.setValue(Button.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Button.class, "captionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setIntegerValue(Button.class, "captionPadding", 2);
+		Theme.setIntegerValue(Button.class, "xPadding", 2);
+		Theme.setIntegerValue(Button.class, "yPadding", 2);
 		Theme.setIntegerValue(Button.class, "captionAlignment", GLText.ALIGN_LEFT);
 		Theme.setValue(Button.class, "focusedCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Button.class, "focusedCaptionFontColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setIntegerValue(Button.class, "focusedCaptionPadding", 2);
+		Theme.setIntegerValue(Button.class, "focusedXPadding", 2);
+		Theme.setIntegerValue(Button.class, "focusedYPadding", 2);
 		Theme.setValue(Button.class, "selectedCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Button.class, "selectedCaptionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setIntegerValue(Button.class, "selectedCaptionPadding", 2);
+		Theme.setIntegerValue(Button.class, "selectedXPadding", 2);
+		Theme.setIntegerValue(Button.class, "selectedYPadding", 2);
 		Theme.setValue(Button.class, "selectedBackgroundColor", new GLColor(1.0f, 0.0f, 0.0f));
 		Theme.setFloatValue(Button.class, "selectedTransparancy", 0.5f);
 
@@ -74,20 +84,34 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Text.class, "renderer", new TextRenderer());
 		Theme.setValue(Text.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Text.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setIntegerValue(Text.class, "textPadding", 2);
+		Theme.setIntegerValue(Text.class, "xPadding", 2);
+		Theme.setIntegerValue(Text.class, "yPadding", 2);
 		Theme.setIntegerValue(Text.class, "textAlignment", GLText.ALIGN_LEFT);
 		
 		// ValueBar
 		Theme.setValue(ValueBar.class, "renderer", new ValueBarRenderer());
-		Theme.setValue(ValueBar.class, "barValueColor", new GLColor(0.65f, 0.65f, 1.0f));
-		Theme.setValue(ValueBar.class, "barFillColor", new GLColor(1.0f, 1.0f, 1.0f)); //new GLColor(0.08f, 0.08f, 1.0f)); // this may be null, to indicate there is no bar background fill
-		Theme.setValue(ValueBar.class, "barXPadding", new Integer(1)); // x-pad for the value bar
-		Theme.setValue(ValueBar.class, "barYPadding", new Integer(1)); // y-pad for the value bar
+		Theme.setValue(ValueBar.class, "backgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setFloatValue(ValueBar.class, "transparancy", 0.0f);
+		Theme.setIntegerValue(ValueBar.class, "xPadding", 1);
+		Theme.setIntegerValue(ValueBar.class, "yPadding", 1);
+		Theme.setValue(ValueBar.class, "barColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setValue(ValueBar.class, "focusedBackgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setFloatValue(ValueBar.class, "focusedTransparancy", 0.0f);
+		Theme.setIntegerValue(ValueBar.class, "focusedXPadding", 1);
+		Theme.setIntegerValue(ValueBar.class, "focusedYPadding", 1);
+		Theme.setValue(ValueBar.class, "focusedBarColor", new GLColor(0.65f, 0.65f, 1.0f));
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/19 00:09:17  tako
+ * Added support for seperate X and Y padding.
+ * Removed as much widget-specific paddings and replaced them by the
+ * ones in the Widget base class.
+ * Changed several ValueBar options to make use of the standard options
+ * already available in the Widget base class.
+ *
  * Revision 1.3  2003/11/18 15:59:39  steven
  * Added properties for the ValueBar widget
  *
