@@ -16,7 +16,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 97 $
+ * @version $Revision: 103 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -74,7 +74,7 @@ public class WindowRenderer implements WidgetRendererModel {
 	
 			// Title text
 			int nCaptionAlignment = window.getCaptionAlignment();
-			GLText.drawText(_context, m_tmpBounds, nCaptionXPadding, nCaptionYPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle);
+			GLText.drawText(_context, m_tmpBounds, nCaptionXPadding, nCaptionYPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle, "...");
 
 			gl.glEnable(GL.GL_TEXTURE_2D);
 		}
@@ -83,6 +83,9 @@ public class WindowRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 00:19:18  tako
+ * Minor code change because GLText signature was changed.
+ *
  * Revision 1.6  2003/11/20 00:39:12  tako
  * Changes to title bar size calculations because the height of the bar is
  * now a property of the Window class.

@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 93 $
+ * @version $Revision: 103 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
@@ -43,7 +43,7 @@ public class TextRenderer implements WidgetRendererModel {
 		String sText = text.getText();
 		if (sText != null) {
 			// Caption text			
-			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, textFont, textFontColor, true, nTextAlignment, sText);
+			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, textFont, textFontColor, true, nTextAlignment, sText, "...");
 		
 			/*
 			if(text.hasFocus()) {
@@ -58,6 +58,9 @@ public class TextRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 00:19:18  tako
+ * Minor code change because GLText signature was changed.
+ *
  * Revision 1.6  2003/11/19 17:11:54  steven
  * Preliminary check in of Text widget editing
  *

@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 74 $
+ * @version $Revision: 103 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
@@ -71,7 +71,7 @@ public class ButtonRenderer implements WidgetRendererModel {
 		if (sCaption != null) {
 			// Caption text
 			int nCaptionAlignment = button.getCaptionAlignment();
-			GLText.drawText(_context, _widget.getBounds(), nXPadding, nYPadding, captionFont, captionFontColor, true, nCaptionAlignment, sCaption);
+			GLText.drawText(_context, _widget.getBounds(), nXPadding, nYPadding, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -80,6 +80,9 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 00:19:18  tako
+ * Minor code change because GLText signature was changed.
+ *
  * Revision 1.5  2003/11/19 00:10:14  tako
  * Added support for seperate X and Y padding.
  * Removed as much widget-specific paddings and replaced them by the
