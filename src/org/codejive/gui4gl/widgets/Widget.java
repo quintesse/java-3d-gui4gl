@@ -17,7 +17,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 91 $
+ * @version $Revision: 96 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -270,22 +270,11 @@ public class Widget implements Renderable {
 		return m_innerBounds;
 	}
 
-	protected Padding getPadding() {
-		if (hasFocus()) {
-			m_padding.xPadding = getFocusedXPadding();
-			m_padding.yPadding = getFocusedYPadding();
-		} else {
-			m_padding.xPadding = getXPadding();
-			m_padding.yPadding = getYPadding();
-		}
-		return m_padding;
-	}
-	
 	protected void calculateBounds() {
 		Rectangle r = getRectangle();
 		if (m_parent != null) {
-			m_bounds.setBounds(m_parent.getBounds());
-			updateBounds(m_bounds.width, m_bounds.height);
+			m_bounds.setBounds(m_parent.getInnerBounds());
+			updateBounds();
 			int x, y;
 			if (r.x >= 0) {
 				x = m_bounds.x + r.x;
@@ -299,21 +288,33 @@ public class Widget implements Renderable {
 			}
 			m_bounds.setBounds(x, y, r.width, r.height);
 		} else {
-			updateBounds(-1, -1);
+			updateBounds();
 			m_bounds.setBounds(r);
 		}
 		
-		// Calculate inner bounds (bounds with X and Y padding taken into account)
+		// Calculate inner bounds
 		m_innerBounds.setBounds(m_bounds);
-		Padding pad = getPadding();
-		m_innerBounds.x += pad.xPadding;
-		m_innerBounds.y += pad.yPadding;
-		m_innerBounds.width -= 2 * pad.xPadding;
-		m_innerBounds.height -= 2 * pad.yPadding;
+		updateInnerBounds();
 	}
 	
-	protected void updateBounds(int _parentWidth, int _parentHeight) {
+	protected void updateBounds() {
 		// Override in subclass if needed
+	}
+	
+	protected void updateInnerBounds() {
+		// Substract the padding from the inner bounds
+		int nXPad, nYPad;
+		if (hasFocus()) {
+			nXPad = getFocusedXPadding();
+			nYPad = getFocusedYPadding();
+		} else {
+			nXPad = getXPadding();
+			nYPad = getYPadding();
+		}
+		m_innerBounds.x += nXPad;
+		m_innerBounds.y += nYPad;
+		m_innerBounds.width -= 2 * nXPad;
+		m_innerBounds.height -= 2 * nYPad;
 	}
 	
 	public void addKeyListener(GuiKeyListener _listener) {
@@ -384,6 +385,12 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/20 00:36:07  tako
+ * Code change because of change from getPadding() to
+ * updateInnerBounds(). This makes it possible for widgets to adjust the
+ * amount of inner space to make available for their "content", which is
+ * much more flexible than the previous padding system.
+ *
  * Revision 1.7  2003/11/19 11:19:41  tako
  * Implemented completely new event system because tryin to re-use the
  * AWT and Swing events just was too much trouble.
