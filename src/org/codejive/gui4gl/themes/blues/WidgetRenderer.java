@@ -25,14 +25,14 @@ import net.java.games.jogl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
-import org.codejive.utils4gl.Texture;
+import org.codejive.utils4gl.textures.Texture;
 import org.codejive.gui4gl.themes.WidgetRendererModel;
 import org.codejive.gui4gl.themes.RenderHelper;
 import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 183 $
+ * @version $Revision: 224 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -77,13 +77,18 @@ public class WidgetRenderer implements WidgetRendererModel {
 			gl.glDisable(GL.GL_TEXTURE_2D);
 		} else {
 			gl.glEnable(GL.GL_TEXTURE_2D);
+			backgroundImage.bind();
 		}
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glBegin(GL.GL_QUADS);
 
 		// Widget background
-		gl.glColor4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), 1.0f - fTransparancy);
+		if (backgroundColor != null) {
+			gl.glColor4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), 1.0f - fTransparancy);
+		} else {
+			gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f - fTransparancy);
+		}
 		RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
 
 		gl.glEnd();
@@ -94,6 +99,10 @@ public class WidgetRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.8  2004/03/07 18:25:48  tako
+ * Fixed problem that backgroundColor was not allowed to be null.
+ * The backgroundImage is now properly bound.
+ *
  * Revision 1.7  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of
