@@ -67,7 +67,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 254 $
+ * @version $Revision: 260 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -373,8 +373,8 @@ b.addKeyListener(new GuiKeyAdapter() {
 				e.printStackTrace();
 			}
 			Image imgw = new Image(img);
-			imgw.setBounds(0, 0, 280, 180);
-//			imgw.setBounds(5, 5, 140, 90);
+			imgw.setBounds(0, 0, 324, 300);
+//			imgw.setBounds(5, 5, 162, 150);
 //			imgw.setBackgroundColor(1.0f, 0.0f, 0.0f);
 
 			ScrollContainer sc = new ScrollContainer(imgw);
@@ -558,6 +558,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.18  2004/05/07 23:30:13  tako
+ * Tiny aspect ratio fix for the image.
+ *
  * Revision 1.17  2004/05/04 23:59:45  tako
  * Added ScrollBar and ScrollContainer examples.
  *
