@@ -16,7 +16,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 91 $
+ * @version $Revision: 99 $
  */
 public class Container extends Widget {
 	private List m_children;
@@ -165,10 +165,20 @@ public class Container extends Widget {
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_UP:
-				getFocusWidget().previousFocus().setFocus();
+				if (getFocusWidget() != null) {
+					Widget w = getFocusWidget().previousFocus();
+					if (w != null) {
+						w.setFocus();
+					}
+				}
 				break;
 			case KeyEvent.VK_DOWN:
-				getFocusWidget().nextFocus().setFocus();
+				if (getFocusWidget() != null) {
+					Widget w = getFocusWidget().nextFocus();
+					if (w != null) {
+						w.setFocus();
+					}
+				}
 				break;
 			default:
 				super.processKeyPressedEvent(_event);
@@ -215,6 +225,9 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/20 13:12:23  tako
+ * Made focus changes a bit more robust.
+ *
  * Revision 1.6  2003/11/19 11:19:41  tako
  * Implemented completely new event system because tryin to re-use the
  * AWT and Swing events just was too much trouble.
