@@ -40,7 +40,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 245 $
+ * @version $Revision: 251 $
  */
 public class Widget implements Renderable {
 	private Screen m_screen;
@@ -250,18 +250,7 @@ public class Widget implements Renderable {
 		if (m_parent != null) {
 			m_currentBounds.setBounds(m_parent.getInnerBounds());
 			updateBounds(_context);
-			int x, y;
-			if (r.x >= 0) {
-				x = m_currentBounds.x + r.x;
-			} else {
-				x = m_currentBounds.x + m_currentBounds.width + r.x;
-			}
-			if (r.y >= 0) {
-				y = m_currentBounds.y + r.y;
-			} else {
-				y = m_currentBounds.y + m_currentBounds.height + r.y;
-			}
-			m_currentBounds.setBounds(x, y, r.width, r.height);
+			m_currentBounds.setBounds(m_currentBounds.x + r.x, m_currentBounds.y + r.y, r.width, r.height);
 		} else {
 			updateBounds(_context);
 			m_currentBounds.setBounds(r);
@@ -459,6 +448,10 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.22  2004/05/04 23:56:41  tako
+ * Removed feature where negative x/y positions would be offsets from the opposite side.
+ * Negative positions are not specail cases anymore and will move the widget outside the parent boundaries.
+ *
  * Revision 1.21  2004/05/04 22:26:26  tako
  * Removed all visually oriented attribute getters and setters and implemented a dynamic attribute map.
  * Removed the widget name from the constructor, if you want a named widget just set it explicitly with setName().
