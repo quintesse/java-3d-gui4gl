@@ -15,6 +15,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class Container extends Widget {
 	private List m_children;
@@ -210,3 +211,10 @@ public class Container extends Widget {
 		}
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.4  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

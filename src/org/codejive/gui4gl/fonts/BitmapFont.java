@@ -9,6 +9,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class BitmapFont implements Font {
 	private int m_nFont;
@@ -87,3 +88,10 @@ public class BitmapFont implements Font {
 		_context.getGlut().glutBitmapString(_context.getGl(), m_nFont, _sText);
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.2  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

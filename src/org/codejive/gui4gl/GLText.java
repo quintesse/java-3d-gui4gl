@@ -13,6 +13,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class GLText {
 	public static final int ALIGN_LEFT = 0;
@@ -105,3 +106,10 @@ public class GLText {
 		return ((_nPos >= 0) && (_nPos < _sText.length()) && (_sText.charAt(_nPos) != ' ') && (_sText.charAt(_nPos-1) != ' '));
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.2  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

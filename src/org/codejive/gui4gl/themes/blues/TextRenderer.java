@@ -14,6 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
@@ -44,3 +45,10 @@ public class TextRenderer implements WidgetRendererModel {
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.4  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

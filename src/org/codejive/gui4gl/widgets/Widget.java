@@ -18,6 +18,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -326,3 +327,10 @@ public class Widget implements Renderable {
 		}
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.5  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

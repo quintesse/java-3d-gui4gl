@@ -16,6 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -77,3 +78,10 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(Text.class, "textAlignment", GLText.ALIGN_LEFT);
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.2  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

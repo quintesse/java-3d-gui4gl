@@ -14,6 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -62,3 +63,10 @@ public class WidgetRenderer implements WidgetRendererModel {
 	}
 
 }
+
+/*
+ * $Log$
+ * Revision 1.4  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

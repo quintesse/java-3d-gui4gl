@@ -9,6 +9,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class Text extends Widget {
 	private String m_sText;
@@ -69,3 +70,10 @@ public class Text extends Widget {
 		m_nTextAlignment = _nTextAlignment;
 	}	
 }
+
+/*
+ * $Log$
+ * Revision 1.2  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

@@ -16,6 +16,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -207,3 +208,10 @@ public class Button extends Widget {
 		return m_bSelected;
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.2  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

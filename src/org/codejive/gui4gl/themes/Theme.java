@@ -9,6 +9,7 @@ import org.codejive.gui4gl.themes.blues.BluesThemeConfig;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class Theme {
 	private HashMap m_values;
@@ -75,3 +76,10 @@ public class Theme {
 		return m_theme;
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.2  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */

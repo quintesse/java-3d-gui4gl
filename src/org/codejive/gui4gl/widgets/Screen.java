@@ -16,6 +16,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
+ * @version $Revision: 48 $
  */
 public class Screen extends Container implements KeyListener {
 	private List m_keyListeners;
@@ -124,3 +125,10 @@ public class Screen extends Container implements KeyListener {
 		gl.glPopMatrix (); 		
 	}
 }
+
+/*
+ * $Log$
+ * Revision 1.5  2003/11/17 10:54:49  tako
+ * Added CVS macros for revision and log.
+ *
+ */
