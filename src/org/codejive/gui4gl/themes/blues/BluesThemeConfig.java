@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 72 $
+ * @version $Revision: 80 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -95,16 +95,21 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(ValueBar.class, "xPadding", 1);
 		Theme.setIntegerValue(ValueBar.class, "yPadding", 1);
 		Theme.setValue(ValueBar.class, "barColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(ValueBar.class, "barTransparancy", 0.0f);
 		Theme.setValue(ValueBar.class, "focusedBackgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setFloatValue(ValueBar.class, "focusedTransparancy", 0.0f);
 		Theme.setIntegerValue(ValueBar.class, "focusedXPadding", 1);
 		Theme.setIntegerValue(ValueBar.class, "focusedYPadding", 1);
 		Theme.setValue(ValueBar.class, "focusedBarColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(ValueBar.class, "focusedBarTransparancy", 0.0f);
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:28:53  tako
+ * Added support for ValueBar's transparancy options.
+ *
  * Revision 1.4  2003/11/19 00:09:17  tako
  * Added support for seperate X and Y padding.
  * Removed as much widget-specific paddings and replaced them by the
