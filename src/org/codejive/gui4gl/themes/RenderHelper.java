@@ -30,7 +30,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 209 $
+ * @version $Revision: 247 $
  */
 public class RenderHelper {
 	
@@ -53,7 +53,7 @@ public class RenderHelper {
 		WidgetRendererModel renderer = null;
 		Class superClass = _widgetClass.getSuperclass();
 		if (superClass != null) {
-			renderer = (WidgetRendererModel)Theme.getValue(superClass, _widget.getFullName(), "renderer");
+			renderer = (WidgetRendererModel)Theme.getValue(_widget, superClass, "renderer");
 			if (renderer == null) {
 				renderer = findFirstSuperClassRenderer(superClass, _widget);
 			}
@@ -85,6 +85,10 @@ public class RenderHelper {
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/04 22:30:23  tako
+ * Theme attribute getters and setters now also take a Widget as argument.
+ * This to support the Widget's new attribute maps.
+ *
  * Revision 1.9  2004/01/27 13:29:51  steven
  * image widget patch by gertjan
  *
