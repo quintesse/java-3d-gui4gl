@@ -32,7 +32,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -62,9 +62,15 @@ public class WidgetRenderer implements WidgetRendererModel {
 			fTransparancy = _widget.getFocusedTransparancy();
 			backgroundImage = _widget.getFocusedBackgroundImage();
 		} else {
-			backgroundColor = _widget.getBackgroundColor();
-			fTransparancy = _widget.getTransparancy();
-			backgroundImage = _widget.getBackgroundImage();
+			if (_widget.isEnabled()) {
+				backgroundColor = _widget.getBackgroundColor();
+				fTransparancy = _widget.getTransparancy();
+				backgroundImage = _widget.getBackgroundImage();
+			} else {
+				backgroundColor = _widget.getDisabledBackgroundColor();
+				fTransparancy = _widget.getDisabledTransparancy();
+				backgroundImage = _widget.getDisabledBackgroundImage();
+			}
 		}
 		
 		if (backgroundImage == null) {
@@ -88,6 +94,11 @@ public class WidgetRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.6  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

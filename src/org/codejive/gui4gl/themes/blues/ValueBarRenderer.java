@@ -35,7 +35,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
@@ -78,8 +78,13 @@ public class ValueBarRenderer implements WidgetRendererModel {
 			barColor = bar.getFocusedBarColor();
 			barTransparancy = bar.getFocusedBarTransparancy();
 		} else {
-			barColor = bar.getBarColor();
-			barTransparancy = bar.getBarTransparancy();
+			if (bar.isEnabled()) {
+				barColor = bar.getBarColor();
+				barTransparancy = bar.getBarTransparancy();
+			} else {
+				barColor = bar.getDisabledBarColor();
+				barTransparancy = bar.getDisabledBarTransparancy();
+			}
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
 		RenderHelper.drawRectangle(gl, left, top, width, height);
@@ -100,6 +105,11 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.8  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.7  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

@@ -34,7 +34,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -46,12 +46,15 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Widget.class, "renderer", new WidgetRenderer());
 		Theme.setValue(Widget.class, "backgroundColor", new GLColor(0.45f, 0.45f, 1.0f));
 		Theme.setFloatValue(Widget.class, "transparancy", 1.0f);
+		Theme.setValue(Widget.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
+		Theme.setValue(Widget.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setIntegerValue(Widget.class, "textAlignment", GLText.ALIGN_LEFT);
 		Theme.setIntegerValue(Widget.class, "xPadding", 0);
 		Theme.setIntegerValue(Widget.class, "yPadding", 0);
-		Theme.setValue(Widget.class, "focusedBackgroundColor", new GLColor(0.65f, 0.65f, 1.0f));
-		Theme.setFloatValue(Widget.class, "focusedTransparancy", 0.6f);
-		Theme.setIntegerValue(Widget.class, "focusedXPadding", 0);
-		Theme.setIntegerValue(Widget.class, "focusedYPadding", 0);
+		Theme.setValue(Widget.class, "backgroundColor#focused", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(Widget.class, "transparancy#focused", 0.6f);
+		Theme.setValue(Widget.class, "textFontColor#focused", new GLColor(0.96f, 1.0f, 0.2f));
+		Theme.setValue(Widget.class, "textFontColor#disabled", new GLColor(0.5f, 0.5f, 0.5f));
 	
 		// Screen
 		Theme.setFloatValue(Screen.class, "transparancy", 1.0f);
@@ -66,64 +69,33 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(Window.class, "titlebarHeight", 25);
 		Theme.setValue(Window.class, "titlebarColor", new GLColor(0.16f, 0.16f, 1.0f));
 		Theme.setFloatValue(Window.class, "titlebarTransparancy", 0.3f);
-		Theme.setValue(Window.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_18));
-		Theme.setValue(Window.class, "captionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setValue(Window.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_18));
 		Theme.setIntegerValue(Window.class, "captionXPadding", 2);
 		Theme.setIntegerValue(Window.class, "captionYPadding", 2);
-		Theme.setIntegerValue(Window.class, "captionAlignment", GLText.ALIGN_LEFT);
 
-		Theme.setFloatValue(Window.class, "activeTransparancy", 0.4f);
-		Theme.setValue(Window.class, "activeTitlebarColor", new GLColor(0.16f, 0.16f, 1.0f));
-		Theme.setFloatValue(Window.class, "activeTitlebarTransparancy", 0.1f);
-		Theme.setValue(Window.class, "activeCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_18));
-		Theme.setValue(Window.class, "activeCaptionFontColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setIntegerValue(Window.class, "activeCaptionXPadding", 2);
-		Theme.setIntegerValue(Window.class, "activeCaptionYPadding", 2);
-		Theme.setIntegerValue(Window.class, "activeCaptionPadding", 2);
+		Theme.setFloatValue(Window.class, "titlebarTransparancy#active", 0.1f);
+		Theme.setValue(Window.class, "textFontColor#active", new GLColor(.96f, 1.0f, 0.2f));
 		
 		// Button
 		Theme.setValue(Button.class, "renderer", new ButtonRenderer());
-		Theme.setValue(Button.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Button.class, "captionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setIntegerValue(Button.class, "xPadding", 2);
 		Theme.setIntegerValue(Button.class, "yPadding", 2);
-		Theme.setIntegerValue(Button.class, "captionAlignment", GLText.ALIGN_LEFT);
-		Theme.setValue(Button.class, "focusedCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Button.class, "focusedCaptionFontColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setIntegerValue(Button.class, "focusedXPadding", 2);
-		Theme.setIntegerValue(Button.class, "focusedYPadding", 2);
-		Theme.setValue(Button.class, "selectedCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Button.class, "selectedCaptionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setIntegerValue(Button.class, "selectedXPadding", 2);
-		Theme.setIntegerValue(Button.class, "selectedYPadding", 2);
-		Theme.setValue(Button.class, "selectedBackgroundColor", new GLColor(1.0f, 0.0f, 0.0f));
-		Theme.setFloatValue(Button.class, "selectedTransparancy", 0.5f);
+		Theme.setValue(Button.class, "backgroundColor#selected", new GLColor(1.0f, 0.0f, 0.0f));
+		Theme.setFloatValue(Button.class, "transparancy#selected", 0.5f);
 		
 		// Toggle
 		Theme.setValue(Toggle.class, "renderer", new ToggleRenderer());
-		Theme.setValue(Toggle.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Toggle.class, "captionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setIntegerValue(Toggle.class, "xPadding", 2);
 		Theme.setIntegerValue(Toggle.class, "yPadding", 2);
 		Theme.setValue(Toggle.class, "checkColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setValue(Toggle.class, "checkBackgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setFloatValue(Toggle.class, "checkTransparancy", 0.0f);
-		Theme.setIntegerValue(Toggle.class, "captionAlignment", GLText.ALIGN_LEFT);
-		Theme.setValue(Toggle.class, "focusedCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Toggle.class, "focusedCaptionFontColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setIntegerValue(Toggle.class, "focusedXPadding", 2);
-		Theme.setIntegerValue(Toggle.class, "focusedYPadding", 2);
-		Theme.setValue(Toggle.class, "focusedCheckColor", new GLColor(0.65f, 0.65f, 1.0f));
-		Theme.setValue(Toggle.class, "focusedCheckBackgroundColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setFloatValue(Toggle.class, "focusedCheckTransparancy", 0.0f);
+		Theme.setValue(Toggle.class, "checkBackgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 
 		// Text
 		Theme.setValue(Text.class, "renderer", new TextRenderer());
-		Theme.setValue(Text.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Text.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setIntegerValue(Text.class, "xPadding", 2);
 		Theme.setIntegerValue(Text.class, "yPadding", 2);
-		Theme.setIntegerValue(Text.class, "textAlignment", GLText.ALIGN_LEFT);
 		
 		// ValueBar
 		Theme.setValue(ValueBar.class, "renderer", new ValueBarRenderer());
@@ -133,12 +105,8 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(ValueBar.class, "yPadding", 1);
 		Theme.setValue(ValueBar.class, "barColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setFloatValue(ValueBar.class, "barTransparancy", 0.0f);
-		Theme.setValue(ValueBar.class, "focusedBackgroundColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setFloatValue(ValueBar.class, "focusedTransparancy", 0.0f);
-		Theme.setIntegerValue(ValueBar.class, "focusedXPadding", 1);
-		Theme.setIntegerValue(ValueBar.class, "focusedYPadding", 1);
-		Theme.setValue(ValueBar.class, "focusedBarColor", new GLColor(0.65f, 0.65f, 1.0f));
-		Theme.setFloatValue(ValueBar.class, "focusedBarTransparancy", 0.0f);
+		Theme.setValue(ValueBar.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
+		Theme.setFloatValue(ValueBar.class, "transparancy#focused", 0.0f);
 		
 		// TextField
 		Theme.setValue(TextField.class, "renderer", new TextFieldRenderer());
@@ -146,21 +114,22 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setFloatValue(TextField.class, "transparancy", 0.0f);
 		Theme.setIntegerValue(TextField.class, "xPadding", 2);
 		Theme.setIntegerValue(TextField.class, "yPadding", 2);
-		Theme.setValue(TextField.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(TextField.class, "textFontColor", new GLColor(0.0f, 0.0f, 0.0f));
-		Theme.setValue(TextField.class, "focusedBackgroundColor", new GLColor(.96f, 1.0f, 0.2f));
-		Theme.setFloatValue(TextField.class, "focusedTransparancy", 0.0f);
-		Theme.setValue(TextField.class, "focusedTextFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(TextField.class, "focusedTextFontColor", new GLColor(0.0f, 0.0f, 0.0f));
 		Theme.setValue(TextField.class, "textCursorColor", new GLColor(0.0f, 0.0f, 0.0f, .8f));
 		Theme.setIntegerValue(TextField.class, "textCursorBlinkSpeed", 1000); // in millis
-		Theme.setIntegerValue(TextField.class, "focusedXPadding", 2);
-		Theme.setIntegerValue(TextField.class, "focusedYPadding", 2);		
+		Theme.setValue(TextField.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
+		Theme.setFloatValue(TextField.class, "transparancy#focused", 0.0f);
+		Theme.setValue(TextField.class, "textFontColor#focused", new GLColor(0.0f, 0.0f, 0.0f));
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.12  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

@@ -32,7 +32,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
@@ -54,15 +54,20 @@ public class ButtonRenderer implements WidgetRendererModel {
 		
 		Button button = (Button)_widget;
 		if (button.isSelected()) {
-			captionFont = button.getSelectedCaptionFont();
-			captionFontColor = button.getSelectedCaptionFontColor();
+			captionFont = button.getSelectedTextFont();
+			captionFontColor = button.getSelectedTextFontColor();
 		} else {
 			if (button.hasFocus()) {
-				captionFont = button.getFocusedCaptionFont();
-				captionFontColor = button.getFocusedCaptionFontColor();
+				captionFont = button.getFocusedTextFont();
+				captionFontColor = button.getFocusedTextFontColor();
 			} else {
-				captionFont = button.getCaptionFont();
-				captionFontColor = button.getCaptionFontColor();
+				if (button.isEnabled()) {
+					captionFont = button.getTextFont();
+					captionFontColor = button.getTextFontColor();
+				} else {
+					captionFont = button.getDisabledTextFont();
+					captionFontColor = button.getDisabledTextFontColor();
+				}
 			}
 		}
 
@@ -85,7 +90,7 @@ public class ButtonRenderer implements WidgetRendererModel {
 		String sCaption = button.getCaption();
 		if (sCaption != null) {
 			// Caption text
-			int nCaptionAlignment = button.getCaptionAlignment();
+			int nCaptionAlignment = button.getTextAlignment();
 			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
 
@@ -95,6 +100,11 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.9  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

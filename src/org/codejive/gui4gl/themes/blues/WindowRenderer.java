@@ -34,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -63,19 +63,28 @@ public class WindowRenderer implements WidgetRendererModel {
 		int nCaptionXPadding, nCaptionYPadding;
 		Window window = (Window)_widget;
 		if (window.isActive()) {
-			captionFont = window.getActiveCaptionFont();
+			captionFont = window.getFocusedTextFont();
+			captionFontColor = window.getFocusedTextFontColor();
 			titlebarColor = window.getActiveTitlebarColor();
 			fTitlebarTransparancy = window.getActiveTitlebarTransparancy();
-			captionFontColor = window.getActiveCaptionFontColor();
 			nCaptionXPadding = window.getActiveCaptionXPadding();
 			nCaptionYPadding = window.getActiveCaptionYPadding();
 		} else {
-			captionFont = window.getCaptionFont();
-			titlebarColor = window.getTitlebarColor();
-			fTitlebarTransparancy = window.getTitlebarTransparancy();
-			captionFontColor = window.getCaptionFontColor();
-			nCaptionXPadding = window.getCaptionXPadding();
-			nCaptionYPadding = window.getCaptionYPadding();
+			if (window.isEnabled()) {
+				captionFont = window.getTextFont();
+				captionFontColor = window.getTextFontColor();
+				titlebarColor = window.getTitlebarColor();
+				fTitlebarTransparancy = window.getTitlebarTransparancy();
+				nCaptionXPadding = window.getCaptionXPadding();
+				nCaptionYPadding = window.getCaptionYPadding();
+			} else {
+				captionFont = window.getDisabledTextFont();
+				captionFontColor = window.getDisabledTextFontColor();
+				titlebarColor = window.getDisabledTitlebarColor();
+				fTitlebarTransparancy = window.getDisabledTitlebarTransparancy();
+				nCaptionXPadding = window.getDisabledCaptionXPadding();
+				nCaptionYPadding = window.getDisabledCaptionYPadding();
+			}
 		}
 
 		String sTitle = window.getTitle();
@@ -95,7 +104,7 @@ public class WindowRenderer implements WidgetRendererModel {
 			gl.glDisable(GL.GL_BLEND);
 	
 			// Title text
-			int nCaptionAlignment = window.getCaptionAlignment();
+			int nCaptionAlignment = window.getTextAlignment();
 			GLText.drawText(_context, m_tmpBounds, nCaptionXPadding, nCaptionYPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle, "...");
 
 			gl.glEnable(GL.GL_TEXTURE_2D);
@@ -105,6 +114,11 @@ public class WindowRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.9  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

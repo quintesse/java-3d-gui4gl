@@ -34,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  */
 public class ToggleRenderer implements WidgetRendererModel {
 
@@ -59,17 +59,25 @@ public class ToggleRenderer implements WidgetRendererModel {
 		
 		Toggle toggle = (Toggle)_widget;
 		if (toggle.hasFocus()) {
-			captionFont = toggle.getFocusedCaptionFont();
-			captionFontColor = toggle.getFocusedCaptionFontColor();
+			captionFont = toggle.getFocusedTextFont();
+			captionFontColor = toggle.getFocusedTextFontColor();
 			checkColor = toggle.getFocusedCheckColor();
 			checkBackgroundColor = toggle.getFocusedCheckBackgroundColor();
 			fcheckTransparancy = toggle.getFocusedCheckTransparancy();
 		} else {
-			captionFont = toggle.getCaptionFont();
-			captionFontColor = toggle.getCaptionFontColor();
-			checkColor = toggle.getCheckColor();
-			checkBackgroundColor = toggle.getCheckBackgroundColor();
-			fcheckTransparancy = toggle.getCheckTransparancy();
+			if (toggle.isEnabled()) {
+				captionFont = toggle.getTextFont();
+				captionFontColor = toggle.getTextFontColor();
+				checkColor = toggle.getCheckColor();
+				checkBackgroundColor = toggle.getCheckBackgroundColor();
+				fcheckTransparancy = toggle.getCheckTransparancy();
+			} else {
+				captionFont = toggle.getDisabledTextFont();
+				captionFontColor = toggle.getDisabledTextFontColor();
+				checkColor = toggle.getDisabledCheckColor();
+				checkBackgroundColor = toggle.getDisabledCheckBackgroundColor();
+				fcheckTransparancy = toggle.getDisabledCheckTransparancy();
+			}
 		}
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -93,7 +101,7 @@ public class ToggleRenderer implements WidgetRendererModel {
 		String sCaption = toggle.getCaption();
 		if (sCaption != null) {
 			// Caption text
-			int nCaptionAlignment = toggle.getCaptionAlignment();
+			int nCaptionAlignment = toggle.getTextAlignment();
 			bounds.x += bounds.height + 5;
 			GLText.drawText(_context, bounds, 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
@@ -104,6 +112,11 @@ public class ToggleRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.3  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

@@ -32,7 +32,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 183 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
@@ -51,9 +51,20 @@ public class TextRenderer implements WidgetRendererModel {
 
 		Text text = (Text)_widget;
 		
-		Font textFont = text.getTextFont();
+		Font textFont;
 		GLColor textFontColor;
-		textFontColor = text.getTextFontColor();
+		if (text.hasFocus()) {
+			textFont = text.getFocusedTextFont();
+			textFontColor = text.getFocusedTextFontColor();
+		} else {
+			if (text.isEnabled()) {
+				textFont = text.getTextFont();
+				textFontColor = text.getTextFontColor();
+			} else {
+				textFont = text.getDisabledTextFont();
+				textFontColor = text.getDisabledTextFontColor();
+			}
+		}
 		int nTextAlignment = text.getTextAlignment();
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -70,6 +81,11 @@ public class TextRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/05 01:05:11  tako
+ * Implemented rendering of enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ *
  * Revision 1.10  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *
