@@ -1,8 +1,27 @@
 /*
+ * [gui4gl] OpenGL game-oriented GUI library
+ * 
+ * Copyright (C) 2003, 2004 Tako Schotanus
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
+ * option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
  * Created on Dec 14, 2003
  */
 package org.codejive.gui4gl.widgets;
 
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,30 +29,47 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import net.java.games.jogl.GL;
+
+import org.codejive.gui4gl.layouts.Layouter;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author tako
- * @version $Revision: 222 $
+ * @version $Revision: 241 $
  */
 public class CompoundWidget extends Widget {
 	protected LinkedList m_children;
 	protected Map m_childNames;
 	protected Widget m_focusWidget;
+	protected Layouter m_layouter;
 
 	public CompoundWidget() {
-		this(null);
-	}
-	
-	public CompoundWidget(String _sName) {
-		super(_sName);
 		m_children = new LinkedList();
 		m_childNames = new HashMap();
 		m_focusWidget = null;
+		m_layouter = null;
 		setFocusable(true);
 	}
 
+	/**
+	 * Returns the current layouter for this widget.
+	 * @return A reference to the current Layouter.
+	 */
+	public Layouter getLayouter() {
+		return m_layouter;
+	}
+	
+	/**
+	 * Sets a new layouter for this widget.
+	 * Setting this to null will revert to using the child widget's absolute bounds.
+	 * @param _layouter
+	 */
+	public void setLayouter(Layouter _layouter) {
+		m_layouter = _layouter;
+	}
+	
 	protected void add(Widget _child) {
 		m_children.add(_child);
 		if (_child.getName() != null) {
@@ -84,10 +120,15 @@ public class CompoundWidget extends Widget {
 	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
 		Widget result = null;
 		if (isVisible()) {
-			Iterator i = getChildren();
-			while ((result == null) && i.hasNext()) {
-				Widget w = (Widget)i.next();
-				result = w.getWidgetUnderPoint(_nXPos, _nYPos);
+			if (getClippingBounds().contains(_nXPos, _nYPos)) {
+				Iterator i = getChildren();
+				while (i.hasNext()) {
+					Widget w = (Widget)i.next();
+					Widget under = w.getWidgetUnderPoint(_nXPos, _nYPos);
+					if (under != null) {
+						result = under;
+					}
+				}
 			}
 			if (result == null) {
 				result = super.getWidgetUnderPoint(_nXPos, _nYPos);
@@ -131,11 +172,12 @@ public class CompoundWidget extends Widget {
 				Widget w = (Widget)i.previous();
 				if (w.isFocusable()) {
 					prevWidget = w;
-				} else if (w instanceof Container) {
-					Container cw = (Container)w;
-					w = cw.getPreviousFocusWidget(null);
-					if (w != null) {
-						prevWidget = w;
+					if (w instanceof CompoundWidget) {
+						CompoundWidget cw = (CompoundWidget)w;
+						w = cw.getPreviousFocusWidget(null);
+						if (w != null) {
+							prevWidget = w;
+						}
 					}
 				}
 			}
@@ -172,11 +214,12 @@ public class CompoundWidget extends Widget {
 				Widget w = (Widget)i.next();
 				if (w.isFocusable()) {
 					nextWidget = w;
-				} else if (w instanceof Container) {
-					Container cw = (Container)w;
-					w = cw.getNextFocusWidget(null);
-					if (w != null) {
-						nextWidget = w;
+					if (w instanceof CompoundWidget) {
+						CompoundWidget cw = (CompoundWidget)w;
+						w = cw.getNextFocusWidget(null);
+						if (w != null) {
+							nextWidget = w;
+						}
 					}
 				}
 			}
@@ -196,6 +239,13 @@ public class CompoundWidget extends Widget {
 		return nextWidget;
 	}
 
+	protected void calculateBounds(RenderContext _context) {
+		super.calculateBounds(_context);
+		if (m_layouter != null) {
+			m_layouter.layoutChildren(this);
+		}
+	}
+	
 	public void initRendering(RenderContext _context) {
 		super.initRendering(_context);
 		if (isVisible()) {
@@ -211,11 +261,9 @@ public class CompoundWidget extends Widget {
 		}
 	}
 
-	public void render(RenderContext _context, RenderObserver _observer) {
-		super.render(_context, _observer);
-		if (isVisible()) {
-			renderChildren(_context, _observer);
-		}
+	protected void renderWidget(RenderContext _context, RenderObserver _observer) {
+		super.renderWidget(_context, _observer);
+		renderChildren(_context, _observer);
 	}
 
 	protected void renderChildren(RenderContext _context, RenderObserver _observer) {
@@ -229,6 +277,13 @@ public class CompoundWidget extends Widget {
 
 /*
  * $Log$
+ * Revision 1.5  2004/05/04 22:12:54  tako
+ * Added license.
+ * Added support for layouters.
+ * Fixed getWidgetUnderPoint() that used to return the bottommost widget instead of the topmost.
+ * Focus switching is now properly supported for CompoundWidgets.
+ * Will now only render children if visible itself.
+ *
  * Revision 1.4  2004/03/07 18:21:29  tako
  * Bounds calculations and render functions now all have a RenderContext argument.
  *
