@@ -14,9 +14,25 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 91 $
+ * @version $Revision: 109 $
  */
 public class Screen extends Container implements KeyListener {
+	
+	public Toplevel getToplevel() {
+		return null;
+	}
+	
+	public Toplevel getActiveToplevel() {
+		return getFocusWidget().getToplevel();
+	}
+	
+	public void add(Widget _child, String _sName) {
+		if (_child instanceof Toplevel) {
+			super.add(_child, _sName);
+		} else {
+			throw new RuntimeException("Screen only accepts Toplevel widgets as it children");
+		}
+	}
 	
 	public Widget getPreviousFocusWidget(Widget _widget) {
 		return null;
@@ -107,6 +123,11 @@ public class Screen extends Container implements KeyListener {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 01:29:15  tako
+ * Added getActiveToplevel() method.
+ * Overriden getToplevel().
+ * Adding a non-toplevel widget non throws an exception.
+ *
  * Revision 1.6  2003/11/19 11:19:41  tako
  * Implemented completely new event system because tryin to re-use the
  * AWT and Swing events just was too much trouble.
