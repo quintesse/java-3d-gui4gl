@@ -38,7 +38,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 204 $
+ * @version $Revision: 205 $
  */
 public class Widget implements Renderable {
 	private CompoundWidget m_parent;
@@ -86,22 +86,13 @@ public class Widget implements Renderable {
 	protected Padding m_padding;
 	
 	public Widget() {
-		m_parent = null;
-		m_sName = "";
-		m_bounds = new Rectangle();
-		m_bEnabled = true;
-		m_bVisible = true;
-		m_bCanHaveFocus = false;
-		
-		m_keyListeners = new ArrayList();
-		m_mouseListeners = new ArrayList();
-
-		m_currentBounds = new Rectangle();
-		m_innerBounds = new Rectangle();
-		m_padding = new Padding();
+		this(null);
 	}
 	
-	protected void updateTheme() {
+	public Widget(String _sName) {
+		m_parent = null;
+		m_sName = _sName;
+		m_bounds = new Rectangle();
 		m_backgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor");
 		m_fTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy");
 		m_backgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage");
@@ -124,14 +115,20 @@ public class Widget implements Renderable {
 		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#disabled");
 		m_disabledTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#disabled");
 		m_disabledTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#disabled");
+		m_bEnabled = true;
+		m_bVisible = true;
+		m_bCanHaveFocus = false;
+		
+		m_keyListeners = new ArrayList();
+		m_mouseListeners = new ArrayList();
+
+		m_currentBounds = new Rectangle();
+		m_innerBounds = new Rectangle();
+		m_padding = new Padding();
 	}
 	
 	public String getName() {
 		return m_sName;
-	}
-	
-	protected void setName(String _sName) {
-		m_sName = _sName;
 	}
 	
 	public String getFullName() {
@@ -146,7 +143,7 @@ public class Widget implements Renderable {
 		} else {
 			sName = getName();
 		}
-		return sName;
+		return (sName != null) ? sName : "";
 	}
 	
 	protected void setParent(CompoundWidget _parent) {
@@ -595,7 +592,6 @@ public class Widget implements Renderable {
 	}
 	
 	protected void initWidget(RenderContext _context) {
-		updateTheme();
 		calculateBounds();
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
@@ -604,7 +600,6 @@ public class Widget implements Renderable {
 	}
 	
 	protected void updateWidget(RenderContext _context) {
-		updateTheme();
 		calculateBounds();
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
@@ -632,10 +627,10 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
- * Revision 1.17  2003/12/14 04:07:23  tako
- * Moved property initialization code from the widget constructors to the new
- * method updateTheme() because with the new hierarchical property
- * system we have to wait until the entire widget tree has been constructed.
+ * Revision 1.18  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
  *
  * Revision 1.16  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set

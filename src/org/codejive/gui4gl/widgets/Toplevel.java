@@ -27,12 +27,17 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
  * @author Tako
- * @version $Revision: 184 $
+ * @version $Revision: 205 $
  */
 public class Toplevel extends Container {
 	private boolean m_bDraggable;
 	
 	public Toplevel() {
+		m_bDraggable = true;
+	}
+	
+	public Toplevel(String _sName) {
+		super(_sName);
 		m_bDraggable = true;
 	}
 	
@@ -78,6 +83,11 @@ public class Toplevel extends Container {
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
+ *
  * Revision 1.4  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 204 $
+ * @version $Revision: 205 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -48,21 +48,23 @@ public class TextField extends Widget {
 	private int m_nViewOffset;
 	
 	public TextField() {
-		this("");
+		this(null, "");
 	}
 
 	public TextField(String _sText) {
+		this(null, _sText);
+	}
+	
+	public TextField(String _sName, String _sText) {
+		super(_sName);
+		m_textCursorColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor");
+		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
+		
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
 		setText(_sText);
 	}
 
-	protected void updateTheme() {
-		super.updateTheme();
-		m_textCursorColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor");
-		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
-	}
-	
 	public String getText() {
 		return m_sText;
 	}
@@ -196,10 +198,10 @@ public class TextField extends Widget {
 
 /*
  * $Log$
- * Revision 1.7  2003/12/14 04:07:23  tako
- * Moved property initialization code from the widget constructors to the new
- * method updateTheme() because with the new hierarchical property
- * system we have to wait until the entire widget tree has been constructed.
+ * Revision 1.8  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
  *
  * Revision 1.6  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set

@@ -36,7 +36,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 204 $
+ * @version $Revision: 205 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -57,40 +57,50 @@ public class ValueBar extends Widget {
 	private List m_changeListeners;
 	
 	public ValueBar(float _fMin, float _fMax) {
-		this(_fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
+		this(null, _fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
+	}
+	
+	public ValueBar(String _sName, float _fMin, float _fMax) {
+		this(_sName, _fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
 	}
 	
 	public ValueBar(float _fMin, float _fMax, float _fStepSize) {
-		this(_fMin, _fMax, _fStepSize, false, GLText.ALIGN_CENTER);
+		this(null, _fMin, _fMax, _fStepSize, false, GLText.ALIGN_CENTER);
+	}
+	
+	public ValueBar(String _sName, float _fMin, float _fMax, float _fStepSize) {
+		this(_sName, _fMin, _fMax, _fStepSize, false, GLText.ALIGN_CENTER);
+	}
+	
+	public ValueBar(float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
+		this(null, _fMin, _fMax, _fStepSize, _bShowValue, _lAlignment);
 	}
 	
 	/**
-	 * 
+	 * @param _sName
 	 * @param _fMin
 	 * @param _fMax
 	 * @param _fStepSize
 	 * @param __bShowValue
 	 * @param _lAlignment see GLText for values.
 	 */
-	public ValueBar(float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
+	public ValueBar(String _sName, float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
+		super(_sName);
+		
 		setAlignment(_lAlignment);
 		setShowValue(_bShowValue);
 		
 		m_fMin = _fMin;
 		m_fMax = _fMax;
 		m_fStepSize = _fStepSize;
-		m_changeListeners = new LinkedList();
-		setFocusable(true);
-	}
-	
-	protected void updateTheme() {
-		super.updateTheme();
 		m_barColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor");
 		m_fBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy");
 		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor#focused");
 		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#focused");
 		m_disabledBarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor#disabled");
 		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#disabled");
+		m_changeListeners = new LinkedList();
+		setFocusable(true);
 	}
 	
 	public boolean isShowValue() {
@@ -248,10 +258,10 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
- * Revision 1.14  2003/12/14 04:07:23  tako
- * Moved property initialization code from the widget constructors to the new
- * method updateTheme() because with the new hierarchical property
- * system we have to wait until the entire widget tree has been constructed.
+ * Revision 1.15  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
  *
  * Revision 1.13  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set

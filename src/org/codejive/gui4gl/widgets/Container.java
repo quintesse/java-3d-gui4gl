@@ -28,16 +28,20 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 205 $
  */
 public class Container extends CompoundWidget {
 	
+	public Container() {
+		this(null);
+	}
+	
+	public Container(String _sName) {
+		super(_sName);
+	}
+	
 	public void add(Widget _child) {
 		super.add(_child);
-	}
-
-	public void add(Widget _child, String _sName) {
-		super.add(_child, _sName);
 	}
 
 	protected Widget getChild(String _sName) {
@@ -92,6 +96,11 @@ public class Container extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
+ *
  * Revision 1.14  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within

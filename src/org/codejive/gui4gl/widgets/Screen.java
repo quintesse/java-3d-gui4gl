@@ -35,7 +35,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 190 $
+ * @version $Revision: 205 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -43,6 +43,11 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	private int m_nLastXPos, m_nLastYPos;
 	
 	public Screen() {
+		this(null);
+	}
+	
+	public Screen(String _sName) {
+		super(_sName);
 		m_widgetUnderMouse = null;
 		m_widgetPressed = null;
 		m_nLastXPos = m_nLastYPos = -1;
@@ -60,9 +65,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		}
 	}
 	
-	public void add(Widget _child, String _sName) {
+	public void add(Widget _child) {
 		if (_child instanceof Toplevel) {
-			super.add(_child, _sName);
+			super.add(_child);
 		} else {
 			throw new RuntimeException("Screen only accepts Toplevel widgets as it children");
 		}
@@ -277,6 +282,11 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
+ *
  * Revision 1.13  2003/12/11 10:49:25  tako
  * All mouse events now include information about which button changed
  * state.

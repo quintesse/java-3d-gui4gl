@@ -23,16 +23,21 @@ package org.codejive.gui4gl.widgets;
 
 /**
  * @author tako
- * @version $Revision: 184 $
+ * @version $Revision: 205 $
  */
 public class Text extends Widget {
 	private String m_sText;
 	
 	public Text() {
-		this(null);
+		this(null, null);
 	}
 
 	public Text(String _sText) {
+		this(null, _sText);
+	}
+	
+	public Text(String _sName, String _sText) {
+		super(_sName);
 		m_sText = _sText;
 	}
 
@@ -47,6 +52,11 @@ public class Text extends Widget {
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
+ *
  * Revision 1.7  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

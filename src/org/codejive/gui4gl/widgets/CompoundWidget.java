@@ -14,7 +14,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 202 $
+ * @version $Revision: 205 $
  */
 public class CompoundWidget extends Widget {
 	protected LinkedList m_children;
@@ -22,6 +22,11 @@ public class CompoundWidget extends Widget {
 	protected Widget m_focusWidget;
 
 	public CompoundWidget() {
+		this(null);
+	}
+	
+	public CompoundWidget(String _sName) {
+		super(_sName);
 		m_children = new LinkedList();
 		m_childNames = new HashMap();
 		m_focusWidget = null;
@@ -30,15 +35,10 @@ public class CompoundWidget extends Widget {
 
 	protected void add(Widget _child) {
 		m_children.add(_child);
+		if (_child.getName() != null) {
+			m_childNames.put(_child.getName(), _child);
+		}
 		_child.setParent(this);
-		_child.setName("");
-	}
-
-	protected void add(Widget _child, String _sName) {
-		m_children.add(_child);
-		m_childNames.put(_sName, _child);
-		_child.setParent(this);
-		_child.setName(_sName);
 	}
 
 	protected void remove(Widget _child) {
@@ -228,6 +228,11 @@ public class CompoundWidget extends Widget {
 
 /*
  * $Log$
+ * Revision 1.3  2003/12/15 11:06:00  tako
+ * Did a rollback of the previous code because it was introducing more
+ * problems than solving them. A widget's name is now set in the constructor
+ * and can not be changed anymore.
+ *
  * Revision 1.2  2003/12/14 03:09:55  tako
  * Adding a widget without a name will no longer give it an internally generated
  * name, it will just be nameless and Themes properties won't be able to
