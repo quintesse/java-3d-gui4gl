@@ -36,7 +36,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 205 $
+ * @version $Revision: 233 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -93,11 +93,11 @@ public class ValueBar extends Widget {
 		m_fMin = _fMin;
 		m_fMax = _fMax;
 		m_fStepSize = _fStepSize;
-		m_barColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor");
+		m_barColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "barColor"));
 		m_fBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy");
-		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor#focused");
+		m_focusedBarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "barColor#focused"));
 		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#focused");
-		m_disabledBarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor#disabled");
+		m_disabledBarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "barColor#disabled"));
 		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#disabled");
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
@@ -258,6 +258,10 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.16  2004/03/17 00:50:46  tako
+ * Colors are now cloned during initialization to prevent others from messing
+ * up the Themes.
+ *
  * Revision 1.15  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

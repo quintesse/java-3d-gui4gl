@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 233 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
@@ -63,14 +63,14 @@ public class Toggle extends Widget {
 		super(_sName);
 		m_sCaption = _sCaption;
 		m_bChecked = _bChecked;
-		m_checkColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor");
-		m_checkBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor");
+		m_checkColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkColor"));
+		m_checkBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor"));
 		m_fCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy");
-		m_focusedCheckColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#focused");
-		m_focusedCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#focused");
+		m_focusedCheckColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#focused"));
+		m_focusedCheckBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#focused"));
 		m_fFocusedCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#focused");
-		m_disabledCheckColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#disabled");
-		m_disabledCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#disabled");
+		m_disabledCheckColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#disabled"));
+		m_disabledCheckBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#disabled"));
 		m_fDisabledCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#disabled");
 		setFocusable(true);
 		
@@ -195,6 +195,10 @@ public class Toggle extends Widget {
 
 /*
  * $Log$
+ * Revision 1.8  2004/03/17 00:50:46  tako
+ * Colors are now cloned during initialization to prevent others from messing
+ * up the Themes.
+ *
  * Revision 1.7  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

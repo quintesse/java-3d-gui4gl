@@ -30,7 +30,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 222 $
+ * @version $Revision: 233 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -62,15 +62,15 @@ public class Window extends Toplevel {
 		super(_sName);
 		m_sTitle = _sTitle;
 		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), getFullName(), "titlebarHeight");
-		m_titlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor");
+		m_titlebarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor"));
 		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy");
 		m_nCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding");
 		m_nCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding");
-		m_activeTitlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#active");
+		m_activeTitlebarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#active"));
 		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#active");
 		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#active");
 		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#active");
-		m_disabledTitlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#disabled");
+		m_disabledTitlebarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#disabled"));
 		m_fDisabledTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#disabled");
 		m_nDisabledCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#disabled");
 		m_nDisabledCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#disabled");
@@ -262,6 +262,10 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.15  2004/03/17 00:50:46  tako
+ * Colors are now cloned during initialization to prevent others from messing
+ * up the Themes.
+ *
  * Revision 1.14  2004/03/07 18:21:29  tako
  * Bounds calculations and render functions now all have a RenderContext argument.
  *

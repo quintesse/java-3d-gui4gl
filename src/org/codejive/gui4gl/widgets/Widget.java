@@ -39,7 +39,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 223 $
+ * @version $Revision: 233 $
  */
 public class Widget implements Renderable {
 	private CompoundWidget m_parent;
@@ -94,28 +94,28 @@ public class Widget implements Renderable {
 		m_parent = null;
 		m_sName = _sName;
 		m_bounds = new Rectangle();
-		m_backgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor");
+		m_backgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor"));
 		m_fTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy");
 		m_backgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage");
 		m_nXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding");
 		m_nYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding");
 		m_textFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont");
-		m_textFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor");
+		m_textFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor"));
 		m_nTextAlignment = Theme.getIntegerValue(getClass(), getFullName(), "textAlignment");
-		m_focusedBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#focused");
+		m_focusedBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#focused"));
 		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#focused");
 		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage#focused");
 		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#focused");
 		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#focused");
 		m_focusedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#focused");
-		m_focusedTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#focused");
-		m_disabledBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#disabled");
+		m_focusedTextFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#focused"));
+		m_disabledBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#disabled"));
 		m_fDisabledTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#disabled");
 		m_disabledBackgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage#disabled");
 		m_nDisabledXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#disabled");
 		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#disabled");
 		m_disabledTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#disabled");
-		m_disabledTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#disabled");
+		m_disabledTextFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#disabled"));
 		m_bEnabled = true;
 		m_bVisible = true;
 		m_bCanHaveFocus = false;
@@ -259,7 +259,7 @@ public class Widget implements Renderable {
 	}
 	
 	public void setBackgroundColor(float _fRed, float _fGreen, float _fBlue) {
-		m_backgroundColor.set(_fRed, _fGreen, _fBlue);
+		setBackgroundColor(new GLColor(_fRed, _fGreen, _fBlue));
 	}
 	
 	public void setBackgroundColor(GLColor _color) {
@@ -625,6 +625,10 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.20  2004/03/17 00:50:46  tako
+ * Colors are now cloned during initialization to prevent others from messing
+ * up the Themes.
+ *
  * Revision 1.19  2004/03/07 18:22:58  tako
  * Bounds calculations and render functions now all have a RenderContext argument.
  * The methods getFullName() now won't return illegal names anymore if the

@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 205 $
+ * @version $Revision: 233 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -57,7 +57,7 @@ public class TextField extends Widget {
 	
 	public TextField(String _sName, String _sText) {
 		super(_sName);
-		m_textCursorColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor");
+		m_textCursorColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor"));
 		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
 		
 		m_changeListeners = new LinkedList();
@@ -198,6 +198,10 @@ public class TextField extends Widget {
 
 /*
  * $Log$
+ * Revision 1.9  2004/03/17 00:50:46  tako
+ * Colors are now cloned during initialization to prevent others from messing
+ * up the Themes.
+ *
  * Revision 1.8  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

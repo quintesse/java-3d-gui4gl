@@ -37,7 +37,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 222 $
+ * @version $Revision: 233 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -63,10 +63,10 @@ public class Button extends Widget {
 		super(_sName);
 		m_sCaption = _sCaption;
 		m_selectedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#selected");
-		m_selectedTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#selected");
+		m_selectedTextFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#selected"));
 		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#selected");
 		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#selected");
-		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#selected");
+		m_selectedBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#selected"));
 		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#selected");
 		setFocusable(true);
 		
@@ -205,6 +205,10 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.13  2004/03/17 00:50:46  tako
+ * Colors are now cloned during initialization to prevent others from messing
+ * up the Themes.
+ *
  * Revision 1.12  2004/03/07 18:21:29  tako
  * Bounds calculations and render functions now all have a RenderContext argument.
  *
