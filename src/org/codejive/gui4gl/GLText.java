@@ -13,14 +13,14 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 71 $
+ * @version $Revision: 104 $
  */
 public class GLText {
 	public static final int ALIGN_LEFT = 0;
 	public static final int ALIGN_CENTER = 1;
 	public static final int ALIGN_RIGHT = 2;
 		
-	public static void drawText(RenderContext _context, Rectangle _bounds, int _nXPadding, int _nYPadding, Font _font, GLColor _color, boolean _bMultiLine, int _nAlignment, String _sText) {
+	public static void drawText(RenderContext _context, Rectangle _bounds, int _nXPadding, int _nYPadding, Font _font, GLColor _color, boolean _bMultiLine, int _nAlignment, String _sText, String _sPostFix) {
 		GL gl = _context.getGl();
 
 		float fFontHeight = _font.getSize(_context);
@@ -73,12 +73,12 @@ public class GLText {
 					// Determine if this is the last line that will be able to fit
 					boolean bLastLine = (!_bMultiLine || ((fYPosDelta + 2 * fFontHeight + fFontPadding) >= fHeight));
 					if (bLastLine) {
-						// Let's shorten the fragment even more until "..." fits at the end
+						// Let's shorten the fragment even more until the PostFix fits at the end
 						while ((s.length() > 0) && (fLength > fWidth)) {
 							s.deleteCharAt(s.length() - 1);
-							fLength = _font.getTextWidth(_context, s.toString() + "...");
+							fLength = _font.getTextWidth(_context, s.toString() + _sPostFix);
 						}
-						s.append("...");
+						s.append(_sPostFix);
 					} else {
 						// Did we encounter a word boundary somewhere in the fragment?
 						int nLastBreak = s.lastIndexOf(" ");
@@ -122,6 +122,10 @@ public class GLText {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 00:20:56  tako
+ * The "..." at the end of a string that is too long to fit can now be configured
+ * to be any text you want (an empty string is also possible).
+ *
  * Revision 1.5  2003/11/19 00:06:34  tako
  * Added support for seperate X and Y padding.
  *
