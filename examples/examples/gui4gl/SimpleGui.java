@@ -9,9 +9,6 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -23,6 +20,12 @@ import java.text.NumberFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.codejive.gui4gl.events.GuiActionEvent;
+import org.codejive.gui4gl.events.GuiActionListener;
+import org.codejive.gui4gl.events.GuiChangeEvent;
+import org.codejive.gui4gl.events.GuiChangeListener;
+import org.codejive.gui4gl.events.GuiKeyAdapter;
+import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.Text;
@@ -36,7 +39,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 87 $
+ * @version $Revision: 92 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -108,8 +111,8 @@ class SimpleGui implements GLEventListener {
 		// If we want to get any keys the GUI doesn't handle
 		// (no windows active for example) we need to register
 		// a listener for them
-		m_screen.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
+		m_screen.addKeyListener(new GuiKeyAdapter() {
+			public void keyPressed(GuiKeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					m_display.stop();
 				}
@@ -156,55 +159,66 @@ class SimpleGui implements GLEventListener {
 			b.setBounds(5, 65, 290, 20);
 			add(b);
 			b = new Button("Exit this example");
-
+/*
 // BEGIN TEST
-b.addKeyListener(new KeyAdapter() {
-	public void keyTyped(KeyEvent _event) {
-		Button b = (Button)_event.getSource();
+b.addKeyListener(new GuiKeyAdapter() {
+	public void keyTyped(GuiKeyEvent _event) {
+		Button button = (Button)_event.getSource();
 		switch (_event.getKeyChar()) {
 			case 'a':
-				b.setWidth(b.getWidth() - 1);
+				button.setWidth(button.getWidth() - 1);
+				_event.consume();
 				break;
 			case 'd':
-				b.setWidth(b.getWidth() + 1);
+				button.setWidth(button.getWidth() + 1);
+				_event.consume();
 				break;
 			case 'w':
-				b.setHeight(b.getHeight() - 1);
+				button.setHeight(button.getHeight() - 1);
+				_event.consume();
 				break;
 			case 's':
-				b.setHeight(b.getHeight() + 1);
+				button.setHeight(button.getHeight() + 1);
+				_event.consume();
 				break;
 		}
 	}
 });
 // END TEST
-
+*/
 			b.setBounds(5, 85, 290, 20);
-			b.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent _event) {
+			b.addActionListener(new GuiActionListener() {
+				public void actionPerformed(GuiActionEvent _event) {
 					m_display.stop();
 				}
 			});
 			add(b);
-			addKeyListener(new KeyAdapter() {
-				public void keyPressed(KeyEvent _event) {
-					switch (_event.getKeyCode()) {
-						case KeyEvent.VK_ESCAPE:
-							Window w = (Window)_event.getSource();
-							w.setVisible(false);
-							break;
-					}
-				}
-			});
 			
 			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f);
 			vb.setBounds(5, 110, 290, 10);
 			add(vb);
+			vb.addChangeListener(new GuiChangeListener() {
+				public void stateChanged(GuiChangeEvent _event) {
+					Float value = (Float)_event.getValue();
+					m_infoWindow.setValue(value.floatValue());
+				}
+			});
+
+			addKeyListener(new GuiKeyAdapter() {
+				public void keyPressed(GuiKeyEvent _event) {
+					switch (_event.getKeyCode()) {
+						case KeyEvent.VK_ESCAPE:
+							m_menuWindow.setVisible(false);
+							_event.consume();
+							break;
+					}
+				}
+			});
 		}
-}
+	}
 
 	class InfoWindow extends Window {
-		Text m_fps, m_objectCount, m_liveCount, m_mortalCount;
+		Text m_fps, m_value, m_liveCount, m_mortalCount;
 		ValueBar m_gfpsHorizontal, m_gfpsVertical;
 	
 		public InfoWindow() {
@@ -218,12 +232,12 @@ b.addKeyListener(new KeyAdapter() {
 			m_fps.setBounds(80, 5, 60, 20);
 			add(m_fps);
 
-			t = new Text("#objects");
+			t = new Text("value");
 			t.setBounds(5, 25, 75, 20);
 			add(t);
-			m_objectCount = new Text("?");
-			m_objectCount.setBounds(80, 25, 60, 20);
-			add(m_objectCount);
+			m_value = new Text("?");
+			m_value.setBounds(80, 25, 60, 20);
+			add(m_value);
 
 			t = new Text("#live");
 			t.setBounds(5, 45, 75, 20);
@@ -260,8 +274,12 @@ b.addKeyListener(new KeyAdapter() {
 			m_gfpsVertical.setValue(_fFps);
 		}
 	
-		public void setObjectCount(String _sCount) {
-			m_objectCount.setText(_sCount);
+		public void setValue(float _fValue) {
+			NumberFormat nf = NumberFormat.getNumberInstance();
+			nf.setMinimumFractionDigits(1);
+			nf.setMaximumFractionDigits(1);
+			Float f = new Float(_fValue);
+			m_value.setText(nf.format(f));
 		}
 	
 		public void setLiveCount(String _sCount) {
@@ -448,6 +466,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 11:21:48  tako
+ * Updated the code to use the new event system.
+ *
  * Revision 1.4  2003/11/19 09:27:22  tako
  * Added ValueBar as slider to the menu window.
  *
