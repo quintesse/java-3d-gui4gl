@@ -8,39 +8,49 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 81 $
+ * @version $Revision: 82 $
  */
 public class ValueBar extends Widget {
-	float m_min;
-	float m_max;
-	float m_value;
+	private float m_fMin;
+	private float m_fMax;
+	private float m_fValue;
 
-	GLColor m_barColor;
-	float m_fBarTransparancy;
-	GLColor m_focusedBarColor;
-	float m_fFocusedBarTransparancy;
+	private GLColor m_barColor;
+	private float m_fBarTransparancy;
+	private GLColor m_focusedBarColor;
+	private float m_fFocusedBarTransparancy;
 	
 	public ValueBar(float _min, float _max) {
-		m_min = _min;
-		m_max = _max;
+		m_fMin = _min;
+		m_fMax = _max;
 		m_barColor = (GLColor)Theme.getValue(getClass(), "barColor");
 		m_fBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy");
 		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), "focusedBarColor");
 		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), "focusedBarTransparancy");
 	}
 	
+	public float getValue() {
+		return m_fValue;
+	}
+	
 	public void setValue(float _value) {
-		m_value = _value;
+		m_fValue = _value;
 	}
 
-	public float getValue() {
-		return m_value;
-	}
 	public float getMinValue() {
-		return m_min;
+		return m_fMin;
 	}
+	
+	public void setMinValue(float _fValue) {
+		m_fMin = _fValue;
+	}
+	
 	public float getMaxValue() {
-		return m_max;
+		return m_fMax;
+	}
+	
+	public void setMaxValue(float _fValue) {
+		m_fMax = _fValue;
 	}
 	
 	public GLColor getBarColor() {
@@ -61,6 +71,10 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.4  2003/11/19 00:46:35  tako
+ * Added setters for min/max and value properties.
+ * Adjusted some names to be more consistent with the used coding style.
+ *
  * Revision 1.3  2003/11/19 00:29:29  tako
  * Added support to render the bar with transparancy.
  *
