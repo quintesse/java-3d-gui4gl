@@ -9,7 +9,7 @@ import org.codejive.gui4gl.themes.blues.BluesThemeConfig;
 
 /**
  * @author tako
- * @version $Revision: 56 $
+ * @version $Revision: 57 $
  */
 public class Theme {
 	private HashMap m_values;
@@ -69,9 +69,8 @@ public class Theme {
 
 	public static Theme getTheme() {
 		if (m_theme == null) {
-			m_theme = new Theme();
 			BluesThemeConfig config = new BluesThemeConfig();
-			config.configure();
+			loadTheme(config);
 		}
 		return m_theme;
 	}
@@ -79,10 +78,19 @@ public class Theme {
 	public static void setTheme(Theme _theme) {
 		m_theme = _theme;
 	}
+	
+	public static void loadTheme(ThemeConfig _config) {
+		m_theme = new Theme();
+		_config.configure();
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/18 12:52:47  tako
+ * Added loadTheme(ThemeConfig _config) to easily set an alternative
+ * global theme.
+ *
  * Revision 1.3  2003/11/18 11:58:53  tako
  * Added setTheme() on request.
  *
