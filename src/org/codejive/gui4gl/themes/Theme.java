@@ -9,7 +9,7 @@ import org.codejive.gui4gl.themes.blues.BluesThemeConfig;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 56 $
  */
 public class Theme {
 	private HashMap m_values;
@@ -75,10 +75,17 @@ public class Theme {
 		}
 		return m_theme;
 	}
+	
+	public static void setTheme(Theme _theme) {
+		m_theme = _theme;
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/18 11:58:53  tako
+ * Added setTheme() on request.
+ *
  * Revision 1.2  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
