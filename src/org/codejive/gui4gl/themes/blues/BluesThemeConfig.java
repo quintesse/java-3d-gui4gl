@@ -1,7 +1,7 @@
 /*
  * [gui4gl] OpenGL game-oriented GUI library
  * 
- * Copyright (C) 2003 Tako Schotanus, Steven Lagerweij
+ * Copyright (C) 2003 Tako Schotanus, Steven Lagerweij, Gertjan Assies
  * 
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by the
@@ -21,8 +21,6 @@
  */
 package org.codejive.gui4gl.themes.blues;
 
-import java.io.IOException;
-
 import net.java.games.jogl.util.GLUT;
 
 import org.codejive.gui4gl.GLText;
@@ -31,11 +29,10 @@ import org.codejive.gui4gl.themes.*;
 import org.codejive.gui4gl.widgets.*;
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
-import org.codejive.utils4gl.textures.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 230 $
+ * @version $Revision: 248 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -105,6 +102,26 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(ValueBar.class, "textFontColor#focused", new GLColor(0.0f, 0.0f, 0.0f));
 		Theme.setValue(ValueBar.class, "textFontColor", new GLColor(0.0f, 0.0f, 0.0f));
 		
+		// ScrollBar
+//		Theme.setValue(ScrollBar.class, "renderer", new ScrollBarRenderer());
+		Theme.setValue(ScrollBar.class, "backgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setFloatValue(ScrollBar.class, "transparancy", 0.0f);
+		Theme.setIntegerValue(ScrollBar.class, "xPadding", 1);
+		Theme.setIntegerValue(ScrollBar.class, "yPadding", 1);
+		Theme.setValue(ScrollBar.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
+		Theme.setFloatValue(ScrollBar.class, "transparancy#focused", 0.0f);
+		Theme.setValue(ScrollBar.class, "innerBar.renderer", new ScrollBarRenderer());
+		Theme.setIntegerValue(ScrollBar.class, "innerBar.xPadding", 1);
+		Theme.setValue(ScrollBar.class, "innerBar.barColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(ScrollBar.class, "innerBar.barTransparancy", 0.0f);
+		Theme.setValue(ScrollBar.class, "innerBar.barColor#focused", new GLColor(0.45f, 0.45f, 1.0f));
+		Theme.setValue(ScrollBar.class, "lessButton.backgroundColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(ScrollBar.class, "lessButton.transparancy", 0.0f);
+		Theme.setValue(ScrollBar.class, "lessButton.backgroundColor#focused", new GLColor(0.45f, 0.45f, 1.0f));
+		Theme.setValue(ScrollBar.class, "moreButton.backgroundColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(ScrollBar.class, "moreButton.transparancy", 0.0f);
+		Theme.setValue(ScrollBar.class, "moreButton.backgroundColor#focused", new GLColor(0.45f, 0.45f, 1.0f));
+		
 		// TextField
 		Theme.setValue(TextField.class, "renderer", new TextFieldRenderer());
 		Theme.setValue(TextField.class, "backgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
@@ -112,8 +129,8 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(TextField.class, "xPadding", 2);
 		Theme.setIntegerValue(TextField.class, "yPadding", 2);
 		Theme.setValue(TextField.class, "textFontColor", new GLColor(0.0f, 0.0f, 0.0f));
-		Theme.setValue(TextField.class, "textCursorColor", new GLColor(0.0f, 0.0f, 0.0f, .8f));
-		Theme.setIntegerValue(TextField.class, "textCursorBlinkSpeed", 1000); // in millis
+		Theme.setValue(TextField.class, "cursorColor", new GLColor(0.0f, 0.0f, 0.0f, .8f));
+		Theme.setIntegerValue(TextField.class, "cursorBlinkSpeed", 1000); // in millis
 		Theme.setValue(TextField.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 		Theme.setFloatValue(TextField.class, "transparancy#focused", 0.0f);
 		Theme.setValue(TextField.class, "textFontColor#focused", new GLColor(0.0f, 0.0f, 0.0f));
@@ -125,6 +142,10 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.17  2004/05/04 22:31:23  tako
+ * Added scrollbar attribute values.
+ * Changed the names of a couple of TextField attributes.
+ *
  * Revision 1.16  2004/03/17 00:41:17  tako
  * Removed background image for Windows because it looked horrible.
  *
