@@ -50,6 +50,8 @@ import org.codejive.gui4gl.themes.Theme;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Image;
 import org.codejive.gui4gl.widgets.Screen;
+import org.codejive.gui4gl.widgets.ScrollBar;
+import org.codejive.gui4gl.widgets.ScrollContainer;
 import org.codejive.gui4gl.widgets.Text;
 import org.codejive.gui4gl.widgets.TextField;
 import org.codejive.gui4gl.widgets.Toggle;
@@ -65,7 +67,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 234 $
+ * @version $Revision: 254 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -186,7 +188,7 @@ public class SimpleGui implements GLEventListener {
 			super("Test Window");
 			setCenterParent(true);
 			setWidth(300);
-			setHeight(200);
+			setHeight(220);
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
 			t.setBounds(5, 5, 290, 40);
@@ -259,8 +261,12 @@ b.addKeyListener(new GuiKeyAdapter() {
 //			vb.setBounds(310, 5, 25, 150);
 //			add(vb);			
 			
+			ScrollBar sb = new ScrollBar(100, 10);
+			sb.setBounds(5, 145, 290, 12);
+			add(sb);
+			
 			TextField tf = new TextField("Edit me");
-			tf.setBounds(5, 145, 290, 20);
+			tf.setBounds(5, 165, 290, 20);
 			add(tf);
 
 			addKeyListener(new GuiKeyAdapter() {
@@ -281,7 +287,7 @@ b.addKeyListener(new GuiKeyAdapter() {
 		ValueBar m_gfpsHorizontal, m_gfpsVertical;
 	
 		public InfoWindow() {
-			setBounds(10, -110, 150, 100);
+			setBounds(10, 340, 150, 100);
 			setFocusable(false);
 			setDraggable(false);
 		
@@ -357,8 +363,8 @@ b.addKeyListener(new GuiKeyAdapter() {
 		
 		public TestWindow(RenderContext _context) {
 			super("Test Window");
-			setBounds(-160, 10, 150, 120);
-			
+			setBounds(475, 10, 150, 125);
+
 			Texture img = null;
 			try {
 				img = TextureReader.readTexture(_context, "examples/gui4gl/toucan.png", true);
@@ -367,9 +373,13 @@ b.addKeyListener(new GuiKeyAdapter() {
 				e.printStackTrace();
 			}
 			Image imgw = new Image(img);
-			imgw.setBounds(5, 5, 140, 90);
+			imgw.setBounds(0, 0, 280, 180);
+//			imgw.setBounds(5, 5, 140, 90);
 //			imgw.setBackgroundColor(1.0f, 0.0f, 0.0f);
-			add(imgw);
+
+			ScrollContainer sc = new ScrollContainer(imgw);
+			sc.setBounds(0, 0, 150, 100);
+			add(sc);
 		}
 	}
 }
@@ -548,6 +558,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.17  2004/05/04 23:59:45  tako
+ * Added ScrollBar and ScrollContainer examples.
+ *
  * Revision 1.16  2004/03/17 00:52:27  tako
  * Updated the example app to include an Image widget.
  *
