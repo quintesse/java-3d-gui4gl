@@ -38,10 +38,11 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 184 $
+ * @version $Revision: 203 $
  */
 public class Widget implements Renderable {
-	private Container m_parent;
+	private CompoundWidget m_parent;
+	private String m_sName;
 	private Rectangle m_bounds;
 	private GLColor m_backgroundColor;
 	private float m_fTransparancy;
@@ -86,29 +87,30 @@ public class Widget implements Renderable {
 	
 	public Widget() {
 		m_parent = null;
+		m_sName = "";
 		m_bounds = new Rectangle();
-		m_backgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor");
-		m_fTransparancy = Theme.getFloatValue(getClass(), "transparancy");
-		m_backgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage");
-		m_nXPadding = Theme.getIntegerValue(getClass(), "xPadding");
-		m_nYPadding = Theme.getIntegerValue(getClass(), "yPadding");
-		m_textFont = (Font)Theme.getValue(getClass(), "textFont");
-		m_textFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor");
-		m_nTextAlignment = Theme.getIntegerValue(getClass(), "textAlignment");
-		m_focusedBackgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor#focused");
-		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), "transparancy#focused");
-		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage#focused");
-		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), "xPadding#focused");
-		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), "yPadding#focused");
-		m_focusedTextFont = (Font)Theme.getValue(getClass(), "textFont#focused");
-		m_focusedTextFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor#focused");
-		m_disabledBackgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor#disabled");
-		m_fDisabledTransparancy = Theme.getFloatValue(getClass(), "transparancy#disabled");
-		m_disabledBackgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage#disabled");
-		m_nDisabledXPadding = Theme.getIntegerValue(getClass(), "xPadding#disabled");
-		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), "yPadding#disabled");
-		m_disabledTextFont = (Font)Theme.getValue(getClass(), "textFont#disabled");
-		m_disabledTextFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor#disabled");
+		m_backgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor");
+		m_fTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy");
+		m_backgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage");
+		m_nXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding");
+		m_nYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding");
+		m_textFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont");
+		m_textFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor");
+		m_nTextAlignment = Theme.getIntegerValue(getClass(), getFullName(), "textAlignment");
+		m_focusedBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#focused");
+		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#focused");
+		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage#focused");
+		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#focused");
+		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#focused");
+		m_focusedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#focused");
+		m_focusedTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#focused");
+		m_disabledBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#disabled");
+		m_fDisabledTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#disabled");
+		m_disabledBackgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage#disabled");
+		m_nDisabledXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#disabled");
+		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#disabled");
+		m_disabledTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#disabled");
+		m_disabledTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#disabled");
 		m_bEnabled = true;
 		m_bVisible = true;
 		m_bCanHaveFocus = false;
@@ -121,11 +123,34 @@ public class Widget implements Renderable {
 		m_padding = new Padding();
 	}
 	
-	protected void setParent(Container _parent) {
+	public String getName() {
+		return m_sName;
+	}
+	
+	protected void setName(String _sName) {
+		m_sName = _sName;
+	}
+	
+	public String getFullName() {
+		String sName;
+		if (getParent() != null) {
+			String sFullParentName = getParent().getFullName();
+			if (sFullParentName.length() > 0) {
+				sName = sFullParentName + "." + getName();
+			} else {
+				sName = getName();
+			}
+		} else {
+			sName = getName();
+		}
+		return sName;
+	}
+	
+	protected void setParent(CompoundWidget _parent) {
 		m_parent = _parent;
 	}
 	
-	public Container getParent() {
+	public CompoundWidget getParent() {
 		return m_parent;
 	}
 	
@@ -135,7 +160,7 @@ public class Widget implements Renderable {
 	
 	public Screen getScreen() {
 		Screen screen;
-		Container parent = getParent();
+		CompoundWidget parent = getParent();
 		if (parent != null) {
 			screen = parent.getScreen();
 		} else {
@@ -568,7 +593,7 @@ public class Widget implements Renderable {
 	
 	protected void initWidget(RenderContext _context) {
 		calculateBounds();
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
 			renderer.initRendering(this, _context);
 		}
@@ -576,7 +601,7 @@ public class Widget implements Renderable {
 	
 	protected void updateWidget(RenderContext _context) {
 		calculateBounds();
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
 			renderer.updateRendering(this, _context);
 		}
@@ -593,7 +618,7 @@ public class Widget implements Renderable {
 	}
 	
 	protected void renderWidget(RenderContext _context) {
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
 			renderer.render(this, _context);
 		}
@@ -602,6 +627,13 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.15  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

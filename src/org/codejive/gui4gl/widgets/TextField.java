@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 184 $
+ * @version $Revision: 203 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -52,8 +52,8 @@ public class TextField extends Widget {
 	}
 
 	public TextField(String _sText) {
-		m_textCursorColor = (GLColor)Theme.getValue(getClass(), "textCursorColor");
-		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), "textCursorBlinkSpeed");
+		m_textCursorColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor");
+		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
 		
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
@@ -193,6 +193,13 @@ public class TextField extends Widget {
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.5  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

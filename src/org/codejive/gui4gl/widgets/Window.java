@@ -30,7 +30,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 184 $
+ * @version $Revision: 203 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -56,19 +56,19 @@ public class Window extends Toplevel {
 
 	public Window(String _sTitle) {
 		m_sTitle = _sTitle;
-		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), "titlebarHeight");
-		m_titlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor");
-		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy");
-		m_nCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding");
-		m_nCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding");
-		m_activeTitlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor#active");
-		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy#active");
-		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding#active");
-		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding#active");
-		m_disabledTitlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor#disabled");
-		m_fDisabledTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy#disabled");
-		m_nDisabledCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding#disabled");
-		m_nDisabledCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding#disabled");
+		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), getFullName(), "titlebarHeight");
+		m_titlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor");
+		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy");
+		m_nCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding");
+		m_nCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding");
+		m_activeTitlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#active");
+		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#active");
+		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#active");
+		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#active");
+		m_disabledTitlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#disabled");
+		m_fDisabledTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#disabled");
+		m_nDisabledCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#disabled");
+		m_nDisabledCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#disabled");
 		m_bCenterParent = false;
 		setVisible(false);
 	}
@@ -257,6 +257,13 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.10  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

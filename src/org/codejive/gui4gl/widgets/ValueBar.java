@@ -36,7 +36,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 198 $
+ * @version $Revision: 203 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -61,7 +61,7 @@ public class ValueBar extends Widget {
 	}
 	
 	public ValueBar(float _fMin, float _fMax, float _fStepSize) {
-		this(_fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
+		this(_fMin, _fMax, _fStepSize, false, GLText.ALIGN_CENTER);
 	}
 	
 	/**
@@ -79,12 +79,12 @@ public class ValueBar extends Widget {
 		m_fMin = _fMin;
 		m_fMax = _fMax;
 		m_fStepSize = _fStepSize;
-		m_barColor = (GLColor)Theme.getValue(getClass(), "barColor");
-		m_fBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy");
-		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), "barColor#focused");
-		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy#focused");
-		m_disabledBarColor = (GLColor)Theme.getValue(getClass(), "barColor#disabled");
-		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy#disabled");
+		m_barColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor");
+		m_fBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy");
+		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor#focused");
+		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#focused");
+		m_disabledBarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "barColor#disabled");
+		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#disabled");
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
 	}
@@ -244,6 +244,13 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.13  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.12  2003/12/14 00:28:10  steven
  * added some very basic support for showing the bar value in both horiz and vert. mode.
  * Still to be done is rendering the background for the bar ourselves.

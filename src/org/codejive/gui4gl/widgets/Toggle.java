@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 184 $
+ * @version $Revision: 203 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
@@ -58,15 +58,15 @@ public class Toggle extends Widget {
 	public Toggle(String _sCaption, boolean _bChecked) {
 		m_sCaption = _sCaption;
 		m_bChecked = _bChecked;
-		m_checkColor = (GLColor)Theme.getValue(getClass(), "checkColor");
-		m_checkBackgroundColor = (GLColor)Theme.getValue(getClass(), "checkBackgroundColor");
-		m_fCheckTransparancy = Theme.getFloatValue(getClass(), "checkTransparancy");
-		m_focusedCheckColor = (GLColor)Theme.getValue(getClass(), "checkColor#focused");
-		m_focusedCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), "checkBackgroundColor#focused");
-		m_fFocusedCheckTransparancy = Theme.getFloatValue(getClass(), "checkTransparancy#focused");
-		m_disabledCheckColor = (GLColor)Theme.getValue(getClass(), "checkColor#disabled");
-		m_disabledCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), "checkBackgroundColor#disabled");
-		m_fDisabledCheckTransparancy = Theme.getFloatValue(getClass(), "checkTransparancy#disabled");
+		m_checkColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor");
+		m_checkBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor");
+		m_fCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy");
+		m_focusedCheckColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#focused");
+		m_focusedCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#focused");
+		m_fFocusedCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#focused");
+		m_disabledCheckColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#disabled");
+		m_disabledCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#disabled");
+		m_fDisabledCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#disabled");
 		setFocusable(true);
 		
 		m_changeListeners = new ArrayList();
@@ -190,6 +190,13 @@ public class Toggle extends Widget {
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.4  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

@@ -36,7 +36,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 184 $
+ * @version $Revision: 203 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -56,12 +56,12 @@ public class Button extends Widget {
 
 	public Button(String _sCaption) {
 		m_sCaption = _sCaption;
-		m_selectedTextFont = (Font)Theme.getValue(getClass(), "textFont#selected");
-		m_selectedTextFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor#selected");
-		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), "xPadding#selected");
-		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), "yPadding#selected");
-		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor#selected");
-		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), "transparancy#selected");
+		m_selectedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#selected");
+		m_selectedTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#selected");
+		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#selected");
+		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#selected");
+		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#selected");
+		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#selected");
 		setFocusable(true);
 		
 		m_actionListeners = new ArrayList();
@@ -199,6 +199,13 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.8  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

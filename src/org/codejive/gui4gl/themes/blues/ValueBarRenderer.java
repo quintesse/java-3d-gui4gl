@@ -37,7 +37,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 198 $
+ * @version $Revision: 203 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
@@ -45,7 +45,7 @@ public class ValueBarRenderer implements WidgetRendererModel {
 	private GLColor m_textFontColor;
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
-		// nothing to do.
+		RenderHelper.initSuperClass(ValueBar.class, _widget, _context);
 	}
 
 	public void updateRendering(Widget _widget, RenderContext _context) {
@@ -190,6 +190,13 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.10  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.9  2003/12/14 00:28:10  steven
  * added some very basic support for showing the bar value in both horiz and vert. mode.
  * Still to be done is rendering the background for the bar ourselves.

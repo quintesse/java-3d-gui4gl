@@ -30,7 +30,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 203 $
  */
 public class RenderHelper {
 	
@@ -49,34 +49,34 @@ public class RenderHelper {
 		_gl.glVertex2f(_left + _width, _top);
 	}
 
-	protected static WidgetRendererModel findFirstSuperClassRenderer(Class _widgetClass) {
+	protected static WidgetRendererModel findFirstSuperClassRenderer(Class _widgetClass, Widget _widget) {
 		WidgetRendererModel renderer = null;
 		Class superClass = _widgetClass.getSuperclass();
 		if (superClass != null) {
-			renderer = (WidgetRendererModel)Theme.getValue(superClass, "renderer");
+			renderer = (WidgetRendererModel)Theme.getValue(superClass, _widget.getFullName(), "renderer");
 			if (renderer == null) {
-				renderer = findFirstSuperClassRenderer(superClass);
+				renderer = findFirstSuperClassRenderer(superClass, _widget);
 			}
 		}
 		return renderer;
 	}
 	
 	public static void initSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
 		if (renderer != null) {
 			renderer.initRendering(_widget, _context);
 		}
 	}
 
 	public static void updateSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
 		if (renderer != null) {
 			renderer.updateRendering(_widget, _context);
 		}
 	}
 
 	public static void renderSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
 		if (renderer != null) {
 			renderer.render(_widget, _context);
 		}
@@ -85,6 +85,13 @@ public class RenderHelper {
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.7  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

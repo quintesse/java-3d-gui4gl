@@ -28,7 +28,7 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 
 /**
  * @author tako
- * @version $Revision: 201 $
+ * @version $Revision: 203 $
  */
 public class Container extends CompoundWidget {
 	
@@ -92,6 +92,13 @@ public class Container extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/14 03:13:57  tako
+ * Widgets used in CompoundWidgets can now have their properties set
+ * specifically within the CompoundWidgets hierarchy. Each widget within
+ * a CompoundWidget can have a (unique) name which can be used in the
+ * Theme properties like <widgetname>.<propertyname>. If the hierarchy
+ * is more than one level deep the names are separated by dots as well.
+ *
  * Revision 1.13  2003/12/14 02:36:26  tako
  * CompoundWidget added that has almost all the functionality of Container
  * but with all protected methods meant for complex widgets. Container has
