@@ -13,7 +13,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 52 $
+ * @version $Revision: 53 $
  */
 public class GLText {
 	public static final int ALIGN_LEFT = 0;
@@ -118,14 +118,13 @@ public class GLText {
 			}
 		}
 	}
-	
-	private static boolean inWord(String _sText, int _nPos) {
-		return ((_nPos >= 0) && (_nPos < _sText.length()) && (_sText.charAt(_nPos) != ' ') && (_sText.charAt(_nPos-1) != ' '));
-	}
 }
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/18 11:02:38  tako
+ * Removed unused code.
+ *
  * Revision 1.3  2003/11/18 11:02:13  tako
  * Improved rendering speed quite a bit.
  *
