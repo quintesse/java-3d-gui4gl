@@ -4,21 +4,20 @@
 package org.codejive.gui4gl.widgets;
 
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.Renderable;
 import org.codejive.utils4gl.Texture;
+import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.events.GuiKeyListener;
 import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 79 $
+ * @version $Revision: 91 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -317,47 +316,26 @@ public class Widget implements Renderable {
 		// Override in subclass if needed
 	}
 	
-	public void addKeyListener(KeyListener _listener) {
+	public void addKeyListener(GuiKeyListener _listener) {
 		m_keyListeners.add(_listener);
 	}
 	
-	protected void processKeyPressedEvent(KeyEvent _event) {
-		_event.setSource(this);
-		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext() && !_event.isConsumed()) {
-				KeyListener listener = (KeyListener)i.next();
-				listener.keyPressed(_event);
-			}
-		}
+	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+		GuiKeyEvent.fireKeyPressed(m_keyListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
 			getParent().processKeyPressedEvent(_event);
 		}
 	}
 		
-	protected void processKeyReleasedEvent(KeyEvent _event) {
-		_event.setSource(this);
-		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext() && !_event.isConsumed()) {
-				KeyListener listener = (KeyListener)i.next();
-				listener.keyReleased(_event);
-			}
-		}
+	protected void processKeyReleasedEvent(GuiKeyEvent _event) {
+		GuiKeyEvent.fireKeyReleased(m_keyListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
 			getParent().processKeyReleasedEvent(_event);
 		}
 	}
 		
-	protected void processKeyTypedEvent(KeyEvent _event) {
-		_event.setSource(this);
-		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext() && !_event.isConsumed()) {
-				KeyListener listener = (KeyListener)i.next();
-				listener.keyTyped(_event);
-			}
-		}
+	protected void processKeyTypedEvent(GuiKeyEvent _event) {
+		GuiKeyEvent.fireKeyTyped(m_keyListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
 			getParent().processKeyTypedEvent(_event);
 		}
@@ -406,6 +384,12 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/19 11:19:41  tako
+ * Implemented completely new event system because tryin to re-use the
+ * AWT and Swing events just was too much trouble.
+ * Most names of events, listeners and adapters have been duplicated
+ * from their AWT/Swing counterparts only with a Gui prefix.
+ *
  * Revision 1.6  2003/11/19 00:18:44  tako
  * Added support for seperate X and Y padding.
  * Made several methods protected instead of public.

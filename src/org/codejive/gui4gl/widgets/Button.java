@@ -3,20 +3,20 @@
  */
 package org.codejive.gui4gl.widgets;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.codejive.gui4gl.events.GuiActionEvent;
+import org.codejive.gui4gl.events.GuiActionListener;
+import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 74 $
+ * @version $Revision: 91 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -158,7 +158,7 @@ public class Button extends Widget {
 		m_fSelectedTransparancy = _fTransparancy;
 	}
 
-	public void addActionListener(ActionListener _listener) {
+	public void addActionListener(GuiActionListener _listener) {
 		m_actionListeners.add(_listener);
 	}
 	
@@ -172,7 +172,7 @@ public class Button extends Widget {
 		return m_padding;
 	}
 	
-	protected void processKeyPressedEvent(KeyEvent _event) {
+	protected void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_ENTER:
@@ -184,18 +184,14 @@ public class Button extends Widget {
 		}
 	}
 	
-	protected void processKeyReleasedEvent(KeyEvent _event) {
+	protected void processKeyReleasedEvent(GuiKeyEvent _event) {
 		m_bSelected = false;
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_ENTER:
-				ActionEvent e = new ActionEvent(this, 0, null);
-				if (!_event.isConsumed() && !m_actionListeners.isEmpty()) {
-					Iterator i = m_actionListeners.iterator();
-					while (i.hasNext() && !_event.isConsumed()) {
-						ActionListener listener = (ActionListener)i.next();
-						listener.actionPerformed(e);
-					}
+				if (!_event.isConsumed()) {
+					GuiActionEvent e = new GuiActionEvent(this);
+					GuiActionEvent.fireActionPerformed(m_actionListeners, e);
 				}
 				break;
 			default:
@@ -203,7 +199,7 @@ public class Button extends Widget {
 				break;
 		}
 	}
-	
+
 	public boolean isSelected() {
 		return m_bSelected;
 	}
@@ -211,6 +207,12 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/19 11:19:41  tako
+ * Implemented completely new event system because tryin to re-use the
+ * AWT and Swing events just was too much trouble.
+ * Most names of events, listeners and adapters have been duplicated
+ * from their AWT/Swing counterparts only with a Gui prefix.
+ *
  * Revision 1.3  2003/11/19 00:12:31  tako
  * Added support for seperate X and Y padding.
  * Removed as much widget-specific paddings and replaced them by the

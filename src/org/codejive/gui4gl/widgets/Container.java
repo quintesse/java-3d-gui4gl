@@ -11,11 +11,12 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 75 $
+ * @version $Revision: 91 $
  */
 public class Container extends Widget {
 	private List m_children;
@@ -161,7 +162,7 @@ public class Container extends Widget {
 		return nextWidget;
 	}
 	
-	protected void processKeyPressedEvent(KeyEvent _event) {
+	protected void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_UP:
 				getFocusWidget().previousFocus().setFocus();
@@ -214,6 +215,12 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/19 11:19:41  tako
+ * Implemented completely new event system because tryin to re-use the
+ * AWT and Swing events just was too much trouble.
+ * Most names of events, listeners and adapters have been duplicated
+ * from their AWT/Swing counterparts only with a Gui prefix.
+ *
  * Revision 1.5  2003/11/19 00:12:57  tako
  * Made several methods protected instead of public.
  *

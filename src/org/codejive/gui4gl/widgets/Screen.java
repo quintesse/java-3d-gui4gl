@@ -6,24 +6,17 @@ package org.codejive.gui4gl.widgets;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import net.java.games.jogl.GL;
 
+import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 91 $
  */
 public class Screen extends Container implements KeyListener {
-	private List m_keyListeners;
-	
-	public Screen() {
-		m_keyListeners = new LinkedList();
-	}
 	
 	public Widget getPreviousFocusWidget(Widget _widget) {
 		return null;
@@ -41,50 +34,36 @@ public class Screen extends Container implements KeyListener {
 		return null;
 	}
 	
-	public void addKeyListener(KeyListener _listener) {
-		m_keyListeners.add(_listener);
-	}
-	
-	public void removeKeyListener(KeyListener _listener) {
-		m_keyListeners.remove(_listener);
-	}
-	
 	public void keyPressed(KeyEvent _event) {
 		Widget w = getFocusWidget();
 		if (w != null) {
-			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
+			GuiKeyEvent e = new GuiKeyEvent(w, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			w.processKeyPressedEvent(e);
 		} else {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext()) {
-				((KeyListener)i.next()).keyPressed(_event);
-			}
+			GuiKeyEvent e = new GuiKeyEvent(this, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			processKeyPressedEvent(e);
 		}
 	}
 		
 	public void keyReleased(KeyEvent _event) {
 		Widget w = getFocusWidget();
 		if (w != null) {
-			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
+			GuiKeyEvent e = new GuiKeyEvent(w, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			w.processKeyReleasedEvent(e);
 		} else {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext()) {
-				((KeyListener)i.next()).keyReleased(_event);
-			}
+			GuiKeyEvent e = new GuiKeyEvent(this, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			processKeyReleasedEvent(e);
 		}
 	}
 		
 	public void keyTyped(KeyEvent _event) {
 		Widget w = getFocusWidget();
 		if (w != null) {
-			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
+			GuiKeyEvent e = new GuiKeyEvent(w, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			w.processKeyTypedEvent(e);
 		} else {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext()) {
-				((KeyListener)i.next()).keyTyped(_event);
-			}
+			GuiKeyEvent e = new GuiKeyEvent(this, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			processKeyTypedEvent(e);
 		}
 	}
 
@@ -128,6 +107,12 @@ public class Screen extends Container implements KeyListener {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/19 11:19:41  tako
+ * Implemented completely new event system because tryin to re-use the
+ * AWT and Swing events just was too much trouble.
+ * Most names of events, listeners and adapters have been duplicated
+ * from their AWT/Swing counterparts only with a Gui prefix.
+ *
  * Revision 1.5  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *

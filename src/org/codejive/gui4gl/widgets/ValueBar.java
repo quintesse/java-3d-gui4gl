@@ -4,19 +4,18 @@
 package org.codejive.gui4gl.widgets;
 
 import java.awt.event.KeyEvent;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import org.codejive.gui4gl.events.GuiChangeEvent;
+import org.codejive.gui4gl.events.GuiChangeListener;
+import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 86 $
+ * @version $Revision: 91 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -111,43 +110,31 @@ public class ValueBar extends Widget {
 		m_fFocusedBarTransparancy = _fTransparancy;
 	}	
 	
-	public class ValueChangeEvent extends ChangeEvent {
-		private Object m_value;
-		
-		public ValueChangeEvent(Object _source, Object _value) {
-			super(_source);
-			m_value = _value;
-		}
-		
-		public Object getValue() {
-			return m_value;
-		}
-	}
-	
-	public void addChangeListener(ChangeListener _listener) {
+	public void addChangeListener(GuiChangeListener _listener) {
 		m_changeListeners.add(_listener);
 	}
 	
-	protected void processKeyPressedEvent(KeyEvent _event) {
+	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+		GuiChangeEvent e;
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				m_fValue -= m_fStepSize;
-				if (m_fValue > m_fMax) {
-					m_fValue = m_fMax;
+				if (!_event.isConsumed()) {
+					m_fValue -= m_fStepSize;
+					if (m_fValue < m_fMin) {
+						m_fValue = m_fMin;
+					}
+					e = new GuiChangeEvent(this, new Float(m_fValue));
+					GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 				}
 				break;
 			case KeyEvent.VK_RIGHT:
-				m_fValue += m_fStepSize;
-				if (m_fValue < m_fMin) {
-					m_fValue = m_fMin;
-				}
-				ValueChangeEvent e = new ValueChangeEvent(this, new Float(m_fValue));
-				if (!_event.isConsumed() && !m_changeListeners.isEmpty()) {
-					Iterator i = m_changeListeners.iterator();
-					while (i.hasNext() && !_event.isConsumed()) {
-						ChangeListener listener = (ChangeListener)i.next();
-						listener.stateChanged(e);
+				if (!_event.isConsumed()) {
+					m_fValue += m_fStepSize;
+					if (m_fValue > m_fMax) {
+						m_fValue = m_fMax;
 					}
+					e = new GuiChangeEvent(this, new Float(m_fValue));
+					GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 				}
 				break;
 			default:
@@ -158,6 +145,12 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.7  2003/11/19 11:19:41  tako
+ * Implemented completely new event system because tryin to re-use the
+ * AWT and Swing events just was too much trouble.
+ * Most names of events, listeners and adapters have been duplicated
+ * from their AWT/Swing counterparts only with a Gui prefix.
+ *
  * Revision 1.6  2003/11/19 09:09:31  tako
  * Implemented user interaction to be able to use the bar as a slider.
  * Support ChangeListeners.
