@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.java.games.jogl.GL;
-
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.RenderObserver;
 import org.codejive.utils4gl.Renderable;
@@ -40,7 +38,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 251 $
+ * @version $Revision: 263 $
  */
 public class Widget implements Renderable {
 	private Screen m_screen;
@@ -394,13 +392,6 @@ public class Widget implements Renderable {
 		initWidget(_context);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.codejive.world3d.Renderable#initRendering(org.codejive.world3d.RenderContext)
-	 */
-	public void updateRendering(RenderContext _context) {
-		updateWidget(_context);
-	}
-	
 	protected void initWidget(RenderContext _context) {
 		calculateBounds(_context);
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(this, "renderer");
@@ -409,14 +400,6 @@ public class Widget implements Renderable {
 		}
 	}
 	
-	protected void updateWidget(RenderContext _context) {
-		calculateBounds(_context);
-		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(this, "renderer");
-		if (renderer != null) {
-			renderer.updateRendering(this, _context);
-		}
-	}
-
 	public void render(RenderContext _context, RenderObserver _observer) {
 		if (isVisible()) {
 			calculateBounds(_context);
@@ -448,6 +431,9 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.23  2004/10/17 11:06:22  tako
+ * Removed updateRendering() and updateWidget().
+ *
  * Revision 1.22  2004/05/04 23:56:41  tako
  * Removed feature where negative x/y positions would be offsets from the opposite side.
  * Negative positions are not specail cases anymore and will move the widget outside the parent boundaries.
