@@ -41,7 +41,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 123 $
+ * @version $Revision: 139 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -143,6 +143,9 @@ class SimpleGui implements GLEventListener {
 		glu.gluPerspective(45.0f, h, 1.0, 20.0);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
+
+		// Update the GUI because of the new dimensions
+		m_screen.updateRendering(m_context);
 	}
 
 
@@ -247,6 +250,7 @@ b.addKeyListener(new GuiKeyAdapter() {
 		public InfoWindow() {
 			setBounds(10, -110, 150, 100);
 			setFocusable(false);
+			setDraggable(false);
 		
 			Text t = new Text("FPS");
 			t.setBounds(5, 5, 75, 20);
@@ -490,6 +494,10 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/24 16:45:54  tako
+ * Window resize now properly updates the GUI.
+ * Made info window non-draggable.
+ *
  * Revision 1.9  2003/11/23 01:56:43  tako
  * Minor change to enable mouse support for the GUI.
  *
