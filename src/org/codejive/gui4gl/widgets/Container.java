@@ -4,10 +4,12 @@
 package org.codejive.gui4gl.widgets;
 
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Map;
 
 import org.codejive.utils4gl.RenderContext;
 
@@ -15,23 +17,55 @@ import org.codejive.utils4gl.RenderContext;
  * @author tako
  */
 public class Container extends Widget implements AbstractContainer {
-	private LinkedList m_children;
+	private List m_children;
+	private Map m_childNames;
 	private AbstractWidget m_focusWidget;
 
+	private static int m_nWidgetNr = 0;
+	
 	public Container() {
 		m_children = new LinkedList();
+		m_childNames = new HashMap();
 		m_focusWidget = null;
 	}
 	
-	public void add(Widget _child) {
+	public void add(AbstractWidget _child) {
+		add(_child, "widget" + m_nWidgetNr++);
+	}
+	
+	public void add(AbstractWidget _child, String _sName) {
 		m_children.add(_child);
+		m_childNames.put(_sName, _child);
 		_child.setParent(this);
 	}
 	
-	public List getChildren() {
-		return m_children;
+	public AbstractWidget getChild(String _sName) {
+		return (Widget)m_childNames.get(_sName);
+	}
+
+	public Iterator getChildren() {
+		return m_children.iterator();
 	}
 	
+	public AbstractWidget findChild(String _sName) {
+		AbstractWidget found = null;
+		// First see if the current container contains a widget with the given name
+		AbstractWidget child = getChild(_sName);
+		if (child == null) {
+			Iterator i = getChildren();
+			while ((found == null) && i.hasNext()) {
+				child = (AbstractWidget)i.next();
+				if (child instanceof Container) {
+					found = ((Container)child).findChild(_sName);
+				}
+			}
+		} else {
+			found = child;
+		}
+		// Now see if any of our children is a container and has 
+		return found;
+	}
+
 	public boolean isFocusable() {
 		return false;
 	}
@@ -40,7 +74,7 @@ public class Container extends Widget implements AbstractContainer {
 		return m_focusWidget;
 	}
 	
-	public void setFocusWidget(Widget _widget) {
+	public void setFocusWidget(AbstractWidget _widget) {
 		m_focusWidget = _widget;
 		if (getParent() != null) {
 			getParent().setFocusWidget(_widget);
@@ -151,7 +185,7 @@ public class Container extends Widget implements AbstractContainer {
 	}
 	
 	public void initChildren(RenderContext _context) {
-		Iterator i = getChildren().iterator();
+		Iterator i = getChildren();
 		while (i.hasNext()) {
 			Widget w = (Widget)i.next();
 			w.initRendering(_context);
@@ -169,7 +203,7 @@ public class Container extends Widget implements AbstractContainer {
 	}
 	
 	public void renderChildren(RenderContext _context) {
-		Iterator i = getChildren().iterator();
+		Iterator i = getChildren();
 		while (i.hasNext()) {
 			Widget w = (Widget)i.next();
 			w.render(_context);
