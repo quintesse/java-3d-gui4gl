@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 93 $
+ * @version $Revision: 98 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -45,6 +45,7 @@ public class BluesThemeConfig implements ThemeConfig {
 			Theme.setValue(Window.class, "backgroundImage", TextureReader.readTexture("org/codejive/gui4gl/themes/blues/images/Prairie Wind.bmp", true));
 			Theme.setValue(Window.class, "focusedBackgroundImage", Theme.getValue(Window.class, "backgroundImage"));
 		} catch (IOException e) { /* ignore */ }
+		Theme.setIntegerValue(Window.class, "titlebarHeight", 25);
 		Theme.setValue(Window.class, "titlebarColor", new GLColor(0.16f, 0.16f, 1.0f));
 		Theme.setFloatValue(Window.class, "titlebarTransparancy", 0.3f);
 		Theme.setValue(Window.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_18));
@@ -109,6 +110,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/20 00:40:49  tako
+ * Added titlebarHeight property.
+ *
  * Revision 1.7  2003/11/19 17:11:54  steven
  * Preliminary check in of Text widget editing
  *
