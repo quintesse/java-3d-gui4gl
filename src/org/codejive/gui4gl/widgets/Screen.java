@@ -35,7 +35,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 190 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -53,7 +53,11 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	}
 	
 	public Toplevel getActiveToplevel() {
-		return getFocusWidget().getToplevel();
+		if (getFocusWidget() != null) {
+			return getFocusWidget().getToplevel();
+		} else {
+			return null;
+		}
 	}
 	
 	public void add(Widget _child, String _sName) {
@@ -184,10 +188,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		m_widgetPressed = w;
 		handleMouseHoover(w);
 		if (w != null) {
-			GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_PRESSED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_PRESSED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			w.processMousePressedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_PRESSED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_PRESSED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			processMousePressedEvent(e);
 		}
 	}
@@ -199,18 +203,18 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
 		handleMouseHoover(w);
 		if (m_widgetPressed != null) {
-			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_RELEASED, _event.getModifiersEx(), _event.getX(), -1, -1, _event.getY(), _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_RELEASED, _event.getButton(), _event.getModifiersEx(), _event.getX(), -1, -1, _event.getY(), _event.getClickCount());
 			m_widgetPressed.processMouseReleasedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_RELEASED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_RELEASED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			processMouseReleasedEvent(e);
 		}
 		if (w == m_widgetPressed) {
 			if (w != null) {
-				GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_CLICKED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+				GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_CLICKED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 				w.processMouseClickedEvent(e);
 			} else {
-				GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_CLICKED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+				GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_CLICKED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 				processMouseClickedEvent(e);
 			}
 		}
@@ -260,10 +264,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		int nDeltaX = _event.getX() - m_nLastXPos;
 		int nDeltaY = _event.getY() - m_nLastYPos;
 		if (m_widgetPressed == null) {
-			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_MOVED, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_MOVED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
 			processMouseMovedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_DRAGGED, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_DRAGGED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
 			m_widgetPressed.processMouseDraggedEvent(e);
 		}
 		m_nLastXPos = _event.getX();
@@ -273,6 +277,11 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/11 10:49:25  tako
+ * All mouse events now include information about which button changed
+ * state.
+ * Fixed null pointer exception in getActiveToplevel().
+ *
  * Revision 1.12  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *
