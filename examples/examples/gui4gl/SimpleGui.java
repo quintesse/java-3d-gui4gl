@@ -41,7 +41,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 118 $
+ * @version $Revision: 121 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -153,8 +153,8 @@ class SimpleGui implements GLEventListener {
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
 			t.setBounds(5, 5, 290, 40);
-			t.setFocusable(true);
 			add(t);
+			
 			Button b = new Button("Resume");
 			b.setBounds(5, 45, 290, 20);
 			add(b);
@@ -488,6 +488,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/21 10:53:35  steven
+ * NO longer makes the text widget focusable
+ *
  * Revision 1.7  2003/11/21 10:03:17  steven
  * Removed warnings and added textfield editing example
  *
