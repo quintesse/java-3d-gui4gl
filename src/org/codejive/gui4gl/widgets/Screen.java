@@ -107,7 +107,4 @@ public class Screen extends Container implements KeyListener {
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glPopMatrix (); 		
 	}
-
-	public void renderWidget(RenderContext _context) {
-	}
 }
