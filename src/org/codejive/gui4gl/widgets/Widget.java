@@ -19,7 +19,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 156 $
+ * @version $Revision: 157 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -375,37 +375,22 @@ public class Widget implements Renderable {
 	protected void processMousePressedEvent(GuiMouseEvent _event) {
 		setFocus();
 		GuiMouseEvent.fireMousePressed(m_mouseListeners, _event);
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processMousePressedEvent(_event);
-		}
 	}
 	
 	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
 		GuiMouseEvent.fireMouseReleased(m_mouseListeners, _event);
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processMouseReleasedEvent(_event);
-		}
 	}
 	
 	protected void processMouseClickedEvent(GuiMouseEvent _event) {
 		GuiMouseEvent.fireMouseClicked(m_mouseListeners, _event);
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processMouseClickedEvent(_event);
-		}
 	}
 	
 	protected void processMouseMovedEvent(GuiMouseEvent _event) {
 		GuiMouseEvent.fireMouseMoved(m_mouseListeners, _event);
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processMouseMovedEvent(_event);
-		}
 	}
 	
 	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
 		GuiMouseEvent.fireMouseDragged(m_mouseListeners, _event);
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processMouseDraggedEvent(_event);
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -465,6 +450,10 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/25 00:39:21  tako
+ * Prevented mouse events from bubbling up the hierarchy. Not sure what
+ * the proper way of handling this should be though.
+ *
  * Revision 1.12  2003/11/25 00:29:39  tako
  * Removed visibility check for ini- and updatetRendering() because they
  * messed up the GUI layout for Windows that were invisible when the
