@@ -30,22 +30,21 @@ import org.codejive.gui4gl.fonts.*;
 import org.codejive.gui4gl.themes.*;
 import org.codejive.gui4gl.widgets.*;
 import org.codejive.utils4gl.GLColor;
-import org.codejive.utils4gl.TextureReader;
+import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.textures.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 199 $
+ * @version $Revision: 221 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
-	/* (non-Javadoc)
-	 * @see org.codejive.world3d.gui.ThemeConfig#configure()
-	 */
-	public void configure() {
+	public void configure(RenderContext _context) {
 		// Widget
 		Theme.setValue(Widget.class, "renderer", new WidgetRenderer());
 		Theme.setValue(Widget.class, "backgroundColor", new GLColor(0.45f, 0.45f, 1.0f));
 		Theme.setFloatValue(Widget.class, "transparancy", 1.0f);
+		Theme.setValue(Widget.class, "backgroundImage", null);
 		Theme.setValue(Widget.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Widget.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setIntegerValue(Widget.class, "textAlignment", GLText.ALIGN_LEFT);
@@ -63,9 +62,10 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Window.class, "renderer", new WindowRenderer());
 		Theme.setFloatValue(Window.class, "transparancy", 0.6f);
 		try {
-			Theme.setValue(Window.class, "backgroundImage", TextureReader.readTexture("org/codejive/gui4gl/themes/blues/images/Prairie Wind.bmp", true));
-			Theme.setValue(Window.class, "focusedBackgroundImage", Theme.getValue(Window.class, "backgroundImage"));
-		} catch (IOException e) { /* ignore */ }
+			Theme.setValue(Window.class, "backgroundImage", TextureReader.readTexture(_context, "org/codejive/gui4gl/themes/blues/images/Prairie Wind.bmp", true));
+		} catch (IOException e) {
+			throw new ThemeConfigException("Could not set window background image", e);
+		}
 		Theme.setIntegerValue(Window.class, "titlebarHeight", 25);
 		Theme.setValue(Window.class, "titlebarColor", new GLColor(0.16f, 0.16f, 1.0f));
 		Theme.setFloatValue(Window.class, "titlebarTransparancy", 0.3f);
@@ -127,6 +127,11 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.15  2004/03/07 18:19:43  tako
+ * configure() must now be passed a valid RenderContext.
+ * The attribute "backgroundImage" is now properly affected by style
+ * class indicators like "#focused".
+ *
  * Revision 1.14  2003/12/14 00:29:04  steven
  * added & changed text font color for the valuebar widget
  *
