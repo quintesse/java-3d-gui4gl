@@ -14,7 +14,8 @@ import org.codejive.utils4gl.Texture;
  * @author tako
  */
 public interface AbstractWidget {
-	public abstract Container getParent();
+	public abstract AbstractContainer getParent();
+	public abstract void setParent(AbstractContainer _parent);
 	public abstract Screen getScreen();
 	public abstract boolean isFocusable();
 	public abstract void setFocusable(boolean _bCanHaveFocus);
