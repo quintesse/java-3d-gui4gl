@@ -29,49 +29,24 @@ import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.themes.Theme;
-import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 233 $
+ * @version $Revision: 239 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
 	private boolean m_bChecked;
-	private GLColor m_checkColor;
-	private GLColor m_checkBackgroundColor;
-	private float m_fCheckTransparancy;
-	private GLColor m_focusedCheckColor;
-	private GLColor m_focusedCheckBackgroundColor;
-	private float m_fFocusedCheckTransparancy;
-	private GLColor m_disabledCheckColor;
-	private GLColor m_disabledCheckBackgroundColor;
-	private float m_fDisabledCheckTransparancy;
 	
 	private List m_changeListeners;
 	
 	public Toggle() {
-		this(null, null, false);
+		this(null, false);
 	}
 
 	public Toggle(String _sCaption, boolean _bChecked) {
-		this(null, _sCaption, _bChecked);
-	}
-	
-	public Toggle(String _sName, String _sCaption, boolean _bChecked) {
-		super(_sName);
 		m_sCaption = _sCaption;
 		m_bChecked = _bChecked;
-		m_checkColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkColor"));
-		m_checkBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor"));
-		m_fCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy");
-		m_focusedCheckColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#focused"));
-		m_focusedCheckBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#focused"));
-		m_fFocusedCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#focused");
-		m_disabledCheckColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#disabled"));
-		m_disabledCheckBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#disabled"));
-		m_fDisabledCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#disabled");
 		setFocusable(true);
 		
 		m_changeListeners = new ArrayList();
@@ -91,78 +66,7 @@ public class Toggle extends Widget {
 	
 	public void setChecked(boolean _bChecked) {
 		m_bChecked = _bChecked;
-	}
-	
-	public GLColor getCheckColor() {
-		return m_checkColor;
-	}
-	
-	public void setCheckColor(GLColor _color) {
-		m_checkColor = _color;
-	}
-	
-	public GLColor getCheckBackgroundColor() {
-		return m_checkBackgroundColor;
-	}
-	
-	public void setCheckBackgroundColor(GLColor _color) {
-		m_checkBackgroundColor = _color;
-	}
-	
-	public float getCheckTransparancy() {
-		return m_fCheckTransparancy;
-	}
-	
-	public void setCheckTransparancy(float _fTransparancy) {
-		m_fCheckTransparancy = _fTransparancy;
-	}
-	
-	public GLColor getFocusedCheckColor() {
-		return m_focusedCheckColor;
-	}
-	
-	public void setFocusedCheckColor(GLColor _color) {
-		m_focusedCheckColor = _color;
-	}
-	
-	public GLColor getFocusedCheckBackgroundColor() {
-		return m_focusedCheckBackgroundColor;
-	}
-	
-	public void setFocusedCheckBackgroundColor(GLColor _color) {
-		m_focusedCheckBackgroundColor = _color;
-	}
-	
-	public float getFocusedCheckTransparancy() {
-		return m_fFocusedCheckTransparancy;
-	}
-	
-	public void setFocusedCheckTransparancy(float _fTransparancy) {
-		m_fFocusedCheckTransparancy = _fTransparancy;
-	}
-	
-	public GLColor getDisabledCheckColor() {
-		return m_disabledCheckColor;
-	}
-	
-	public void setDisabledCheckColor(GLColor _color) {
-		m_disabledCheckColor = _color;
-	}
-	
-	public GLColor getDisabledCheckBackgroundColor() {
-		return m_disabledCheckBackgroundColor;
-	}
-	
-	public void setDisabledCheckBackgroundColor(GLColor _color) {
-		m_disabledCheckBackgroundColor = _color;
-	}
-	
-	public float getDisabledCheckTransparancy() {
-		return m_fDisabledCheckTransparancy;
-	}
-	
-	public void setDisabledCheckTransparancy(float _fTransparancy) {
-		m_fDisabledCheckTransparancy = _fTransparancy;
+		fireChangeEvent();
 	}
 	
 	public void addChangeListener(GuiChangeListener _listener) {
@@ -186,15 +90,22 @@ public class Toggle extends Widget {
 	protected void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {
-			m_bChecked = !m_bChecked;
-			GuiChangeEvent e = new GuiChangeEvent(this, new Boolean(m_bChecked));
-			GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+			setChecked(!isChecked());
 		}
+	}
+	
+	protected void fireChangeEvent() {
+		GuiChangeEvent e = new GuiChangeEvent(this, new Boolean(isChecked()));
+		GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.9  2004/05/04 22:05:43  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ * Consolidated event firing code into separate methods.
+ *
  * Revision 1.8  2004/03/17 00:50:46  tako
  * Colors are now cloned during initialization to prevent others from messing
  * up the Themes.

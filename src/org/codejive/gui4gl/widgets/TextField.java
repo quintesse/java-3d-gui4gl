@@ -29,37 +29,24 @@ import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.themes.Theme;
-import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 233 $
+ * @version $Revision: 239 $
  */
 public class TextField extends Widget {
 	private String m_sText;
 	
-	private GLColor m_textCursorColor;
-	private int m_nCursorBlinkSpeed;
-
 	private List m_changeListeners;
 
 	private int m_nCursorPos;
 	private int m_nViewOffset;
 	
 	public TextField() {
-		this(null, "");
+		this("");
 	}
 
 	public TextField(String _sText) {
-		this(null, _sText);
-	}
-	
-	public TextField(String _sName, String _sText) {
-		super(_sName);
-		m_textCursorColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor"));
-		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
-		
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
 		setText(_sText);
@@ -71,16 +58,14 @@ public class TextField extends Widget {
 	
 	public void setText(String _sText) {
 		m_sText = _sText;
-		m_nCursorPos = m_sText.length();
-		m_nViewOffset = 0;
-	}
-	
-	public GLColor getTextCursorColor() {
-		return m_textCursorColor;
-	}
-	
-	public void setTextCursorColor(GLColor _color) {
-		m_textCursorColor = _color;
+		int l = m_sText.length();
+		if (m_nCursorPos > l) {
+			m_nCursorPos = l;
+		}
+		if (m_nViewOffset > l) {
+			m_nViewOffset = l;
+		}
+		fireChangeEvent();
 	}
 	
 	public int getViewOffset() {
@@ -89,14 +74,6 @@ public class TextField extends Widget {
 	
 	public void setViewOffset(int _nViewOffset) {
 		m_nViewOffset = _nViewOffset;
-	}
-	
-	public int getCursorBlinkSpeed() {
-		return m_nCursorBlinkSpeed;
-	}
-	
-	public void setCursorBlinkSpeed(int _nCursorBlinkSpeed) {
-		m_nCursorBlinkSpeed = _nCursorBlinkSpeed;
 	}
 	
 	public int getCursorPos() {
@@ -151,19 +128,16 @@ public class TextField extends Widget {
 				case KeyEvent.VK_DELETE :
 					_event.consume();
 					if(m_nCursorPos < m_sText.length()) {
-						m_sText = m_sText.substring(0, m_nCursorPos) + m_sText.substring(m_nCursorPos + 1);
-						e = new GuiChangeEvent(this, m_sText);
-						GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+						setText(m_sText.substring(0, m_nCursorPos) + m_sText.substring(m_nCursorPos + 1));
 						break;
 					}
 					// fallthrough to work as backspace when at end of text
 				case KeyEvent.VK_BACK_SPACE :
 					_event.consume();
 					if(m_nCursorPos > 0) {
-						m_sText = m_sText.substring(0, m_nCursorPos-1) + m_sText.substring(m_nCursorPos);
-						m_nCursorPos--;
-						e = new GuiChangeEvent(this, m_sText);
-						GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+						int p = m_nCursorPos;
+						setText(m_sText.substring(0, m_nCursorPos-1) + m_sText.substring(m_nCursorPos));
+						m_nCursorPos = p - 1;
 					}
 					break;
 					
@@ -172,10 +146,9 @@ public class TextField extends Widget {
 					
 					if((cKeyChar != KeyEvent.CHAR_UNDEFINED) && (_event.getKeyCode() != KeyEvent.VK_ESCAPE) && (_event.getKeyCode() != KeyEvent.VK_ENTER)) {
 						_event.consume();
-						m_sText = m_sText.substring(0, m_nCursorPos) + String.valueOf(cKeyChar) + m_sText.substring(m_nCursorPos);
-						m_nCursorPos++;
-						e = new GuiChangeEvent(this, m_sText);
-						GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+						int p = m_nCursorPos;
+						setText(m_sText.substring(0, m_nCursorPos) + String.valueOf(cKeyChar) + m_sText.substring(m_nCursorPos));
+						m_nCursorPos = p + 1;
 					} else {
 						super.processKeyPressedEvent(_event);
 					}
@@ -194,10 +167,19 @@ public class TextField extends Widget {
 			// we have a way to do some font calculations in this part of the code
 		}
 	}
+	
+	protected void fireChangeEvent() {
+		GuiChangeEvent e = new GuiChangeEvent(this, getText());
+		GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/04 22:05:43  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ * Consolidated event firing code into separate methods.
+ *
  * Revision 1.9  2004/03/17 00:50:46  tako
  * Colors are now cloned during initialization to prevent others from messing
  * up the Themes.

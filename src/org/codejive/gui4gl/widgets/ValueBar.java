@@ -31,94 +31,55 @@ import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.themes.Theme;
-import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 233 $
+ * @version $Revision: 239 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
 	private float m_fMax;
 	private float m_fValue;
 	private float m_fStepSize;
-
-	private GLColor m_barColor;
-	private float m_fBarTransparancy;
-	private GLColor m_focusedBarColor;
-	private float m_fFocusedBarTransparancy;
-	private GLColor m_disabledBarColor;
-	private float m_fDisabledBarTransparancy;
-
+	private int m_nOrientation;
 	private boolean m_bShowValue = false;
 	private int m_lAlignment = GLText.ALIGN_CENTER;
-	
+
 	private List m_changeListeners;
 	
 	public ValueBar(float _fMin, float _fMax) {
-		this(null, _fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
-	}
-	
-	public ValueBar(String _sName, float _fMin, float _fMax) {
-		this(_sName, _fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
+		this(_fMin, _fMax, 1.0f, Orientation.DEFAULT, false, GLText.ALIGN_CENTER);
 	}
 	
 	public ValueBar(float _fMin, float _fMax, float _fStepSize) {
-		this(null, _fMin, _fMax, _fStepSize, false, GLText.ALIGN_CENTER);
-	}
-	
-	public ValueBar(String _sName, float _fMin, float _fMax, float _fStepSize) {
-		this(_sName, _fMin, _fMax, _fStepSize, false, GLText.ALIGN_CENTER);
+		this(_fMin, _fMax, _fStepSize, Orientation.DEFAULT, false, GLText.ALIGN_CENTER);
 	}
 	
 	public ValueBar(float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
-		this(null, _fMin, _fMax, _fStepSize, _bShowValue, _lAlignment);
+		this(_fMin, _fMax, _fStepSize, Orientation.DEFAULT, _bShowValue, _lAlignment);
+	}
+	
+	public ValueBar(float _fMin, float _fMax, int _nOrientation) {
+		this(_fMin, _fMax, 1.0f, _nOrientation, false, GLText.ALIGN_CENTER);
+	}
+	
+	public ValueBar(float _fMin, float _fMax, float _fStepSize, int _nOrientation) {
+		this(_fMin, _fMax, _fStepSize, _nOrientation, false, GLText.ALIGN_CENTER);
 	}
 	
 	/**
-	 * @param _sName
-	 * @param _fMin
-	 * @param _fMax
-	 * @param _fStepSize
-	 * @param __bShowValue
 	 * @param _lAlignment see GLText for values.
 	 */
-	public ValueBar(String _sName, float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
-		super(_sName);
-		
+	public ValueBar(float _fMin, float _fMax, float _fStepSize, int _nOrientation, boolean _bShowValue, int _lAlignment) {
+		setMinValue(_fMin);
+		setMaxValue(_fMax);
+		setStepSize(_fStepSize);
+		setOrientation(_nOrientation);
 		setAlignment(_lAlignment);
 		setShowValue(_bShowValue);
 		
-		m_fMin = _fMin;
-		m_fMax = _fMax;
-		m_fStepSize = _fStepSize;
-		m_barColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "barColor"));
-		m_fBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy");
-		m_focusedBarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "barColor#focused"));
-		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#focused");
-		m_disabledBarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "barColor#disabled"));
-		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "barTransparancy#disabled");
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
-	}
-	
-	public boolean isShowValue() {
-		return m_bShowValue;
-	}
-	public void setShowValue(boolean _bShowValue) {
-		m_bShowValue = _bShowValue;
-	}
-	
-	public void setAlignment(int _lAlignment) {
-		if(m_lAlignment == GLText.ALIGN_CENTER || m_lAlignment == GLText.ALIGN_LEFT || m_lAlignment == GLText.ALIGN_RIGHT) {
-			m_lAlignment = _lAlignment;
-		} else {
-			throw new RuntimeException("Invalid alignment specified. See GLText for valid alignments");
-		}
-	}
-	public int getAlignment() {
-		return m_lAlignment;
 	}
 	
 	public float getValue() {
@@ -127,6 +88,7 @@ public class ValueBar extends Widget {
 	
 	public void setValue(float _value) {
 		m_fValue = _value;
+		fireChangeEvent();
 	}
 
 	public float getMinValue() {
@@ -153,54 +115,67 @@ public class ValueBar extends Widget {
 		m_fStepSize = _fStepSize;
 	}
 	
-	public GLColor getBarColor() {
-		return m_barColor;
+	/**
+	 * Returns the current orientation of the scroll bar.
+	 * @return The orientation of the scroll bar
+	 */
+	public int getOrientation() {
+		return m_nOrientation;
 	}
 	
-	public void setBarColor(GLColor _color) {
-		m_barColor = _color;
+	/**
+	 * Sets the orientation of the scroll bar.
+	 * @param _nOrientation The new orientation of the scroll bar
+	 */
+	public void setOrientation(int _nOrientation) {
+		m_nOrientation = _nOrientation;
 	}
 	
-	public float getBarTransparancy() {
-		return m_fBarTransparancy;
-	}
-	
-	public void setBarTransparancy(float _fTransparancy) {
-		m_fBarTransparancy = _fTransparancy;
-	}
-	
-	public GLColor getFocusedBarColor() {
-		return m_focusedBarColor;
-	}
-	
-	public void setFocusedBarColor(GLColor _color) {
-		m_focusedBarColor = _color;
+	public boolean isShowValue() {
+		return m_bShowValue;
 	}
 
-	public float getFocusedBarTransparancy() {
-		return m_fFocusedBarTransparancy;
+	public void setShowValue(boolean _bShowValue) {
+		m_bShowValue = _bShowValue;
 	}
 	
-	public void setFocusedBarTransparancy(float _fTransparancy) {
-		m_fFocusedBarTransparancy = _fTransparancy;
-	}	
-	
-	public GLColor getDisabledBarColor() {
-		return m_disabledBarColor;
-	}
-	
-	public void setDisabledBarColor(GLColor _color) {
-		m_disabledBarColor = _color;
+	public void setAlignment(int _lAlignment) {
+		if(m_lAlignment == GLText.ALIGN_CENTER || m_lAlignment == GLText.ALIGN_LEFT || m_lAlignment == GLText.ALIGN_RIGHT) {
+			m_lAlignment = _lAlignment;
+		} else {
+			throw new RuntimeException("Invalid alignment specified. See GLText for valid alignments");
+		}
 	}
 
-	public float getDisabledBarTransparancy() {
-		return m_fDisabledBarTransparancy;
+	public int getAlignment() {
+		return m_lAlignment;
+	}
+
+	/**
+	 * Returns the actual orientation for this widget.
+	 * If the orientation property is either HORIZONTAL or VERTICAL
+	 * this will just return the same value as getOrientation() but
+	 * if the value is DEFAULT this method will try to determine the
+	 * orientation by looking at the widget's bounds.
+	 * @return The actual orientation of this widget
+	 */
+	public int getActualOrientation() {
+		int orientation = getOrientation();
+		if (orientation == Orientation.DEFAULT) {
+			Rectangle barRect = getBounds();
+			if (barRect.height > barRect.width) {
+				orientation = Orientation.VERTICAL;
+			} else {
+				orientation = Orientation.HORIZONTAL;
+			}
+		}
+		return orientation;
 	}
 	
-	public void setDisabledBarTransparancy(float _fTransparancy) {
-		m_fDisabledBarTransparancy = _fTransparancy;
-	}	
-	
+	/**
+	 * Adds a listener for the change events that get fired when the user adjusts the value bar
+	 * @param _listener The GuiChangeListener to add
+	 */
 	public void addChangeListener(GuiChangeListener _listener) {
 		m_changeListeners.add(_listener);
 	}
@@ -250,14 +225,27 @@ public class ValueBar extends Widget {
 			float fPct = (float)(_event.getX() - bounds.x) / bounds.width;
 			float fRelVal = fPct * (m_fMax - m_fMin);
 			fRelVal = (int)((fRelVal + m_fStepSize / 2) / m_fStepSize) * m_fStepSize;
-			m_fValue = m_fMin + fRelVal;
-			GuiChangeEvent e = new GuiChangeEvent(this, new Float(m_fValue));
-			GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+			float fNewVal = getMinValue() + fRelVal;
+			if (fNewVal < m_fMin) {
+				fNewVal = m_fMin;
+			} else if (fNewVal > m_fMax) {
+				fNewVal = m_fMax;
+			}
+			setValue(fNewVal);
 		}
+	}
+	
+	protected void fireChangeEvent() {
+		GuiChangeEvent e = new GuiChangeEvent(this, new Float(getValue()));
+		GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 	}
 }
 /*
  * $Log$
+ * Revision 1.17  2004/05/04 22:05:43  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ * Consolidated event firing code into separate methods.
+ *
  * Revision 1.16  2004/03/17 00:50:46  tako
  * Colors are now cloned during initialization to prevent others from messing
  * up the Themes.

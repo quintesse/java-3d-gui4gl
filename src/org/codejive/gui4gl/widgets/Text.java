@@ -23,21 +23,16 @@ package org.codejive.gui4gl.widgets;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 239 $
  */
 public class Text extends Widget {
 	private String m_sText;
 	
 	public Text() {
-		this(null, null);
-	}
-
-	public Text(String _sText) {
-		this(null, _sText);
+		this(null);
 	}
 	
-	public Text(String _sName, String _sText) {
-		super(_sName);
+	public Text(String _sText) {
 		m_sText = _sText;
 	}
 
@@ -52,6 +47,10 @@ public class Text extends Widget {
 
 /*
  * $Log$
+ * Revision 1.9  2004/05/04 22:05:43  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ * Consolidated event firing code into separate methods.
+ *
  * Revision 1.8  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

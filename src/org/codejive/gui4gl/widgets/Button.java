@@ -30,44 +30,24 @@ import org.codejive.gui4gl.events.GuiActionEvent;
 import org.codejive.gui4gl.events.GuiActionListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.fonts.Font;
-import org.codejive.gui4gl.themes.Theme;
-import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 233 $
+ * @version $Revision: 239 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
-	private Font m_selectedTextFont;
-	private GLColor m_selectedTextFontColor;
-	private int m_nSelectedXPadding;
-	private int m_nSelectedYPadding;
-	private GLColor m_selectedBackgroundColor;
-	private float m_fSelectedTransparancy;
 	
 	private List m_actionListeners;
 	private boolean m_bSelected;
 	
 	public Button() {
-		this(null, null);
+		this(null);
 	}
 
 	public Button(String _sCaption) {
-		this(null, _sCaption);
-	}
-	
-	public Button(String _sName, String _sCaption) {
-		super(_sName);
 		m_sCaption = _sCaption;
-		m_selectedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#selected");
-		m_selectedTextFontColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#selected"));
-		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#selected");
-		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#selected");
-		m_selectedBackgroundColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#selected"));
-		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#selected");
 		setFocusable(true);
 		
 		m_actionListeners = new ArrayList();
@@ -82,66 +62,23 @@ public class Button extends Widget {
 		m_sCaption = _sCaption;
 	}
 	
-	public Font getSelectedTextFont() {
-		return m_selectedTextFont;
-	}
-	
-	public void setSelectedTextFont(Font _font) {
-		m_selectedTextFont = _font;
-	}
-	
-	public GLColor getSelectedTextFontColor() {
-		return m_selectedTextFontColor;
-	}
-	
-	public void setSelectedTextFontColor(GLColor _color) {
-		m_selectedTextFontColor = _color;
-	}
-	
-	public int getSelectedXPadding() {
-		return m_nSelectedXPadding;
-	}
-	
-	public void setSelectedXPadding(int _nPadding) {
-		m_nSelectedXPadding = _nPadding;
-	}
-	
-	public int getSelectedYPadding() {
-		return m_nSelectedYPadding;
-	}
-	
-	public void setSelectedYPadding(int _nPadding) {
-		m_nSelectedYPadding = _nPadding;
-	}
-	
-	public GLColor getSelectedBackgroundColor() {
-		return m_selectedBackgroundColor;
-	}
-	
-	public void setSelectedBackgroundColor(float _fRed, float _fGreen, float _fBlue) {
-		m_selectedBackgroundColor.set(_fRed, _fGreen, _fBlue);
-	}
-	
-	public void setSelectedBackgroundColor(GLColor _color) {
-		m_selectedBackgroundColor.set(_color);
-	}
-	
-	public float getSelectedTransparancy() {
-		return m_fSelectedTransparancy;
-	}
-	
-	public void setSelectedTransparancy(float _fTransparancy) {
-		m_fSelectedTransparancy = _fTransparancy;
-	}
-
 	public void addActionListener(GuiActionListener _listener) {
 		m_actionListeners.add(_listener);
 	}
 	
+	public void click() {
+		fireActionEvent();
+	}
+	
+	public boolean isSelected() {
+		return m_bSelected;
+	}
+	
 	protected void updateInnerBounds(RenderContext _context) {
 		if (isSelected()) {
-			int nXPad = getSelectedXPadding();
-			int nYPad = getSelectedYPadding();
+//			 FIXME: should handle padding!!
+			int nXPad = getIntegerAttribute("xPadding#selected");
+			int nYPad = getIntegerAttribute("yPadding#selected");
 			Rectangle bounds = getInnerBounds();
 			bounds.x += nXPad;
 			bounds.y += nYPad;
@@ -193,18 +130,22 @@ public class Button extends Widget {
 	protected void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {
-			GuiActionEvent e = new GuiActionEvent(this);
-			GuiActionEvent.fireActionPerformed(m_actionListeners, e);
+			click();
 		}
 	}
 	
-	public boolean isSelected() {
-		return m_bSelected;
+	protected void fireActionEvent() {
+		GuiActionEvent e = new GuiActionEvent(this);
+		GuiActionEvent.fireActionPerformed(m_actionListeners, e);
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.14  2004/05/04 22:05:43  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ * Consolidated event firing code into separate methods.
+ *
  * Revision 1.13  2004/03/17 00:50:46  tako
  * Colors are now cloned during initialization to prevent others from messing
  * up the Themes.
