@@ -12,7 +12,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 88 $
+ * @version $Revision: 142 $
  */
 public class RenderHelper {
 	
@@ -50,6 +50,13 @@ public class RenderHelper {
 		}
 	}
 
+	public static void updateSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
+		if (renderer != null) {
+			renderer.updateRendering(_widget, _context);
+		}
+	}
+
 	public static void renderSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
 		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass);
 		if (renderer != null) {
@@ -60,6 +67,9 @@ public class RenderHelper {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/24 16:48:14  tako
+ * Added updateSuperClass().
+ *
  * Revision 1.5  2003/11/19 10:01:55  steven
  * added a drawRectangle with primitive arguments to prevent unnecessary Rectangle creation in render methods
  *
