@@ -18,7 +18,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 79 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -26,15 +26,30 @@ public class Widget implements Renderable {
 	private GLColor m_backgroundColor;
 	private float m_fTransparancy;
 	private Texture m_backgroundImage;
+	private int m_nXPadding, m_nYPadding;
 	private GLColor m_focusedBackgroundColor;
 	private float m_fFocusedTransparancy;
 	private Texture m_focusedBackgroundImage;
+	private int m_nFocusedXPadding, m_nFocusedYPadding;
 	private boolean m_bVisible;
 	private boolean m_bCanHaveFocus;
 
 	private List m_keyListeners;
 
+	public class Padding {
+		public int xPadding, yPadding;
+		public Padding() {
+			xPadding = yPadding = 0;
+		}
+		public Padding(int _nXPadding, int _nYPadding) {
+			xPadding = _nXPadding;
+			yPadding = _nYPadding;
+		}
+	}
+	
 	private Rectangle m_bounds;
+	private Rectangle m_innerBounds;
+	protected Padding m_padding;
 	
 	public Widget() {
 		m_parent = null;
@@ -42,18 +57,24 @@ public class Widget implements Renderable {
 		m_backgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor");
 		m_fTransparancy = Theme.getFloatValue(getClass(), "transparancy");
 		m_backgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage");
+		m_nXPadding = Theme.getIntegerValue(getClass(), "xPadding");
+		m_nYPadding = Theme.getIntegerValue(getClass(), "yPadding");
 		m_focusedBackgroundColor = (GLColor)Theme.getValue(getClass(), "focusedBackgroundColor");
 		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), "focusedTransparancy");
 		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), "focusedBackgroundImage");
+		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), "focusedXPadding");
+		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), "focusedYPadding");
 		m_bVisible = true;
 		m_bCanHaveFocus = false;
 		
 		m_keyListeners = new ArrayList();
 
 		m_bounds = new Rectangle();
+		m_innerBounds = new Rectangle();
+		m_padding = new Padding();
 	}
 	
-	public void setParent(Container _parent) {
+	protected void setParent(Container _parent) {
 		m_parent = _parent;
 	}
 	
@@ -146,10 +167,6 @@ public class Widget implements Renderable {
 		m_rectangle.setRect(_rect);
 	}
 	
-	public Rectangle getBounds() {
-		return m_bounds;
-	}
-	
 	public GLColor getBackgroundColor() {
 		return m_backgroundColor;
 	}
@@ -176,6 +193,22 @@ public class Widget implements Renderable {
 	
 	public void setBackgroundImage(Texture _image) {
 		m_backgroundImage = _image;
+	}
+	
+	public int getXPadding() {
+		return m_nXPadding;
+	}
+	
+	public void setXPadding(int _nPadding) {
+		m_nXPadding = _nPadding;
+	}
+	
+	public int getYPadding() {
+		return m_nYPadding;
+	}
+	
+	public void setYPadding(int _nPadding) {
+		m_nYPadding = _nPadding;
 	}
 	
 	public GLColor getFocusedBackgroundColor() {
@@ -206,6 +239,22 @@ public class Widget implements Renderable {
 		m_focusedBackgroundImage = _image;
 	}
 	
+	public int getFocusedXPadding() {
+		return m_nFocusedXPadding;
+	}
+	
+	public void setFocusedXPadding(int _nPadding) {
+		m_nFocusedXPadding = _nPadding;
+	}
+	
+	public int getFocusedYPadding() {
+		return m_nFocusedYPadding;
+	}
+	
+	public void setFocusedYPadding(int _nPadding) {
+		m_nFocusedYPadding = _nPadding;
+	}
+	
 	public boolean isVisible() {
 		return m_bVisible;
 	}
@@ -213,32 +262,105 @@ public class Widget implements Renderable {
 	public void setVisible(boolean _bVisible) {
 		m_bVisible = _bVisible;
 	}
-
-	public void calculateBounds(Rectangle _rect) {
-		Rectangle r = getRectangle();
-		if (m_parent != null) {
-			m_parent.calculateBounds(_rect); // TODO Figure out why this is necessary. Should already have been done by parent??
-			updateBounds(_rect.width, _rect.height);
-			int x, y;
-			if (r.x >= 0) {
-				x = _rect.x + r.x;
-			} else {
-				x = _rect.x + _rect.width + r.x;
-			}
-			if (r.y >= 0) {
-				y = _rect.y + r.y;
-			} else {
-				y = _rect.y + _rect.height + r.y;
-			}
-			_rect.setBounds(x, y, r.width, r.height);
-		} else {
-			updateBounds(-1, -1);
-			_rect.setBounds(r);
-		}
+	
+	public Rectangle getBounds() {
+		return m_bounds;
 	}
 	
-	public void updateBounds(int _parentWidth, int _parentHeight) {
+	public Rectangle getInnerBounds() {
+		return m_innerBounds;
+	}
+
+	protected Padding getPadding() {
+		if (hasFocus()) {
+			m_padding.xPadding = getFocusedXPadding();
+			m_padding.yPadding = getFocusedYPadding();
+		} else {
+			m_padding.xPadding = getXPadding();
+			m_padding.yPadding = getYPadding();
+		}
+		return m_padding;
+	}
+	
+	protected void calculateBounds() {
+		Rectangle r = getRectangle();
+		if (m_parent != null) {
+			m_bounds.setBounds(m_parent.getBounds());
+			updateBounds(m_bounds.width, m_bounds.height);
+			int x, y;
+			if (r.x >= 0) {
+				x = m_bounds.x + r.x;
+			} else {
+				x = m_bounds.x + m_bounds.width + r.x;
+			}
+			if (r.y >= 0) {
+				y = m_bounds.y + r.y;
+			} else {
+				y = m_bounds.y + m_bounds.height + r.y;
+			}
+			m_bounds.setBounds(x, y, r.width, r.height);
+		} else {
+			updateBounds(-1, -1);
+			m_bounds.setBounds(r);
+		}
+		
+		// Calculate inner bounds (bounds with X and Y padding taken into account)
+		m_innerBounds.setBounds(m_bounds);
+		Padding pad = getPadding();
+		m_innerBounds.x += pad.xPadding;
+		m_innerBounds.y += pad.yPadding;
+		m_innerBounds.width -= 2 * pad.xPadding;
+		m_innerBounds.height -= 2 * pad.yPadding;
+	}
+	
+	protected void updateBounds(int _parentWidth, int _parentHeight) {
 		// Override in subclass if needed
+	}
+	
+	public void addKeyListener(KeyListener _listener) {
+		m_keyListeners.add(_listener);
+	}
+	
+	protected void processKeyPressedEvent(KeyEvent _event) {
+		_event.setSource(this);
+		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
+			Iterator i = m_keyListeners.iterator();
+			while (i.hasNext() && !_event.isConsumed()) {
+				KeyListener listener = (KeyListener)i.next();
+				listener.keyPressed(_event);
+			}
+		}
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processKeyPressedEvent(_event);
+		}
+	}
+		
+	protected void processKeyReleasedEvent(KeyEvent _event) {
+		_event.setSource(this);
+		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
+			Iterator i = m_keyListeners.iterator();
+			while (i.hasNext() && !_event.isConsumed()) {
+				KeyListener listener = (KeyListener)i.next();
+				listener.keyReleased(_event);
+			}
+		}
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processKeyReleasedEvent(_event);
+		}
+	}
+		
+	protected void processKeyTypedEvent(KeyEvent _event) {
+		_event.setSource(this);
+		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
+			Iterator i = m_keyListeners.iterator();
+			while (i.hasNext() && !_event.isConsumed()) {
+				KeyListener listener = (KeyListener)i.next();
+				listener.keyTyped(_event);
+			}
+		}
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processKeyTypedEvent(_event);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -257,56 +379,10 @@ public class Widget implements Renderable {
 		}
 	}
 	
-	public void initWidget(RenderContext _context) {
+	protected void initWidget(RenderContext _context) {
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
 		if (renderer != null) {
 			renderer.initRendering(this, _context);
-		}
-	}
-	
-	public void addKeyListener(KeyListener _listener) {
-		m_keyListeners.add(_listener);
-	}
-	
-	public void processKeyPressedEvent(KeyEvent _event) {
-		_event.setSource(this);
-		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext() && !_event.isConsumed()) {
-				KeyListener listener = (KeyListener)i.next();
-				listener.keyPressed(_event);
-			}
-		}
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processKeyPressedEvent(_event);
-		}
-	}
-		
-	public void processKeyReleasedEvent(KeyEvent _event) {
-		_event.setSource(this);
-		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext() && !_event.isConsumed()) {
-				KeyListener listener = (KeyListener)i.next();
-				listener.keyReleased(_event);
-			}
-		}
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processKeyReleasedEvent(_event);
-		}
-	}
-		
-	public void processKeyTypedEvent(KeyEvent _event) {
-		_event.setSource(this);
-		if (!_event.isConsumed() && !m_keyListeners.isEmpty()) {
-			Iterator i = m_keyListeners.iterator();
-			while (i.hasNext() && !_event.isConsumed()) {
-				KeyListener listener = (KeyListener)i.next();
-				listener.keyTyped(_event);
-			}
-		}
-		if (!_event.isConsumed() && (getParent() != null)) {
-			getParent().processKeyTypedEvent(_event);
 		}
 	}
 
@@ -315,12 +391,12 @@ public class Widget implements Renderable {
 	 */
 	public void render(RenderContext _context) {
 		if (isVisible()) {
-			calculateBounds(m_bounds);
+			calculateBounds();
 			renderWidget(_context);
 		}
 	}
 	
-	public void renderWidget(RenderContext _context) {
+	protected void renderWidget(RenderContext _context) {
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
 		if (renderer != null) {
 			renderer.render(this, _context);
@@ -330,6 +406,10 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/19 00:18:44  tako
+ * Added support for seperate X and Y padding.
+ * Made several methods protected instead of public.
+ *
  * Revision 1.5  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
