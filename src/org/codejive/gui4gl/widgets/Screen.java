@@ -31,13 +31,12 @@ import net.java.games.jogl.GL;
 
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author tako
- * @version $Revision: 222 $
+ * @version $Revision: 242 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -45,14 +44,13 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	private int m_nLastXPos, m_nLastYPos;
 	
 	public Screen() {
-		this(null);
-	}
-	
-	public Screen(String _sName) {
-		super(_sName);
 		m_widgetUnderMouse = null;
 		m_widgetPressed = null;
 		m_nLastXPos = m_nLastYPos = -1;
+	}
+	
+	public Screen getScreen() {
+		return this;
 	}
 	
 	public Toplevel getToplevel() {
@@ -287,6 +285,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.17  2004/05/04 22:14:58  tako
+ * Tried to make the getScreen() a bit more efficient.
+ *
  * Revision 1.16  2004/03/07 18:21:29  tako
  * Bounds calculations and render functions now all have a RenderContext argument.
  *
