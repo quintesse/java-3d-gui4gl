@@ -3,6 +3,7 @@
  */
 package org.codejive.gui4gl.widgets;
 
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 91 $
+ * @version $Revision: 94 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -162,14 +163,18 @@ public class Button extends Widget {
 		m_actionListeners.add(_listener);
 	}
 	
-	protected Padding getPadding() {
+	protected void updateInnerBounds() {
 		if (isSelected()) {
-			m_padding.xPadding = getSelectedXPadding();
-			m_padding.yPadding = getSelectedYPadding();
+			int nXPad = getSelectedXPadding();
+			int nYPad = getSelectedYPadding();
+			Rectangle bounds = getInnerBounds();
+			bounds.x += nXPad;
+			bounds.y += nYPad;
+			bounds.width -= 2 * nXPad;
+			bounds.height -= 2 * nYPad;
 		} else {
-			super.getPadding();
+			super.updateInnerBounds();
 		}
-		return m_padding;
 	}
 	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
@@ -207,6 +212,10 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/20 00:32:11  tako
+ * Code change because of change from getPadding() to
+ * updateInnerBounds().
+ *
  * Revision 1.4  2003/11/19 11:19:41  tako
  * Implemented completely new event system because tryin to re-use the
  * AWT and Swing events just was too much trouble.
