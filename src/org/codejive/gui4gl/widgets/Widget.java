@@ -19,7 +19,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 152 $
+ * @version $Revision: 156 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -419,18 +419,14 @@ public class Widget implements Renderable {
 	 * @see org.codejive.world3d.Renderable#initRendering(org.codejive.world3d.RenderContext)
 	 */
 	public void initRendering(RenderContext _context) {
-		if (isVisible()) {
-			initWidget(_context);
-		}
+		initWidget(_context);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.codejive.world3d.Renderable#initRendering(org.codejive.world3d.RenderContext)
 	 */
 	public void updateRendering(RenderContext _context) {
-		if (isVisible()) {
-			updateWidget(_context);
-		}
+		updateWidget(_context);
 	}
 	
 	protected void initWidget(RenderContext _context) {
@@ -469,6 +465,11 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/25 00:29:39  tako
+ * Removed visibility check for ini- and updatetRendering() because they
+ * messed up the GUI layout for Windows that were invisible when the
+ * GUI got initialized.
+ *
  * Revision 1.11  2003/11/24 17:23:37  tako
  * Added moveToBack() and moveToFront().
  * Renamed get/setRectangle() to get/setBounds() and renamed getBounds()
