@@ -16,12 +16,16 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 125 $
+ * @version $Revision: 145 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(TextField.class, _widget, _context);
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
+		RenderHelper.updateSuperClass(TextField.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -129,6 +133,9 @@ public class TextFieldRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/24 16:50:43  tako
+ * Implemented updateRendering().
+ *
  * Revision 1.3  2003/11/23 02:00:33  tako
  * Made the propety handling and naming a bit more like the standard.
  *

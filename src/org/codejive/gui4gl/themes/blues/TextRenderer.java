@@ -14,12 +14,16 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 114 $
+ * @version $Revision: 145 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Text.class, _widget, _context);
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
+		RenderHelper.updateSuperClass(Text.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -48,6 +52,9 @@ public class TextRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/24 16:50:43  tako
+ * Implemented updateRendering().
+ *
  * Revision 1.8  2003/11/21 10:00:51  steven
  * Moved editing support to a different class
  *

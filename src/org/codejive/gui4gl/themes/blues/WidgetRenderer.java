@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 145 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -22,6 +22,10 @@ public class WidgetRenderer implements WidgetRendererModel {
 	 * @see org.codejive.world3d.gui.WidgetRenderer#initRendering(org.codejive.world3d.gui.Widget, org.codejive.world3d.RenderContext)
 	 */
 	public void initRendering(Widget _widget, RenderContext _context) {
+		// No code necessary
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
 		// No code necessary
 	}
 
@@ -56,7 +60,7 @@ public class WidgetRenderer implements WidgetRendererModel {
 
 		// Widget background
 		gl.glColor4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), 1.0f - fTransparancy);
-		RenderHelper.drawRectangle(gl, _widget.getBounds());
+		RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
 
 		gl.glEnd();
 		gl.glDisable(GL.GL_BLEND);
@@ -66,6 +70,9 @@ public class WidgetRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/24 16:50:43  tako
+ * Implemented updateRendering().
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *

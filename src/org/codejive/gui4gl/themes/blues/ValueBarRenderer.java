@@ -17,13 +17,17 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 89 $
+ * @version $Revision: 145 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
 
 	public void initRendering(Widget _widget, RenderContext _context) {
 		// nothing to do.
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
+		RenderHelper.updateSuperClass(ValueBar.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -78,6 +82,9 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.6  2003/11/24 16:50:43  tako
+ * Implemented updateRendering().
+ *
  * Revision 1.5  2003/11/19 10:02:15  steven
  * No longer creates a rectangle every render operation
  *

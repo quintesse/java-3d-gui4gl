@@ -16,12 +16,16 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 107 $
+ * @version $Revision: 145 $
  */
 public class ToggleRenderer implements WidgetRendererModel {
 
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Toggle.class, _widget, _context);
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
+		RenderHelper.updateSuperClass(Toggle.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -82,6 +86,9 @@ public class ToggleRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/24 16:50:43  tako
+ * Implemented updateRendering().
+ *
  * Revision 1.1  2003/11/21 01:27:22  tako
  * First check-in of the renderer for the new Toggle widget.
  *
