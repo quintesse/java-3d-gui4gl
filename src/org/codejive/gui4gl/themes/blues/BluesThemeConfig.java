@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 80 $
+ * @version $Revision: 85 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -96,7 +96,7 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(ValueBar.class, "yPadding", 1);
 		Theme.setValue(ValueBar.class, "barColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setFloatValue(ValueBar.class, "barTransparancy", 0.0f);
-		Theme.setValue(ValueBar.class, "focusedBackgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setValue(ValueBar.class, "focusedBackgroundColor", new GLColor(.96f, 1.0f, 0.2f));
 		Theme.setFloatValue(ValueBar.class, "focusedTransparancy", 0.0f);
 		Theme.setIntegerValue(ValueBar.class, "focusedXPadding", 1);
 		Theme.setIntegerValue(ValueBar.class, "focusedYPadding", 1);
@@ -107,6 +107,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/19 09:07:31  tako
+ * Changed focused background color (to an ugly yellow, sorry).
+ *
  * Revision 1.5  2003/11/19 00:28:53  tako
  * Added support for ValueBar's transparancy options.
  *
