@@ -8,7 +8,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 77 $
+ * @version $Revision: 81 $
  */
 public class ValueBar extends Widget {
 	float m_min;
@@ -16,13 +16,17 @@ public class ValueBar extends Widget {
 	float m_value;
 
 	GLColor m_barColor;
+	float m_fBarTransparancy;
 	GLColor m_focusedBarColor;
+	float m_fFocusedBarTransparancy;
 	
 	public ValueBar(float _min, float _max) {
 		m_min = _min;
 		m_max = _max;
 		m_barColor = (GLColor)Theme.getValue(getClass(), "barColor");
+		m_fBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy");
 		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), "focusedBarColor");
+		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), "focusedBarTransparancy");
 	}
 	
 	public void setValue(float _value) {
@@ -57,6 +61,9 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.3  2003/11/19 00:29:29  tako
+ * Added support to render the bar with transparancy.
+ *
  * Revision 1.2  2003/11/19 00:15:53  tako
  * Simplyfied code a bit by making more use of exisiting options in the
  * Widget base class.
