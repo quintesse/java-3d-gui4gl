@@ -29,6 +29,7 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.Text;
+import org.codejive.gui4gl.widgets.TextField;
 import org.codejive.gui4gl.widgets.Toggle;
 import org.codejive.gui4gl.widgets.ValueBar;
 import org.codejive.gui4gl.widgets.Window;
@@ -40,7 +41,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 105 $
+ * @version $Revision: 118 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -148,7 +149,7 @@ class SimpleGui implements GLEventListener {
 			super("Test Window");
 			setCenterParent(true);
 			setWidth(300);
-			setHeight(170);
+			setHeight(200);
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
 			t.setBounds(5, 5, 290, 40);
@@ -215,6 +216,14 @@ b.addKeyListener(new GuiKeyAdapter() {
 					m_infoWindow.setValue(value.floatValue());
 				}
 			});
+			
+			
+			TextField tf = new TextField("Edit me");
+			tf.setBounds(5, 145, 290, 20);
+			add(tf);
+			
+			
+			
 
 			addKeyListener(new GuiKeyAdapter() {
 				public void keyPressed(GuiKeyEvent _event) {
@@ -338,11 +347,15 @@ class GLDisplay {
 		return new GLDisplay(title, DEFAULT_WIDTH, DEFAULT_HEIGHT, fullscreen);
 	}
 
-	public GLDisplay(String title, boolean fullscreen) {
-		this(title, DEFAULT_WIDTH, DEFAULT_HEIGHT, fullscreen);
+	public GLDisplay(String title, boolean _fullscreen) {
+		this(title, DEFAULT_WIDTH, DEFAULT_HEIGHT, _fullscreen);
 	}
 
-	public GLDisplay(String title, int width, int height, boolean fullscreen) {
+	public GLDisplay(String title, int _width, int _height, boolean _fullscreen) {
+		this.fullscreen = _fullscreen;
+		this.width = _width;
+		this.height = _height;
+		
 		glCanvas = GLDrawableFactory.getFactory().createGLCanvas(new GLCapabilities());
 		glCanvas.setSize(width, height);
 		glCanvas.setIgnoreRepaint(true);
@@ -351,9 +364,6 @@ class GLDisplay {
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(glCanvas, BorderLayout.CENTER);
 
-		this.fullscreen = fullscreen;
-		this.width = width;
-		this.height = height;
 		animator = new Animator(glCanvas);
 	}
 
@@ -478,6 +488,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 10:03:17  steven
+ * Removed warnings and added textfield editing example
+ *
  * Revision 1.6  2003/11/21 01:25:00  tako
  * Updated example to make use of the new Toggle widget.
  *
