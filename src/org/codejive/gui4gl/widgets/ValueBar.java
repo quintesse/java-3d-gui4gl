@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
@@ -35,7 +36,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 184 $
+ * @version $Revision: 198 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -49,14 +50,32 @@ public class ValueBar extends Widget {
 	private float m_fFocusedBarTransparancy;
 	private GLColor m_disabledBarColor;
 	private float m_fDisabledBarTransparancy;
+
+	private boolean m_bShowValue = false;
+	private int m_lAlignment = GLText.ALIGN_CENTER;
 	
 	private List m_changeListeners;
 	
 	public ValueBar(float _fMin, float _fMax) {
-		this(_fMin, _fMax, 1.0f);
+		this(_fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
 	}
 	
 	public ValueBar(float _fMin, float _fMax, float _fStepSize) {
+		this(_fMin, _fMax, 1.0f, false, GLText.ALIGN_CENTER);
+	}
+	
+	/**
+	 * 
+	 * @param _fMin
+	 * @param _fMax
+	 * @param _fStepSize
+	 * @param __bShowValue
+	 * @param _lAlignment see GLText for values.
+	 */
+	public ValueBar(float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
+		setAlignment(_lAlignment);
+		setShowValue(_bShowValue);
+		
 		m_fMin = _fMin;
 		m_fMax = _fMax;
 		m_fStepSize = _fStepSize;
@@ -68,6 +87,24 @@ public class ValueBar extends Widget {
 		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy#disabled");
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
+	}
+	
+	public boolean isShowValue() {
+		return m_bShowValue;
+	}
+	public void setShowValue(boolean _bShowValue) {
+		m_bShowValue = _bShowValue;
+	}
+	
+	public void setAlignment(int _lAlignment) {
+		if(m_lAlignment == GLText.ALIGN_CENTER || m_lAlignment == GLText.ALIGN_LEFT || m_lAlignment == GLText.ALIGN_RIGHT) {
+			m_lAlignment = _lAlignment;
+		} else {
+			throw new RuntimeException("Invalid alignment specified. See GLText for valid alignments");
+		}
+	}
+	public int getAlignment() {
+		return m_lAlignment;
 	}
 	
 	public float getValue() {
@@ -207,6 +244,10 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.12  2003/12/14 00:28:10  steven
+ * added some very basic support for showing the bar value in both horiz and vert. mode.
+ * Still to be done is rendering the background for the bar ourselves.
+ *
  * Revision 1.11  2003/12/05 01:07:02  tako
  * Implemented enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

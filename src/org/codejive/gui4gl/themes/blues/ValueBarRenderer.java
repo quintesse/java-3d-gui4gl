@@ -26,6 +26,8 @@ import java.awt.Rectangle;
 
 import net.java.games.jogl.GL;
 
+import org.codejive.gui4gl.GLText;
+import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.RenderHelper;
 import org.codejive.gui4gl.themes.WidgetRendererModel;
 import org.codejive.gui4gl.widgets.ValueBar;
@@ -35,11 +37,13 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 183 $
+ * @version $Revision: 198 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
-
+	private Font m_textFont;
+	private GLColor m_textFontColor;
+	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		// nothing to do.
 	}
@@ -61,12 +65,69 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		int top = barRect.y;
 		int height = barRect.height;
 		int width = barRect.width;
+
+		
+		int textXPos = 0;
+		int textYPos = 0;
+		
+		String sValueAsString = "";
+		if(bar.isShowValue()) {
+			setFontAndFontColor(bar);
+			
+			sValueAsString = String.valueOf(bar.getValue());
+		}
+		
 		
 		if(barRect.height > barRect.width) {
-			height = getPixelValueForBar(bar, barRect.height);
+			
+			if(bar.isShowValue()) {
+				int h = (int)m_textFont.getSize(_context);
+				switch(bar.getAlignment()) {
+					case GLText.ALIGN_LEFT : // = top
+						textYPos = top + h;
+						height -= h;
+						break;
+					case GLText.ALIGN_RIGHT : // = bottom
+						textYPos = top + height;
+						top -= h;
+						height -= h;
+						break;
+					case GLText.ALIGN_CENTER : // equals to top
+						textYPos = top + height / 2 + h/2;
+						break;
+				}
+				textXPos = left + width/2 - (int)(m_textFont.getTextWidth(_context, sValueAsString) / 2);
+			}
+			
+			
+			height = getPixelValueForBar(bar, height);
 			top += (barRect.height - height);
 		} else {
-			width = getPixelValueForBar(bar, barRect.width);
+			
+			if(bar.isShowValue()) {
+				int w = Math.max(
+					(int)m_textFont.getTextWidth(_context, String.valueOf(bar.getMinValue())),
+					(int)m_textFont.getTextWidth(_context, String.valueOf(bar.getMaxValue()))
+				);
+				
+				switch(bar.getAlignment()) {					
+					case GLText.ALIGN_LEFT :
+						textXPos = left + w - (int)m_textFont.getTextWidth(_context, String.valueOf(bar.getValue()));
+						width -= w;
+						left += w;
+						break;
+					case GLText.ALIGN_RIGHT :
+						textXPos = left + width - w;
+						width -= w;
+						break;
+					case GLText.ALIGN_CENTER :
+						textXPos = left + width/2 - (int)(m_textFont.getTextWidth(_context, String.valueOf(bar.getValue())) / 2);
+						break;
+				}
+				textYPos = top - 1 + height / 2 + (int)(m_textFont.getSize(_context)/2f);
+			}
+			
+			width = getPixelValueForBar(bar, width);
 		}
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -90,6 +151,14 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		RenderHelper.drawRectangle(gl, left, top, width, height);
 		
 		gl.glEnd();
+		
+		gl.glColor3fv(m_textFontColor.toArray3f());
+		
+		if(bar.isShowValue()) {
+			gl.glRasterPos2i(textXPos, textYPos);
+			m_textFont.renderText(_context, sValueAsString);
+		}
+		
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 	
@@ -101,10 +170,30 @@ public class ValueBarRenderer implements WidgetRendererModel {
 
 		return o >= 0 ? (o <= _maxWidth ? o:_maxWidth) : 0;
 	}
+	
+	private void setFontAndFontColor(ValueBar _bar) {
+
+		if (_bar.hasFocus()) {
+			m_textFont = _bar.getFocusedTextFont();
+			m_textFontColor = _bar.getFocusedTextFontColor();
+		} else {
+			if (_bar.isEnabled()) {
+				m_textFont = _bar.getTextFont();
+				m_textFontColor = _bar.getTextFontColor();
+			} else {
+				m_textFont = _bar.getDisabledTextFont();
+				m_textFontColor = _bar.getDisabledTextFontColor();
+			}
+		}		
+	}
 
 }
 /*
  * $Log$
+ * Revision 1.9  2003/12/14 00:28:10  steven
+ * added some very basic support for showing the bar value in both horiz and vert. mode.
+ * Still to be done is rendering the background for the bar ourselves.
+ *
  * Revision 1.8  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of
