@@ -51,7 +51,7 @@ import org.codejive.gui4gl.layouts.Layouter;
  * <li>the position or offset of the Display Window within the entire data set</li>
  * 
  * @author Tako
- * @version $Revision: 257 $
+ * @version $Revision: 259 $
  */
 public class ScrollBar extends CompoundWidget {
 	private int m_nOrientation;
@@ -185,7 +185,7 @@ public class ScrollBar extends CompoundWidget {
 	public void setTotalSize(long _nTotalSize) {
 		m_nTotalSize = _nTotalSize;
 		// Make sure the visible amount and the current value are valid for the new total size
-		if (_nTotalSize > m_nVisibleAmount) {
+		if (_nTotalSize < m_nVisibleAmount) {
 			m_nVisibleAmount = _nTotalSize;
 		}
 		if ((m_nValue + m_nVisibleAmount) > m_nTotalSize) {
@@ -254,19 +254,7 @@ public class ScrollBar extends CompoundWidget {
 	}
 	
 	protected void doStep(long _nStep) {
-		if (_nStep != 0) {
-			long nNewValue = m_nValue + _nStep;
-			if (_nStep < 0) {
-				if (nNewValue < 0) {
-					nNewValue = 0;
-				}
-			} else {
-				if ((nNewValue + m_nVisibleAmount) > m_nTotalSize) {
-					nNewValue = m_nTotalSize - m_nVisibleAmount;
-				}
-			}
-			setValue(nNewValue);
-		}
+		setValue(m_nValue + _nStep);
 	}
 	
 	protected void doSmallStepLess() {
@@ -328,13 +316,18 @@ public class ScrollBar extends CompoundWidget {
 	}
 	
 	public class InnerBar extends Widget {
-		protected Rectangle m_handleBounds, m_lessBounds, m_moreBounds;
+		private Rectangle m_handleBounds, m_lessBounds, m_moreBounds;
 		
-		public InnerBar() {
+		private boolean m_bDragHandle;
+		private float m_fDragOffset;
+		
+		protected InnerBar() {
 			setFocusable(true);
 			m_handleBounds = new Rectangle();
 			m_lessBounds = new Rectangle();
 			m_moreBounds = new Rectangle();
+			
+			m_bDragHandle = false;
 		}
 		
 		public float getStartValue() {
@@ -358,9 +351,7 @@ public class ScrollBar extends CompoundWidget {
 
 		public Rectangle getHandleBounds() {
 			m_handleBounds.setBounds(getInnerBounds());
-			
-			int orientation = getActualOrientation();
-			if (orientation == Orientation.VERTICAL) {
+			if (getActualOrientation() == Orientation.VERTICAL) {
 				m_handleBounds.y += (int)(getStartValue() * m_handleBounds.height);
 				m_handleBounds.height = (int)((getEndValue() - getStartValue()) * m_handleBounds.height);
 			} else {
@@ -373,9 +364,7 @@ public class ScrollBar extends CompoundWidget {
 		
 		public Rectangle getLessBounds() {
 			m_lessBounds.setBounds(getInnerBounds());
-			
-			int orientation = getActualOrientation();
-			if (orientation == Orientation.VERTICAL) {
+			if (getActualOrientation() == Orientation.VERTICAL) {
 				m_lessBounds.height = (int)(getStartValue() * m_lessBounds.height);
 			} else {
 				m_lessBounds.width = (int)(getStartValue() * m_lessBounds.width);
@@ -386,9 +375,7 @@ public class ScrollBar extends CompoundWidget {
 		
 		public Rectangle getMoreBounds() {
 			m_moreBounds.setBounds(getInnerBounds());
-			
-			int orientation = getActualOrientation();
-			if (orientation == Orientation.VERTICAL) {
+			if (getActualOrientation() == Orientation.VERTICAL) {
 				m_moreBounds.y += (int)(getEndValue() * m_moreBounds.height);
 				m_moreBounds.height -= (int)(getEndValue() * m_moreBounds.height);
 			} else {
@@ -399,28 +386,51 @@ public class ScrollBar extends CompoundWidget {
 			return m_moreBounds;
 		}
 		
-		protected void processMouseClickedEvent(GuiMouseEvent _event) {
-			super.processMouseClickedEvent(_event);
+		protected void processMousePressedEvent(GuiMouseEvent _event) {
+			super.processMousePressedEvent(_event);
 			if (!_event.isConsumed()) {
-				Rectangle bounds = getLessBounds();
-				if (bounds.contains(_event.getX(), _event.getY())) {
-					doLargeStepLess();
-				}
-				bounds = getMoreBounds();
-				if (bounds.contains(_event.getX(), _event.getY())) {
-					doLargeStepMore();
+				Rectangle inner = getInnerBounds();
+				if (inner.contains(_event.getX(), _event.getY())) {
+					Rectangle bounds = getHandleBounds();
+					if (bounds.contains(_event.getX(), _event.getY())) {
+						if (getActualOrientation() == Orientation.VERTICAL) {
+							m_fDragOffset = (float)(_event.getY() - bounds.y) / inner.height;
+						} else {
+							m_fDragOffset = (float)(_event.getX() - bounds.x) / inner.width;
+						}
+						m_bDragHandle = true;
+					} else {
+						bounds = getLessBounds();
+						if (bounds.contains(_event.getX(), _event.getY())) {
+							doLargeStepLess();
+						} else {
+							bounds = getMoreBounds();
+							if (bounds.contains(_event.getX(), _event.getY())) {
+								doLargeStepMore();
+							}
+						}
+					}
 				}
 			}
 		}
 		
+		protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+			super.processMouseReleasedEvent(_event);
+			m_bDragHandle = false;
+		}
+		
 		protected void processMouseDraggedEvent(GuiMouseEvent _event) {
 			super.processMouseDraggedEvent(_event);
-			if (!_event.isConsumed()) {
+			if (!_event.isConsumed() && m_bDragHandle) {
 				Rectangle bounds = getInnerBounds();
-				float fPct = (float)(_event.getX() - bounds.x) / bounds.width;
-//				float fRelVal = fPct * (m_fMax - m_fMin);
-//				fRelVal = (int)((fRelVal + m_fStepSize / 2) / m_fStepSize) * m_fStepSize;
-//				setValue(m_fMin + fRelVal);
+				float fPct;
+				if (getActualOrientation() == Orientation.VERTICAL) {
+					fPct = (float)(_event.getY() - bounds.y) / bounds.height;
+				} else {
+					fPct = (float)(_event.getX() - bounds.x) / bounds.width;
+				}
+				long nValue = (long)((fPct - m_fDragOffset) * getTotalSize());
+				setValue(nValue);
 			}
 		}
 	}
@@ -429,6 +439,11 @@ public class ScrollBar extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.4  2004/05/07 23:29:51  tako
+ * Fixed setTotalSize() validation.
+ * Removed unnecessary code from doStep().
+ * Implemented handle dragging.
+ *
  * Revision 1.3  2004/05/07 21:06:42  tako
  * Fixed fireChangeEvent().
  * Made sure changing the attributes cannot put the widget in an invalid state.
