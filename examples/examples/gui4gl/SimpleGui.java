@@ -45,6 +45,7 @@ import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyAdapter;
 import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.themes.Theme;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.Text;
@@ -60,7 +61,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 200 $
+ * @version $Revision: 226 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -89,7 +90,7 @@ public class SimpleGui implements GLEventListener {
 		m_fpsCounter.addFrame();
 		m_infoWindow.setFps(m_fpsCounter.getFrameRate());
 		
-		m_screen.render(m_context);
+		m_screen.render(m_context, null);
 	}
 
 	public void displayChanged(GLDrawable gLDrawable, boolean modeChanged, boolean deviceChanged) {
@@ -108,6 +109,8 @@ public class SimpleGui implements GLEventListener {
 
 		// Set up a render context
 		m_context = new RenderContext(gl, glu);
+		// Determine the Theme to use
+		Theme.setDefaultTheme(m_context);
 		// Create a screen that will hold all our windows
 		m_screen = new Screen();
 
@@ -515,6 +518,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.15  2004/03/07 18:28:51  tako
+ * Updated the example to set the default theme.
+ *
  * Revision 1.14  2003/12/14 00:29:24  steven
  * updated to show valuebars with their value as text
  *
