@@ -19,11 +19,11 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 128 $
+ * @version $Revision: 152 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
-	private Rectangle m_rectangle;
+	private Rectangle m_bounds;
 	private GLColor m_backgroundColor;
 	private float m_fTransparancy;
 	private Texture m_backgroundImage;
@@ -49,13 +49,13 @@ public class Widget implements Renderable {
 		}
 	}
 	
-	private Rectangle m_bounds;
+	private Rectangle m_currentBounds;
 	private Rectangle m_innerBounds;
 	protected Padding m_padding;
 	
 	public Widget() {
 		m_parent = null;
-		m_rectangle = new Rectangle();
+		m_bounds = new Rectangle();
 		m_backgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor");
 		m_fTransparancy = Theme.getFloatValue(getClass(), "transparancy");
 		m_backgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage");
@@ -72,7 +72,7 @@ public class Widget implements Renderable {
 		m_keyListeners = new ArrayList();
 		m_mouseListeners = new ArrayList();
 
-		m_bounds = new Rectangle();
+		m_currentBounds = new Rectangle();
 		m_innerBounds = new Rectangle();
 		m_padding = new Padding();
 	}
@@ -105,7 +105,7 @@ public class Widget implements Renderable {
 	}
 	
 	public boolean isFocusable() {
-		return m_bCanHaveFocus;
+		return m_bCanHaveFocus && ((getParent() == null) || getParent().isFocusable());
 	}
 	
 	public void setFocusable(boolean _bCanHaveFocus) {
@@ -132,7 +132,7 @@ public class Widget implements Renderable {
 	
 	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
 		Widget result;
-		if (getBounds().contains(_nXPos, _nYPos)) {
+		if (isVisible() && getCurrentBounds().contains(_nXPos, _nYPos)) {
 			result = this;
 		} else {
 			result = null;
@@ -141,47 +141,47 @@ public class Widget implements Renderable {
 	}
 	
 	public int getLeft() {
-		return m_rectangle.x;
+		return m_bounds.x;
 	}
 	
 	public void setLeft(int _nPos) {
-		m_rectangle.x = _nPos;
+		m_bounds.x = _nPos;
 	}
 	
 	public int getTop() {
-		return m_rectangle.y;
+		return m_bounds.y;
 	}
 	
 	public void setTop(int _nPos) {
-		m_rectangle.y = _nPos;
+		m_bounds.y = _nPos;
 	}
 	
 	public int getWidth() {
-		return m_rectangle.width;
+		return m_bounds.width;
 	}
 	
 	public void setWidth(int _nPos) {
-		m_rectangle.width = _nPos;
+		m_bounds.width = _nPos;
 	}
 	
 	public int getHeight() {
-		return m_rectangle.height;
+		return m_bounds.height;
 	}
 	
 	public void setHeight(int _nPos) {
-		m_rectangle.height = _nPos;
+		m_bounds.height = _nPos;
+	}
+	
+	public Rectangle getBounds() {
+		return m_bounds;
+	}
+	
+	public void setBounds(Rectangle _rect) {
+		m_bounds.setRect(_rect);
 	}
 	
 	public void setBounds(int _nLeft, int _nTop, int _nWidth, int _nHeight) {
-		m_rectangle.setBounds(_nLeft, _nTop, _nWidth, _nHeight);
-	}
-	
-	public Rectangle getRectangle() {
-		return m_rectangle;
-	}
-	
-	public void setRectangle(Rectangle _rect) {
-		m_rectangle.setRect(_rect);
+		m_bounds.setBounds(_nLeft, _nTop, _nWidth, _nHeight);
 	}
 	
 	public GLColor getBackgroundColor() {
@@ -273,15 +273,23 @@ public class Widget implements Renderable {
 	}
 	
 	public boolean isVisible() {
-		return m_bVisible;
+		return m_bVisible && ((getParent() == null) || getParent().isVisible());
 	}
 	
 	public void setVisible(boolean _bVisible) {
 		m_bVisible = _bVisible;
 	}
 	
-	public Rectangle getBounds() {
-		return m_bounds;
+	public void moveToFront() {
+		getParent().moveChildToFront(this);
+	}
+	
+	public void moveToBack() {
+		getParent().moveChildToBack(this);
+	}
+	
+	public Rectangle getCurrentBounds() {
+		return m_currentBounds;
 	}
 	
 	public Rectangle getInnerBounds() {
@@ -289,29 +297,29 @@ public class Widget implements Renderable {
 	}
 
 	protected void calculateBounds() {
-		Rectangle r = getRectangle();
+		Rectangle r = getBounds();
 		if (m_parent != null) {
-			m_bounds.setBounds(m_parent.getInnerBounds());
+			m_currentBounds.setBounds(m_parent.getInnerBounds());
 			updateBounds();
 			int x, y;
 			if (r.x >= 0) {
-				x = m_bounds.x + r.x;
+				x = m_currentBounds.x + r.x;
 			} else {
-				x = m_bounds.x + m_bounds.width + r.x;
+				x = m_currentBounds.x + m_currentBounds.width + r.x;
 			}
 			if (r.y >= 0) {
-				y = m_bounds.y + r.y;
+				y = m_currentBounds.y + r.y;
 			} else {
-				y = m_bounds.y + m_bounds.height + r.y;
+				y = m_currentBounds.y + m_currentBounds.height + r.y;
 			}
-			m_bounds.setBounds(x, y, r.width, r.height);
+			m_currentBounds.setBounds(x, y, r.width, r.height);
 		} else {
 			updateBounds();
-			m_bounds.setBounds(r);
+			m_currentBounds.setBounds(r);
 		}
 		
 		// Calculate inner bounds
-		m_innerBounds.setBounds(m_bounds);
+		m_innerBounds.setBounds(m_currentBounds);
 		updateInnerBounds();
 	}
 	
@@ -373,16 +381,30 @@ public class Widget implements Renderable {
 	}
 	
 	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
-		GuiMouseEvent.fireMousePressed(m_mouseListeners, _event);
+		GuiMouseEvent.fireMouseReleased(m_mouseListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
 			getParent().processMouseReleasedEvent(_event);
 		}
 	}
 	
 	protected void processMouseClickedEvent(GuiMouseEvent _event) {
-		GuiMouseEvent.fireMousePressed(m_mouseListeners, _event);
+		GuiMouseEvent.fireMouseClicked(m_mouseListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
 			getParent().processMouseClickedEvent(_event);
+		}
+	}
+	
+	protected void processMouseMovedEvent(GuiMouseEvent _event) {
+		GuiMouseEvent.fireMouseMoved(m_mouseListeners, _event);
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processMouseMovedEvent(_event);
+		}
+	}
+	
+	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+		GuiMouseEvent.fireMouseDragged(m_mouseListeners, _event);
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processMouseDraggedEvent(_event);
 		}
 	}
 	
@@ -401,11 +423,29 @@ public class Widget implements Renderable {
 			initWidget(_context);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see org.codejive.world3d.Renderable#initRendering(org.codejive.world3d.RenderContext)
+	 */
+	public void updateRendering(RenderContext _context) {
+		if (isVisible()) {
+			updateWidget(_context);
+		}
+	}
 	
 	protected void initWidget(RenderContext _context) {
+		calculateBounds();
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
 		if (renderer != null) {
 			renderer.initRendering(this, _context);
+		}
+	}
+	
+	protected void updateWidget(RenderContext _context) {
+		calculateBounds();
+		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), "renderer");
+		if (renderer != null) {
+			renderer.updateRendering(this, _context);
 		}
 	}
 
@@ -429,6 +469,14 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/24 17:23:37  tako
+ * Added moveToBack() and moveToFront().
+ * Renamed get/setRectangle() to get/setBounds() and renamed getBounds()
+ * to getCurrentBounds().
+ * isFocusable() and isVisible() now both check their ancesters as well.
+ * Added processMouseMoved/DraggedEvent().
+ * Implemented updateRendering().
+ *
  * Revision 1.10  2003/11/23 02:04:27  tako
  * Added mouse support.
  *
