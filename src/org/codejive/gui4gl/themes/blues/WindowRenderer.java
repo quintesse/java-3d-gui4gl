@@ -16,7 +16,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 73 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -38,20 +38,22 @@ public class WindowRenderer implements WidgetRendererModel {
 		GLColor titlebarColor;
 		float fTitlebarTransparancy;
 		GLColor captionFontColor;
-		int nCaptionPadding;
+		int nCaptionXPadding, nCaptionYPadding;
 		Window window = (Window)_widget;
 		if (window.isActive()) {
 			captionFont = window.getActiveCaptionFont();
 			titlebarColor = window.getActiveTitlebarColor();
 			fTitlebarTransparancy = window.getActiveTitlebarTransparancy();
 			captionFontColor = window.getActiveCaptionFontColor();
-			nCaptionPadding = window.getActiveCaptionPadding();
+			nCaptionXPadding = window.getActiveCaptionXPadding();
+			nCaptionYPadding = window.getActiveCaptionYPadding();
 		} else {
 			captionFont = window.getCaptionFont();
 			titlebarColor = window.getTitlebarColor();
 			fTitlebarTransparancy = window.getTitlebarTransparancy();
 			captionFontColor = window.getCaptionFontColor();
-			nCaptionPadding = window.getCaptionPadding();
+			nCaptionXPadding = window.getCaptionXPadding();
+			nCaptionYPadding = window.getCaptionYPadding();
 		}
 
 		String sTitle = window.getTitle();
@@ -67,8 +69,8 @@ public class WindowRenderer implements WidgetRendererModel {
 			float fFontPadding = fFontHeight - fFontBaseLine;
 			gl.glColor4f(titlebarColor.getRed(), titlebarColor.getGreen(), titlebarColor.getBlue(), 1.0f - fTitlebarTransparancy);
 			m_tmpBounds.setBounds(window.getBounds());
-			m_tmpBounds.y -= fFontHeight + 2 * nCaptionPadding + fFontPadding;
-			m_tmpBounds.height = (int)fFontHeight + 2 * nCaptionPadding + (int)fFontPadding;
+			m_tmpBounds.y -= fFontHeight + 2 * nCaptionYPadding + fFontPadding;
+			m_tmpBounds.height = (int)fFontHeight + 2 * nCaptionYPadding + (int)fFontPadding;
 			RenderHelper.drawRectangle(gl, m_tmpBounds);
 	
 			gl.glEnd();
@@ -76,7 +78,7 @@ public class WindowRenderer implements WidgetRendererModel {
 	
 			// Title text
 			int nCaptionAlignment = window.getCaptionAlignment();
-			GLText.drawText(_context, m_tmpBounds, nCaptionPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle);
+			GLText.drawText(_context, m_tmpBounds, nCaptionXPadding, nCaptionYPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle);
 
 			gl.glEnable(GL.GL_TEXTURE_2D);
 		}
@@ -85,6 +87,9 @@ public class WindowRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:11:54  tako
+ * Added support for seperate X and Y padding.
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
