@@ -25,10 +25,11 @@ import java.util.HashMap;
 
 import org.codejive.gui4gl.themes.blues.BluesThemeConfig;
 import org.codejive.gui4gl.widgets.Widget;
+import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 219 $
  */
 public class Theme {
 	private HashMap m_values;
@@ -147,10 +148,6 @@ public class Theme {
 	private static Theme m_theme = null;
 
 	public static Theme getTheme() {
-		if (m_theme == null) {
-			BluesThemeConfig config = new BluesThemeConfig();
-			loadTheme(config);
-		}
 		return m_theme;
 	}
 	
@@ -158,14 +155,24 @@ public class Theme {
 		m_theme = _theme;
 	}
 	
-	public static void loadTheme(ThemeConfig _config) {
+	public static void setDefaultTheme(RenderContext _context) {
+		BluesThemeConfig config = new BluesThemeConfig();
+		loadTheme(_context, config);
+	}
+	
+	public static void loadTheme(RenderContext _context, ThemeConfig _config) {
 		m_theme = new Theme();
-		_config.configure();
+		_config.configure(_context);
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.8  2004/03/07 18:16:42  tako
+ * ThemeConfig now needs a RenderContext to function. Because of that
+ * it is not possible anymore to select a default theme anymore!
+ * Use Theme.setDefaultConfig() first when starting to use use gui4gl.
+ *
  * Revision 1.7  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within

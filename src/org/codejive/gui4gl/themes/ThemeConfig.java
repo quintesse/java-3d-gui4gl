@@ -21,16 +21,23 @@
  */
 package org.codejive.gui4gl.themes;
 
+import org.codejive.utils4gl.RenderContext;
+
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 219 $
  */
 public interface ThemeConfig {
-	public void configure();
+	public void configure(RenderContext _context);
 }
 
 /*
  * $Log$
+ * Revision 1.4  2004/03/07 18:16:42  tako
+ * ThemeConfig now needs a RenderContext to function. Because of that
+ * it is not possible anymore to select a default theme anymore!
+ * Use Theme.setDefaultConfig() first when starting to use use gui4gl.
+ *
  * Revision 1.3  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *
