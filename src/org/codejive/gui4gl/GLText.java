@@ -13,25 +13,25 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 53 $
+ * @version $Revision: 71 $
  */
 public class GLText {
 	public static final int ALIGN_LEFT = 0;
 	public static final int ALIGN_CENTER = 1;
 	public static final int ALIGN_RIGHT = 2;
 		
-	public static void drawText(RenderContext _context, Rectangle _bounds, int _nPadding, Font _font, GLColor _color, boolean _bMultiLine, int _nAlignment, String _sText) {
+	public static void drawText(RenderContext _context, Rectangle _bounds, int _nXPadding, int _nYPadding, Font _font, GLColor _color, boolean _bMultiLine, int _nAlignment, String _sText) {
 		GL gl = _context.getGl();
 
 		float fFontHeight = _font.getSize(_context);
 		float fFontBaseLine = _font.getBaseLine(_context);
 		float fFontPadding = fFontHeight - fFontBaseLine;
-		float fXPos = _bounds.x + _nPadding;
-		float fYPos = _bounds.y + _nPadding + fFontBaseLine + fFontPadding;
+		float fXPos = _bounds.x + _nXPadding;
+		float fYPos = _bounds.y + _nYPadding + fFontBaseLine + fFontPadding;
 		float fXPosDelta = 0.0f;
 		float fYPosDelta = 0.0f;
-		float fWidth = _bounds.width - 2 * _nPadding;
-		float fHeight = _bounds.height - 2 * _nPadding;
+		float fWidth = _bounds.width - 2 * _nXPadding;
+		float fHeight = _bounds.height - 2 * _nYPadding;
 		
 		// Determine if the text will fit the bounds
 		gl.glColor3fv(_color.toArray3f());
@@ -122,6 +122,9 @@ public class GLText {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:06:34  tako
+ * Added support for seperate X and Y padding.
+ *
  * Revision 1.4  2003/11/18 11:02:38  tako
  * Removed unused code.
  *
