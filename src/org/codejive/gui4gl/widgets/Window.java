@@ -4,7 +4,6 @@
 package org.codejive.gui4gl.widgets;
 
 import java.awt.Rectangle;
-import java.util.Iterator;
 
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
@@ -12,9 +11,9 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 95 $
+ * @version $Revision: 112 $
  */
-public class Window extends Container {
+public class Window extends Toplevel {
 	private String m_sTitle;
 	private int m_nTitlebarHeight;
 	private GLColor m_titlebarColor;
@@ -187,29 +186,8 @@ public class Window extends Container {
 	
 	public void setVisible(boolean _bVisible) {
 		super.setVisible(_bVisible);
-		if (!_bVisible && (getParent() != null)) {
+		if (!_bVisible && (getParent() != null) && (getToplevel() == getScreen().getActiveToplevel())) {
 			getParent().setFocusWidget(null);
-		}
-	}
-	
-	public boolean isActive() {
-		return (getFocusWidget() != null) && getFocusWidget().hasFocus();
-	}
-
-	public void activate() {
-		if (isVisible()) {
-			if (getFocusWidget() == null) {
-				Iterator i = getChildren();
-				while (i.hasNext()) {
-					Widget w = (Widget)i.next();
-					if (w.isFocusable()) {
-						w.setFocus();
-						break;
-					}
-				}
-			} else {
-				getFocusWidget().setFocus();
-			}
 		}
 	}
 	
@@ -236,6 +214,12 @@ public class Window extends Container {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 01:32:56  tako
+ * Window now extends Toplevel instead of Container.
+ * Moved isActive() and activate() methods to the Toplevel class.
+ * Making the window invisible doesn't take the focus away from other
+ * windows anymore.
+ *
  * Revision 1.6  2003/11/20 00:34:19  tako
  * Code change because of change from getPadding() to
  * updateInnerBounds().
