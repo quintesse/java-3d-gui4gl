@@ -38,6 +38,7 @@ import java.text.NumberFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.events.GuiActionEvent;
 import org.codejive.gui4gl.events.GuiActionListener;
 import org.codejive.gui4gl.events.GuiChangeEvent;
@@ -59,7 +60,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 186 $
+ * @version $Revision: 200 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -171,7 +172,7 @@ public class SimpleGui implements GLEventListener {
 		public MenuWindow() {
 			super("Test Window");
 			setCenterParent(true);
-			setWidth(300);
+			setWidth(350);
 			setHeight(200);
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
@@ -231,15 +232,20 @@ b.addKeyListener(new GuiKeyAdapter() {
 				}
 			});
 			
-			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f);
-			vb.setBounds(5, 130, 290, 10);
-			add(vb);
-			vb.addChangeListener(new GuiChangeListener() {
+			ValueBar hb = new ValueBar(0.0f, 100.0f, 5.0f, true, GLText.ALIGN_CENTER);
+			hb.setBounds(5, 130, 290, 12);
+			add(hb);
+			hb.addChangeListener(new GuiChangeListener() {
 				public void stateChanged(GuiChangeEvent _event) {
 					Float value = (Float)_event.getValue();
 					m_infoWindow.setValue(value.floatValue());
 				}
 			});
+	
+			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f, true, GLText.ALIGN_RIGHT);
+			vb.setBounds(310, 5, 25, 150);
+			add(vb);
+			
 			
 			TextField tf = new TextField("Edit me");
 			tf.setBounds(5, 145, 290, 20);
@@ -509,6 +515,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/14 00:29:24  steven
+ * updated to show valuebars with their value as text
+ *
  * Revision 1.13  2003/12/05 01:08:58  tako
  * Updated the example to show what a disabled widget looks like.
  *
