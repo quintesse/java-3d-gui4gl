@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 76 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
@@ -31,7 +31,6 @@ public class TextRenderer implements WidgetRendererModel {
 		
 		Font textFont = text.getTextFont();
 		GLColor textFontColor = text.getTextFontColor();
-		int nTextPadding = text.getTextPadding();
 		int nTextAlignment = text.getTextAlignment();
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -39,7 +38,7 @@ public class TextRenderer implements WidgetRendererModel {
 		String sText = text.getText();
 		if (sText != null) {
 			// Caption text
-			GLText.drawText(_context, _widget.getBounds(), nTextPadding, textFont, textFontColor, true, nTextAlignment, sText);
+			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, textFont, textFontColor, true, nTextAlignment, sText);
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -48,6 +47,10 @@ public class TextRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:10:45  tako
+ * Removed as much widget-specific paddings and replaced them by the
+ * ones in the Widget base class.
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *

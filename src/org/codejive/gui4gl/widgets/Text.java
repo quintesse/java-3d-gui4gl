@@ -9,13 +9,12 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 76 $
  */
 public class Text extends Widget {
 	private String m_sText;
 	private Font m_textFont;
 	private GLColor m_textFontColor;
-	private int m_nTextPadding;
 	private int m_nTextAlignment;
 	
 	public Text() {
@@ -26,7 +25,6 @@ public class Text extends Widget {
 		m_sText = _sText;
 		m_textFont = (Font)Theme.getValue(getClass(), "textFont");
 		m_textFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor");
-		m_nTextPadding = Theme.getIntegerValue(getClass(), "textPadding");
 		m_nTextAlignment = Theme.getIntegerValue(getClass(), "textAlignment");
 	}
 
@@ -54,14 +52,6 @@ public class Text extends Widget {
 		m_textFontColor = _color;
 	}
 	
-	public int getTextPadding() {
-		return m_nTextPadding;
-	}
-	
-	public void setTextPadding(int _nPadding) {
-		m_nTextPadding = _nPadding;
-	}
-	
 	public int getTextAlignment() {
 		return m_nTextAlignment;
 	}
@@ -73,6 +63,10 @@ public class Text extends Widget {
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/19 00:13:28  tako
+ * Removed as much widget-specific paddings and replaced them by the
+ * ones in the Widget base class.
+ *
  * Revision 1.2  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
