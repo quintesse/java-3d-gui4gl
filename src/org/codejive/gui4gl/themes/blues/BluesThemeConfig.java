@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 85 $
+ * @version $Revision: 93 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -84,6 +84,8 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Text.class, "renderer", new TextRenderer());
 		Theme.setValue(Text.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Text.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setValue(Text.class, "textFontFocusedColor", new GLColor(1.0f, .5f, .5f));
+		Theme.setValue(Text.class, "textCursorColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setIntegerValue(Text.class, "xPadding", 2);
 		Theme.setIntegerValue(Text.class, "yPadding", 2);
 		Theme.setIntegerValue(Text.class, "textAlignment", GLText.ALIGN_LEFT);
@@ -107,6 +109,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/19 17:11:54  steven
+ * Preliminary check in of Text widget editing
+ *
  * Revision 1.6  2003/11/19 09:07:31  tako
  * Changed focused background color (to an ugly yellow, sorry).
  *
