@@ -51,7 +51,7 @@ import org.codejive.gui4gl.layouts.Layouter;
  * <li>the position or offset of the Display Window within the entire data set</li>
  * 
  * @author Tako
- * @version $Revision: 250 $
+ * @version $Revision: 257 $
  */
 public class ScrollBar extends CompoundWidget {
 	private int m_nOrientation;
@@ -59,7 +59,7 @@ public class ScrollBar extends CompoundWidget {
 	private long m_nTotalSize;
 	private long m_nValue;
 
-	protected Widget m_innerBar;
+	protected InnerBar m_innerBar;
 	protected Button m_lessButton, m_moreButton;
 	
 	private List m_changeListeners;
@@ -143,7 +143,15 @@ public class ScrollBar extends CompoundWidget {
 	 * @param _nVisibleAmount The new size of the Display Window
 	 */
 	public void setVisibleAmount(long _nVisibleAmount) {
+		// Sanity check
+		if (_nVisibleAmount > m_nTotalSize) {
+			_nVisibleAmount = m_nTotalSize;
+		}
 		m_nVisibleAmount = _nVisibleAmount;
+		// Make sure the current value is valid for the new visible amount
+		if ((m_nValue + m_nVisibleAmount) > m_nTotalSize) {
+			setValue(m_nTotalSize - m_nVisibleAmount);
+		}
 	}
 
 	/**
@@ -176,6 +184,13 @@ public class ScrollBar extends CompoundWidget {
 	 */
 	public void setTotalSize(long _nTotalSize) {
 		m_nTotalSize = _nTotalSize;
+		// Make sure the visible amount and the current value are valid for the new total size
+		if (_nTotalSize > m_nVisibleAmount) {
+			m_nVisibleAmount = _nTotalSize;
+		}
+		if ((m_nValue + m_nVisibleAmount) > m_nTotalSize) {
+			setValue(m_nTotalSize - m_nVisibleAmount);
+		}
 	}
 
 	/**
@@ -191,8 +206,17 @@ public class ScrollBar extends CompoundWidget {
 	 * @param _nValue The new position of the Display Window
 	 */
 	public void setValue(long _nValue) {
-		m_nValue = _nValue;
-		fireChangeEvent();
+		if (_nValue != m_nValue) {
+			// Sanity check
+			if (_nValue < 0) {
+				_nValue = 0;
+			} else if ((_nValue + m_nVisibleAmount) > m_nTotalSize) {
+				_nValue = m_nTotalSize - m_nVisibleAmount;
+			}
+			// Change the value and notify listeners
+			m_nValue = _nValue;
+			fireChangeEvent();
+		}
 	}
 	
 	/**
@@ -203,28 +227,8 @@ public class ScrollBar extends CompoundWidget {
 		m_changeListeners.add(_listener);
 	}
 	
-	protected void processMouseClickedEvent(GuiMouseEvent _event) {
-		super.processMouseClickedEvent(_event);
-		handleBarChangeEvent(_event);
-	}
-	
-	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
-		super.processMouseDraggedEvent(_event);
-		handleBarChangeEvent(_event);
-	}
-	
-	protected void handleBarChangeEvent(GuiMouseEvent _event) {
-		if (!_event.isConsumed()) {
-			Rectangle bounds = getInnerBounds();
-			float fPct = (float)(_event.getX() - bounds.x) / bounds.width;
-//			float fRelVal = fPct * (m_fMax - m_fMin);
-//			fRelVal = (int)((fRelVal + m_fStepSize / 2) / m_fStepSize) * m_fStepSize;
-//			setValue(m_fMin + fRelVal);
-		}
-	}
-	
 	protected void fireChangeEvent() {
-		GuiChangeEvent e = new GuiChangeEvent(this, new Float(getValue()));
+		GuiChangeEvent e = new GuiChangeEvent(this, new Long(getValue()));
 		GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 	}
 	
@@ -250,18 +254,19 @@ public class ScrollBar extends CompoundWidget {
 	}
 	
 	protected void doStep(long _nStep) {
-		m_nValue += _nStep;
-		if (_nStep < 0) {
-			if (m_nValue < 0) {
-				m_nValue = 0;
+		if (_nStep != 0) {
+			long nNewValue = m_nValue + _nStep;
+			if (_nStep < 0) {
+				if (nNewValue < 0) {
+					nNewValue = 0;
+				}
+			} else {
+				if ((nNewValue + m_nVisibleAmount) > m_nTotalSize) {
+					nNewValue = m_nTotalSize - m_nVisibleAmount;
+				}
 			}
-		} else {
-			if ((m_nValue + m_nVisibleAmount) > m_nTotalSize) {
-				m_nValue = m_nTotalSize - m_nVisibleAmount;
-			}
+			setValue(nNewValue);
 		}
-		GuiChangeEvent e = new GuiChangeEvent(this, new Long(m_nValue));
-		GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 	}
 	
 	protected void doSmallStepLess() {
@@ -270,6 +275,14 @@ public class ScrollBar extends CompoundWidget {
 	
 	protected void doSmallStepMore() {
 		doStep(1);
+	}
+	
+	protected void doLargeStepLess() {
+		doStep(-m_nVisibleAmount);
+	}
+	
+	protected void doLargeStepMore() {
+		doStep(m_nVisibleAmount);
 	}
 	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
@@ -295,7 +308,7 @@ public class ScrollBar extends CompoundWidget {
 			Rectangle barRect = getInnerBounds();
 			int orientation = getActualOrientation();
 			if (orientation == Orientation.VERTICAL) {
-				int buttonSize = barRect.height / 10;
+				int buttonSize = barRect.height / 5;
 				if (buttonSize > barRect.width) {
 					buttonSize = barRect.width;
 				}
@@ -303,7 +316,7 @@ public class ScrollBar extends CompoundWidget {
 				m_innerBar.setBounds(0, buttonSize + 1, barRect.width, barRect.height - 2 * buttonSize - 2);
 				m_moreButton.setBounds(0, barRect.height - buttonSize, barRect.width, buttonSize);
 			} else {
-				int buttonSize = barRect.width / 10;
+				int buttonSize = barRect.width / 5;
 				if (buttonSize > barRect.height) {
 					buttonSize = barRect.height;
 				}
@@ -315,9 +328,13 @@ public class ScrollBar extends CompoundWidget {
 	}
 	
 	public class InnerBar extends Widget {
+		protected Rectangle m_handleBounds, m_lessBounds, m_moreBounds;
 		
 		public InnerBar() {
 			setFocusable(true);
+			m_handleBounds = new Rectangle();
+			m_lessBounds = new Rectangle();
+			m_moreBounds = new Rectangle();
 		}
 		
 		public float getStartValue() {
@@ -338,12 +355,89 @@ public class ScrollBar extends CompoundWidget {
 		public int getActualOrientation() {
 			return ScrollBar.this.getActualOrientation();
 		}
+
+		public Rectangle getHandleBounds() {
+			m_handleBounds.setBounds(getInnerBounds());
+			
+			int orientation = getActualOrientation();
+			if (orientation == Orientation.VERTICAL) {
+				m_handleBounds.y += (int)(getStartValue() * m_handleBounds.height);
+				m_handleBounds.height = (int)((getEndValue() - getStartValue()) * m_handleBounds.height);
+			} else {
+				m_handleBounds.x += (int)(getStartValue() * m_handleBounds.width);
+				m_handleBounds.width = (int)((getEndValue() - getStartValue()) * m_handleBounds.width);
+			}
+
+			return m_handleBounds;
+		}
+		
+		public Rectangle getLessBounds() {
+			m_lessBounds.setBounds(getInnerBounds());
+			
+			int orientation = getActualOrientation();
+			if (orientation == Orientation.VERTICAL) {
+				m_lessBounds.height = (int)(getStartValue() * m_lessBounds.height);
+			} else {
+				m_lessBounds.width = (int)(getStartValue() * m_lessBounds.width);
+			}
+
+			return m_lessBounds;
+		}
+		
+		public Rectangle getMoreBounds() {
+			m_moreBounds.setBounds(getInnerBounds());
+			
+			int orientation = getActualOrientation();
+			if (orientation == Orientation.VERTICAL) {
+				m_moreBounds.y += (int)(getEndValue() * m_moreBounds.height);
+				m_moreBounds.height -= (int)(getEndValue() * m_moreBounds.height);
+			} else {
+				m_moreBounds.x += (int)(getEndValue() * m_moreBounds.width);
+				m_moreBounds.width -= (int)(getEndValue() * m_moreBounds.width);
+			}
+
+			return m_moreBounds;
+		}
+		
+		protected void processMouseClickedEvent(GuiMouseEvent _event) {
+			super.processMouseClickedEvent(_event);
+			if (!_event.isConsumed()) {
+				Rectangle bounds = getLessBounds();
+				if (bounds.contains(_event.getX(), _event.getY())) {
+					doLargeStepLess();
+				}
+				bounds = getMoreBounds();
+				if (bounds.contains(_event.getX(), _event.getY())) {
+					doLargeStepMore();
+				}
+			}
+		}
+		
+		protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+			super.processMouseDraggedEvent(_event);
+			if (!_event.isConsumed()) {
+				Rectangle bounds = getInnerBounds();
+				float fPct = (float)(_event.getX() - bounds.x) / bounds.width;
+//				float fRelVal = fPct * (m_fMax - m_fMin);
+//				fRelVal = (int)((fRelVal + m_fStepSize / 2) / m_fStepSize) * m_fStepSize;
+//				setValue(m_fMin + fRelVal);
+			}
+		}
 	}
 }
 
 
 /*
  * $Log$
+ * Revision 1.3  2004/05/07 21:06:42  tako
+ * Fixed fireChangeEvent().
+ * Made sure changing the attributes cannot put the widget in an invalid state.
+ * Removed processMouseClickedEvent(), processMouseDraggedEvent() and handleBarChangeEvent().
+ * doStep() now uses setValue() to prevent duplication of code.
+ * Added doLargeStepLess() and doLargeStepMore().
+ * Changed the percentage at which non-rectangular less/more buttons will be accepted (was 10% is now 20%).
+ * Added getHandleBounds(), getLessBounds() and getMoreBounds() to InnerBar.
+ *
  * Revision 1.2  2004/05/04 23:54:53  tako
  * Minor change in scrollbar layout.
  *
