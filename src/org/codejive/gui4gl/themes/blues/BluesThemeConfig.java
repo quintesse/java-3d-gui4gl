@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 63 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -76,11 +76,21 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Text.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setIntegerValue(Text.class, "textPadding", 2);
 		Theme.setIntegerValue(Text.class, "textAlignment", GLText.ALIGN_LEFT);
+		
+		// ValueBar
+		Theme.setValue(ValueBar.class, "renderer", new ValueBarRenderer());
+		Theme.setValue(ValueBar.class, "barValueColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setValue(ValueBar.class, "barFillColor", new GLColor(1.0f, 1.0f, 1.0f)); //new GLColor(0.08f, 0.08f, 1.0f)); // this may be null, to indicate there is no bar background fill
+		Theme.setValue(ValueBar.class, "barXPadding", new Integer(1)); // x-pad for the value bar
+		Theme.setValue(ValueBar.class, "barYPadding", new Integer(1)); // y-pad for the value bar
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/18 15:59:39  steven
+ * Added properties for the ValueBar widget
+ *
  * Revision 1.2  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
