@@ -16,10 +16,10 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 126 $
+ * @version $Revision: 146 $
  */
 public class Container extends Widget {
-	private List m_children;
+	private LinkedList m_children;
 	private Map m_childNames;
 	private Widget m_focusWidget;
 
@@ -46,7 +46,8 @@ public class Container extends Widget {
 	}
 
 	public Iterator getChildren() {
-		return m_children.iterator();
+		List x = new LinkedList(m_children);
+		return x.iterator();
 	}
 	
 	public Widget findChild(String _sName) {
@@ -164,15 +165,27 @@ public class Container extends Widget {
 	
 	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
 		Widget result = null;
-		Iterator i = getChildren();
-		while ((result == null) && i.hasNext()) {
-			Widget w = (Widget)i.next();
-			result = w.getWidgetUnderPoint(_nXPos, _nYPos);
-		}
-		if (result == null) {
-			result = super.getWidgetUnderPoint(_nXPos, _nYPos);
+		if (isVisible()) {
+			Iterator i = getChildren();
+			while ((result == null) && i.hasNext()) {
+				Widget w = (Widget)i.next();
+				result = w.getWidgetUnderPoint(_nXPos, _nYPos);
+			}
+			if (result == null) {
+				result = super.getWidgetUnderPoint(_nXPos, _nYPos);
+			}
 		}
 		return result;
+	}
+	
+	protected void moveChildToFront(Widget _child) {
+		m_children.remove(_child);
+		m_children.addLast(_child);
+	}
+	
+	protected void moveChildToBack(Widget _child) {
+		m_children.remove(_child);
+		m_children.addFirst(_child);
 	}
 	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
@@ -239,6 +252,10 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/24 16:52:25  tako
+ * Added moveChildToFront() and moveChildToBack().
+ * getWidgetUnderPoint() no longer returns references to invisible widgets.
+ *
  * Revision 1.9  2003/11/23 02:02:33  tako
  * Added getWidgetUnderPoint(int, int), necessary for the mouse support.
  *
@@ -249,7 +266,7 @@ public class Container extends Widget {
  * Made focus changes a bit more robust.
  *
  * Revision 1.6  2003/11/19 11:19:41  tako
- * Implemented completely new event system because tryin to re-use the
+ * Implemented completely new event system because trying to re-use the
  * AWT and Swing events just was too much trouble.
  * Most names of events, listeners and adapters have been duplicated
  * from their AWT/Swing counterparts only with a Gui prefix.
