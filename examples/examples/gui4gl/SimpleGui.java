@@ -35,7 +35,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 49 $
+ * @version $Revision: 59 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -155,6 +155,29 @@ class SimpleGui implements GLEventListener {
 			b.setBounds(5, 65, 290, 20);
 			add(b);
 			b = new Button("Exit this example");
+
+// BEGIN TEST
+b.addKeyListener(new KeyAdapter() {
+	public void keyTyped(KeyEvent _event) {
+		Button b = (Button)_event.getSource();
+		switch (_event.getKeyChar()) {
+			case 'a':
+				b.setWidth(b.getWidth() - 1);
+				break;
+			case 'd':
+				b.setWidth(b.getWidth() + 1);
+				break;
+			case 'w':
+				b.setHeight(b.getHeight() - 1);
+				break;
+			case 's':
+				b.setHeight(b.getHeight() + 1);
+				break;
+		}
+	}
+});
+// END TEST
+
 			b.setBounds(5, 85, 290, 20);
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent _event) {
@@ -407,6 +430,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/18 15:54:57  tako
+ * Added some silly test code.
+ *
  * Revision 1.1  2003/11/17 11:05:19  tako
  * First check-in of the gui4gl example application.
  *
