@@ -20,7 +20,7 @@ import org.codejive.gui4gl.themes.*;
  * @author tako
  */
 public class Widget implements Renderable, AbstractWidget {
-	private Container m_parent;
+	private AbstractContainer m_parent;
 	private Rectangle m_rectangle;
 	private GLColor m_backgroundColor;
 	private float m_fTransparancy;
@@ -52,17 +52,17 @@ public class Widget implements Renderable, AbstractWidget {
 		m_bounds = new Rectangle();
 	}
 	
-	protected void setParent(Container _parent) {
+	public void setParent(AbstractContainer _parent) {
 		m_parent = _parent;
 	}
 	
-	public Container getParent() {
+	public AbstractContainer getParent() {
 		return m_parent;
 	}
 	
 	public Screen getScreen() {
 		Screen screen;
-		AbstractWidget parent = getParent();
+		AbstractContainer parent = getParent();
 		if (parent != null) {
 			screen = parent.getScreen();
 		} else {
@@ -218,7 +218,18 @@ public class Widget implements Renderable, AbstractWidget {
 		if (m_parent != null) {
 			m_parent.calculateBounds(_rect); // TODO Figure out why this is necessary. Should already have been done by parent??
 			updateBounds(_rect.width, _rect.height);
-			_rect.setBounds(_rect.x + r.x, _rect.y + r.y, r.width, r.height);
+			int x, y;
+			if (r.x >= 0) {
+				x = _rect.x + r.x;
+			} else {
+				x = _rect.x + _rect.width + r.x;
+			}
+			if (r.y >= 0) {
+				y = _rect.y + r.y;
+			} else {
+				y = _rect.y + _rect.height + r.y;
+			}
+			_rect.setBounds(x, y, r.width, r.height);
 		} else {
 			updateBounds(-1, -1);
 			_rect.setBounds(r);
