@@ -16,7 +16,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 73 $
+ * @version $Revision: 97 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -64,13 +64,9 @@ public class WindowRenderer implements WidgetRendererModel {
 			gl.glBegin(GL.GL_QUADS);
 
 			// Title bar
-			float fFontHeight = captionFont.getSize(_context);
-			float fFontBaseLine = captionFont.getBaseLine(_context);
-			float fFontPadding = fFontHeight - fFontBaseLine;
 			gl.glColor4f(titlebarColor.getRed(), titlebarColor.getGreen(), titlebarColor.getBlue(), 1.0f - fTitlebarTransparancy);
 			m_tmpBounds.setBounds(window.getBounds());
-			m_tmpBounds.y -= fFontHeight + 2 * nCaptionYPadding + fFontPadding;
-			m_tmpBounds.height = (int)fFontHeight + 2 * nCaptionYPadding + (int)fFontPadding;
+			m_tmpBounds.height = window.getTitlebarHeight();
 			RenderHelper.drawRectangle(gl, m_tmpBounds);
 	
 			gl.glEnd();
@@ -87,6 +83,12 @@ public class WindowRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/20 00:39:12  tako
+ * Changes to title bar size calculations because the height of the bar is
+ * now a property of the Window class.
+ * The title bar is now drawn inside the bounds of the widget as opposed
+ * to outside like it was before.
+ *
  * Revision 1.5  2003/11/19 00:11:54  tako
  * Added support for seperate X and Y padding.
  *
