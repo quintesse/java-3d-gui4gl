@@ -26,16 +26,25 @@ import java.awt.Rectangle;
 import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.layouts.Layouter;
+import org.codejive.utils4gl.RenderContext;
 
 /**
+ * This class implements a conatiner for a widget that will automatically
+ * add scrollbars when the contained widget is larger than the container.
+ * 
  * @author tako
- * @version $Revision: 255 $
+ * @version $Revision: 258 $
  */
 public class ScrollContainer extends CompoundWidget {
 	protected Widget m_content;
 	protected Container m_container;
 	protected ScrollBar m_horizontal, m_vertical;
 	
+	/**
+	 * Creates a new ScrollContainer with the specified widget as
+	 * the content to scroll (only when larger than the container).
+	 * @param _content The contained widget to scroll
+	 */
 	public ScrollContainer(Widget _content) {
 		m_content = _content;
 		
@@ -68,6 +77,19 @@ public class ScrollContainer extends CompoundWidget {
 		});
 		add(m_vertical);
 
+		setLayouter(new ScrollContainerLayouter());
+	}
+	
+	public boolean hasFocus() {
+		return false;
+	}
+	
+	public void setFocus() {
+		// Don't allow this
+	}
+	
+	protected void updateInnerBounds(RenderContext _context) {
+		super.updateInnerBounds(_context);
 		if (m_content.getWidth() > getWidth()) {
 			m_horizontal.setVisible(true);
 			m_horizontal.setTotalSize(m_content.getWidth());
@@ -79,16 +101,6 @@ public class ScrollContainer extends CompoundWidget {
 			m_vertical.setTotalSize(m_content.getHeight());
 			m_vertical.setVisibleAmount(m_container.getHeight());
 		}
-		
-		setLayouter(new ScrollContainerLayouter());
-	}
-	
-	public boolean hasFocus() {
-		return false;
-	}
-	
-	public void setFocus() {
-		// Don't allow this
 	}
 	
 	protected class ScrollContainerLayouter implements Layouter {
@@ -118,6 +130,10 @@ public class ScrollContainer extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.3  2004/05/07 23:28:05  tako
+ * Scrollbar sizes are now calculated correctly.
+ * Added some comments.
+ *
  * Revision 1.2  2004/05/05 00:14:22  tako
  * Scrolling now actually works.
  *
