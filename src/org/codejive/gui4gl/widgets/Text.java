@@ -22,24 +22,42 @@
 package org.codejive.gui4gl.widgets;
 
 /**
+ * This widget is used to just display text, it provides no interaction with
+ * the user.
+ * 
  * @author tako
- * @version $Revision: 239 $
+ * @version $Revision: 261 $
  */
 public class Text extends Widget {
 	private String m_sText;
 	
+	/**
+	 * Creates a new Text without any actual text in it yet.
+	 */
 	public Text() {
 		this(null);
 	}
 	
+	/**
+	 * Creates a new Text with the given string as its content
+	 * @param _sText The text to use as the contents for the new widget
+	 */
 	public Text(String _sText) {
 		m_sText = _sText;
 	}
 
+	/**
+	 * Returns the current contents of the Text.
+	 * @return The current text
+	 */
 	public String getText() {
 		return m_sText;
 	}
 	
+	/**
+	 * Sets a new text for the widget
+	 * @param _sText The new text to use as the contents
+	 */
 	public void setText(String _sText) {
 		m_sText = _sText;
 	}
@@ -47,6 +65,9 @@ public class Text extends Widget {
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.9  2004/05/04 22:05:43  tako
  * Now using the new attribute map instead of individual property getters and setters.
  * Consolidated event firing code into separate methods.

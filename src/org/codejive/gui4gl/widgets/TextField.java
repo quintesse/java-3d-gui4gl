@@ -31,8 +31,13 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
+ * This widget implements an editable text field. When the widget
+ * has the keyboard focus a cursor will appear indicating where
+ * new letters will apear while typing. The cursor keys will
+ * work as expected, moving the cursor from left to right.
+ * 
  * @author steven
- * @version $Revision: 239 $
+ * @version $Revision: 261 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -42,20 +47,35 @@ public class TextField extends Widget {
 	private int m_nCursorPos;
 	private int m_nViewOffset;
 	
+	/**
+	 * Creates a new TextField without any actual text in it yet.
+	 */
 	public TextField() {
 		this("");
 	}
 
+	/**
+	 * Creates a new TextField with the given string as its content
+	 * @param _sText The text to use as the contents for the new widget
+	 */
 	public TextField(String _sText) {
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
 		setText(_sText);
 	}
 
+	/**
+	 * Returns the current contents of the Text.
+	 * @return The current text
+	 */
 	public String getText() {
 		return m_sText;
 	}
 	
+	/**
+	 * Sets a new text for the widget
+	 * @param _sText The new text to use as the contents
+	 */
 	public void setText(String _sText) {
 		m_sText = _sText;
 		int l = m_sText.length();
@@ -68,18 +88,38 @@ public class TextField extends Widget {
 		fireChangeEvent();
 	}
 	
+	/**
+	 * Returns the index of the first character that gets displayed in the field.
+	 * This is needed for strings that are to large to fit entirely into the
+	 * field. When that happens and the cursor would pass beyond the start or end
+	 * of the field it will stay in its place and the text will scroll left or
+	 * right.
+	 * @return
+	 */
 	public int getViewOffset() {
 		return m_nViewOffset;
 	}
 	
+	/**
+	 * Sets the index of the first character that should be displayed in the field.
+	 * @param _nViewOffset The index of the first character to display.
+	 */
 	public void setViewOffset(int _nViewOffset) {
 		m_nViewOffset = _nViewOffset;
 	}
 	
+	/**
+	 * Returns the index of the current cursor position within the text.
+	 * @return The cursor position
+	 */
 	public int getCursorPos() {
 		return m_nCursorPos;
 	}
 	
+	/**
+	 * Sets the index of the new cursor position within the text.
+	 * @param _nCursorOffset The new cursor position
+	 */
 	public void setCursorPos(int _nCursorOffset) {
 		m_nCursorPos = _nCursorOffset;
 		if(m_nCursorPos < 0) {
@@ -90,12 +130,16 @@ public class TextField extends Widget {
 		}
 	}
 	
+	/**
+	 * Adds a listener for the GuiChange event that will be
+	 * fired when the user changes the contents of the text field.
+	 * @param _listener The listener to add to the list of listeners
+	 */
 	public void addChangeListener(GuiChangeListener _listener) {
 		m_changeListeners.add(_listener);
 	}
 	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
-		GuiChangeEvent e;
 		if (!_event.isConsumed()) {
 			switch (_event.getKeyCode()) {
 				case KeyEvent.VK_LEFT:
@@ -176,6 +220,9 @@ public class TextField extends Widget {
 
 /*
  * $Log$
+ * Revision 1.11  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.10  2004/05/04 22:05:43  tako
  * Now using the new attribute map instead of individual property getters and setters.
  * Consolidated event firing code into separate methods.

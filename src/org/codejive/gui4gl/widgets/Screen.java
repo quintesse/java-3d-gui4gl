@@ -35,14 +35,26 @@ import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.RenderObserver;
 
 /**
+ * This class represents the entire visible screen estate that can be used to
+ * display widgets. Any widget that needs to be display must either directly
+ * or indirectly be a child of a Screen object. The Screen is de root of the
+ * entire widget tree that must be displayed. A Screen is normally supposed
+ * to cover the entire OpenGL viewport that it will displayed in (although it
+ * is not actually required to be that exact size).
+ * The Screen is also responsible for translating and dispatching all the
+ * system-events to the widgets that want/need them.
+ * 
  * @author tako
- * @version $Revision: 249 $
+ * @version $Revision: 261 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
 	private Widget m_widgetPressed;
 	private int m_nLastXPos, m_nLastYPos;
 	
+	/**
+	 * Creates a new Screen.
+	 */
 	public Screen() {
 		m_widgetUnderMouse = null;
 		m_widgetPressed = null;
@@ -57,6 +69,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		return null;
 	}
 	
+	/**
+	 * Returns the TopLevel object that has the current focus.
+	 * @return The currently focused TopLevel object
+	 */
 	public Toplevel getActiveToplevel() {
 		if (getFocusWidget() != null) {
 			return getFocusWidget().getToplevel();
@@ -285,6 +301,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.19  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.18  2004/05/04 23:54:02  tako
  * Fixed typo in method name.
  *

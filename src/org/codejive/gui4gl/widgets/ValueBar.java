@@ -33,8 +33,14 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
+ * This class implements a widget that represents a single value within a range.
+ * In a way it is very similar to a ScrollBar and the differences are subtle.
+ * The biggest difference is that a ValueBar selects a single value within a range
+ * and shows it that way while a ScrollBar represents a sub-range of values
+ * or "window" within a range.
+ * 
  * @author steven
- * @version $Revision: 239 $
+ * @version $Revision: 261 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -47,28 +53,66 @@ public class ValueBar extends Widget {
 
 	private List m_changeListeners;
 	
+	/**
+	 * Creates a new ValueBar.
+	 * @param _fMin The value the widget will represent when it is set at its minimum
+	 * @param _fMax The value the widget will represent when it is set at its maximum
+	 */
 	public ValueBar(float _fMin, float _fMax) {
 		this(_fMin, _fMax, 1.0f, Orientation.DEFAULT, false, GLText.ALIGN_CENTER);
 	}
 	
+	/**
+	 * Creates a new ValueBar.
+	 * @param _fMin The value the widget will represent when it is set at its minimum
+	 * @param _fMax The value the widget will represent when it is set at its maximum
+	 * @param _fStepSize The amount by which the value of the widget can be increased or decreased
+	 */
 	public ValueBar(float _fMin, float _fMax, float _fStepSize) {
 		this(_fMin, _fMax, _fStepSize, Orientation.DEFAULT, false, GLText.ALIGN_CENTER);
 	}
 	
+	/**
+	 * Creates a new ValueBar.
+	 * @param _fMin The value the widget will represent when it is set at its minimum
+	 * @param _fMax The value the widget will represent when it is set at its maximum
+	 * @param _fStepSize The amount by which the value of the widget can be increased or decreased
+	 * @param _bShowValue Indicates if a text with the current value of the widget should be displayed
+	 * @param _lAlignment The position of the value text with respect to the value bar
+	 */
 	public ValueBar(float _fMin, float _fMax, float _fStepSize, boolean _bShowValue, int _lAlignment) {
 		this(_fMin, _fMax, _fStepSize, Orientation.DEFAULT, _bShowValue, _lAlignment);
 	}
 	
+	/**
+	 * Creates a new ValueBar.
+	 * @param _fMin The value the widget will represent when it is set at its minimum
+	 * @param _fMax The value the widget will represent when it is set at its maximum
+	 * @param _nOrientation The orientation of the value bar
+	 */
 	public ValueBar(float _fMin, float _fMax, int _nOrientation) {
 		this(_fMin, _fMax, 1.0f, _nOrientation, false, GLText.ALIGN_CENTER);
 	}
 	
+	/**
+	 * Creates a new ValueBar.
+	 * @param _fMin The value the widget will represent when it is set at its minimum
+	 * @param _fMax The value the widget will represent when it is set at its maximum
+	 * @param _fStepSize The amount by which the value of the widget can be increased or decreased
+	 * @param _nOrientation The orientation of the value bar
+	 */
 	public ValueBar(float _fMin, float _fMax, float _fStepSize, int _nOrientation) {
 		this(_fMin, _fMax, _fStepSize, _nOrientation, false, GLText.ALIGN_CENTER);
 	}
 	
 	/**
-	 * @param _lAlignment see GLText for values.
+	 * Creates a new ValueBar.
+	 * @param _fMin The value the widget will represent when it is set at its minimum
+	 * @param _fMax The value the widget will represent when it is set at its maximum
+	 * @param _fStepSize The amount by which the value of the widget can be increased or decreased
+	 * @param _nOrientation The orientation of the value bar
+	 * @param _bShowValue Indicates if a text with the current value of the widget should be displayed
+	 * @param _lAlignment The position of the value text with respect to the value bar
 	 */
 	public ValueBar(float _fMin, float _fMax, float _fStepSize, int _nOrientation, boolean _bShowValue, int _lAlignment) {
 		setMinValue(_fMin);
@@ -82,35 +126,73 @@ public class ValueBar extends Widget {
 		setFocusable(true);
 	}
 	
+	/**
+	 * Returns the currently selected value.
+	 * @return The current value.
+	 */
 	public float getValue() {
 		return m_fValue;
 	}
 	
+	/**
+	 * Sets the new value for the bar.
+	 * @param _value The new value to display.
+	 */
 	public void setValue(float _value) {
 		m_fValue = _value;
 		fireChangeEvent();
 	}
 
+	/**
+	 * The current minimum value when the bar is all the way at the beginning
+	 * (far left or bottom depending on the orientation).
+	 * @return The current minimum value
+	 */
 	public float getMinValue() {
 		return m_fMin;
 	}
 	
+	/**
+	 * Sets the new minimum value for the bar.
+	 * @param _fValue The new minimum
+	 */
 	public void setMinValue(float _fValue) {
 		m_fMin = _fValue;
 	}
 	
+	/**
+	 * The current maximum value when the bar is all the way at the end
+	 * (far right or top depending on the orientation).
+	 * @return The current maximum value
+	 */
 	public float getMaxValue() {
 		return m_fMax;
 	}
 	
+	/**
+	 * Sets the new maximum value for the bar.
+	 * @param _fValue The new maximum
+	 */
 	public void setMaxValue(float _fValue) {
 		m_fMax = _fValue;
 	}
 	
+	/**
+	 * Returns the current amount by which the value will be increased
+	 * or decreased whenever the user drags the bar around to change its
+	 * value.
+	 * @return The amount by which the widget's value will be adjusted
+	 */
 	public float getStepSize() {
 		return m_fStepSize;
 	}
 	
+	/**
+	 * Sets the new amount by which the value will be increased or
+	 * decreased whenever the user drags the bar around to change its
+	 * value.
+	 * @param _fStepSize The new amount by which the widget's value will be adjusted
+	 */
 	public void setStepSize(float _fStepSize) {
 		m_fStepSize = _fStepSize;
 	}
@@ -131,24 +213,42 @@ public class ValueBar extends Widget {
 		m_nOrientation = _nOrientation;
 	}
 	
+	/**
+	 * Indicates if a text with the current value of the widget should be displayed.
+	 * @return A boolean indicating if the current value should be displayed as text as well
+	 */
 	public boolean isShowValue() {
 		return m_bShowValue;
 	}
 
+	/**
+	 * Sets the fact that a text with the current value of the widget should be displayed or not.
+	 * @param _bShowValue A boolean indicating if the current value should be displayed as text as well
+	 */
 	public void setShowValue(boolean _bShowValue) {
 		m_bShowValue = _bShowValue;
 	}
 	
+	/**
+	 * Returns the current alignment (see GLText for alignments) of the value
+	 * text in relation to the value bar.
+	 * @return The current alignment of the value text
+	 */
+	public int getAlignment() {
+		return m_lAlignment;
+	}
+
+	/**
+	 * Sets the current aligment (see GLText for alignments) for the value text
+	 * in relation to the value bar.
+	 * @param _lAlignment The new aligment for the value text
+	 */
 	public void setAlignment(int _lAlignment) {
 		if(m_lAlignment == GLText.ALIGN_CENTER || m_lAlignment == GLText.ALIGN_LEFT || m_lAlignment == GLText.ALIGN_RIGHT) {
 			m_lAlignment = _lAlignment;
 		} else {
 			throw new RuntimeException("Invalid alignment specified. See GLText for valid alignments");
 		}
-	}
-
-	public int getAlignment() {
-		return m_lAlignment;
 	}
 
 	/**
@@ -242,6 +342,9 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.18  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.17  2004/05/04 22:05:43  tako
  * Now using the new attribute map instead of individual property getters and setters.
  * Consolidated event firing code into separate methods.

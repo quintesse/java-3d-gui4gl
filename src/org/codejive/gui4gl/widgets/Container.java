@@ -25,12 +25,25 @@ import java.awt.event.KeyEvent;
 import java.util.Iterator;
 
 import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.layouts.Layouter;
 
 /**
+ * This widget is basically a CompoundWidget with the difference that
+ * is especially meant for dynamic widgets where the user has full control
+ * over the component widgets that get added to it.
+ * 
  * @author tako
- * @version $Revision: 243 $
+ * @version $Revision: 261 $
  */
 public class Container extends CompoundWidget {
+	
+	public Layouter getLayouter() {
+		return super.getLayouter();
+	}
+	
+	public void setLayouter(Layouter _layouter) {
+		super.setLayouter(_layouter);
+	}
 	
 	public void add(Widget _child) {
 		super.add(_child);
@@ -88,6 +101,9 @@ public class Container extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.17  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.16  2004/05/04 22:13:32  tako
  * Removed unnecessary constructors.
  *

@@ -21,7 +21,6 @@
  */
 package org.codejive.gui4gl.widgets;
 
-import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,15 +28,18 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import net.java.games.jogl.GL;
-
 import org.codejive.gui4gl.layouts.Layouter;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.RenderObserver;
 
 /**
+ * This widget is the basis for more complex widgets that consist of a grouping
+ * of several other widgets. The CompoundWidget can be used for either static
+ * or at least predetermined widgets or dynamic ones where the number and
+ * type of the component widgets are entirely under the user's control.
+ *  
  * @author tako
- * @version $Revision: 241 $
+ * @version $Revision: 261 $
  */
 public class CompoundWidget extends Widget {
 	protected LinkedList m_children;
@@ -45,6 +47,9 @@ public class CompoundWidget extends Widget {
 	protected Widget m_focusWidget;
 	protected Layouter m_layouter;
 
+	/**
+	 * Creates a new CompoundWidget.
+	 */
 	public CompoundWidget() {
 		m_children = new LinkedList();
 		m_childNames = new HashMap();
@@ -57,7 +62,7 @@ public class CompoundWidget extends Widget {
 	 * Returns the current layouter for this widget.
 	 * @return A reference to the current Layouter.
 	 */
-	public Layouter getLayouter() {
+	protected Layouter getLayouter() {
 		return m_layouter;
 	}
 	
@@ -66,10 +71,15 @@ public class CompoundWidget extends Widget {
 	 * Setting this to null will revert to using the child widget's absolute bounds.
 	 * @param _layouter
 	 */
-	public void setLayouter(Layouter _layouter) {
+	protected void setLayouter(Layouter _layouter) {
 		m_layouter = _layouter;
 	}
 	
+	/**
+	 * Adds a new widget as a child to this one, the parent widget.
+	 * The child widget's parent property will automatically be set.
+	 * @param _child The widget to add as child
+	 */
 	protected void add(Widget _child) {
 		m_children.add(_child);
 		if (_child.getName() != null) {
@@ -78,42 +88,68 @@ public class CompoundWidget extends Widget {
 		_child.setParent(this);
 	}
 
+	/**
+	 * Removes the given widget from this widget's list of children.
+	 * The child widget's parent property will automatically be cleared (set to null).
+	 * @param _child The child widget to remove
+	 */
 	protected void remove(Widget _child) {
 		m_children.remove(_child);
 		m_childNames.remove(_child);
 		_child.setParent(null);
 	}
 	
+	/**
+	 * Removes the indicated widget from this widget's list of children.
+	 * The child widget's parent property will automatically be cleared (set to null).
+	 * @param _sChildName The name of the child widget to remove
+	 */
 	protected void remove(String _sChildName) {
 		Widget child = getChild(_sChildName);
 		remove(child);
 	}
 	
+	/**
+	 * Returns the child widget with the given name
+	 * @param _sName The name of the widget to return
+	 * @return The requested widget or null if a widget with that name could not be found
+	 */
 	protected Widget getChild(String _sName) {
 		return (Widget)m_childNames.get(_sName);
 	}
 
+	/**
+	 * Returns an iterator over this widget's children.
+	 * @return An iterator over a collection of child widgets
+	 */
 	protected Iterator getChildren() {
 		List x = new LinkedList(m_children);
 		return x.iterator();
 	}
 
+	/**
+	 * Will try to find a widget with the given name in the entire widget
+	 * tree "under" the current widget.
+	 * @param _sName The name of the widget to find
+	 * @return The requested widget or null if a widget with that name could not be found
+	 */
 	protected Widget findChild(String _sName) {
 		Widget found = null;
 		// First see if the current container contains a widget with the given name
 		Widget child = getChild(_sName);
 		if (child == null) {
+			// Now see if any of our children is a CompoundWidget and try to find
+			// the requested widget inside it
 			Iterator i = getChildren();
 			while ((found == null) && i.hasNext()) {
 				child = (Widget)i.next();
-				if (child instanceof Container) {
-					found = ((Container)child).findChild(_sName);
+				if (child instanceof CompoundWidget) {
+					found = ((CompoundWidget)child).findChild(_sName);
 				}
 			}
 		} else {
 			found = child;
 		}
-		// Now see if any of our children is a container and has 
 		return found;
 	}
 
@@ -137,20 +173,36 @@ public class CompoundWidget extends Widget {
 		return result;
 	}
 
+	/**
+	 * Will move the given child widget to the "front" of all the other children.
+	 * @param _child The child to move to the front.
+	 */
 	protected void moveChildToFront(Widget _child) {
 		m_children.remove(_child);
 		m_children.addLast(_child);
 	}
 
+	/**
+	 * Will move the given child widget to the "back" of all the other children.
+	 * @param _child The child to move to the back.
+	 */
 	protected void moveChildToBack(Widget _child) {
 		m_children.remove(_child);
 		m_children.addFirst(_child);
 	}
 
+	/**
+	 * Returns the child widget that has the keyboard focus.
+	 * @return The child widget that has focus
+	 */
 	protected Widget getFocusWidget() {
 		return m_focusWidget;
 	}
 	
+	/**
+	 * Sets the child widget that should have the keyboard focus.
+	 * @param _widget The child widget to give focus
+	 */
 	protected void setFocusWidget(Widget _widget) {
 		m_focusWidget = _widget;
 		if (getParent() != null) {
@@ -158,6 +210,12 @@ public class CompoundWidget extends Widget {
 		}
 	}
 
+	/**
+	 * Returns the widget that would get the focus if were to go backwards
+	 * in the tabbing order starting from the given widget.
+	 * @param _widget The widget to use as a reference point
+	 * @return The previous focus widget with respect to the reference widget
+	 */
 	protected Widget getPreviousFocusWidget(Widget _widget) {
 		Widget prevWidget = null;
 		int p;
@@ -197,6 +255,12 @@ public class CompoundWidget extends Widget {
 		return prevWidget;
 	}
 
+	/**
+	 * Returns the widget that would get the focus if were to go forwards
+	 * in the tabbing order starting from the given widget.
+	 * @param _widget The widget to use as a reference point
+	 * @return The next focus widget with respect to the reference widget
+	 */
 	protected Widget getNextFocusWidget(Widget _widget) {
 		Widget nextWidget = null;
 		int p;
@@ -277,6 +341,9 @@ public class CompoundWidget extends Widget {
 
 /*
  * $Log$
+ * Revision 1.6  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.5  2004/05/04 22:12:54  tako
  * Added license.
  * Added support for layouters.

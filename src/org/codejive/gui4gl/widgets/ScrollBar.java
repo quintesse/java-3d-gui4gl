@@ -49,9 +49,13 @@ import org.codejive.gui4gl.layouts.Layouter;
  * the total number of items, lines of text, etc. that is supposed to be
  * in the entire data set</li>
  * <li>the position or offset of the Display Window within the entire data set</li>
+ * In a way it is very similar to a ValueBar and the differences are subtle.
+ * The biggest difference is that a ValueBar selects a single value within a range
+ * and shows it that way while a ScrollBar represents a sub-range of values
+ * or "window" within a range.
  * 
  * @author Tako
- * @version $Revision: 259 $
+ * @version $Revision: 261 $
  */
 public class ScrollBar extends CompoundWidget {
 	private int m_nOrientation;
@@ -315,6 +319,17 @@ public class ScrollBar extends CompoundWidget {
 		}
 	}
 	
+	/**
+	 * This is a specialized internal widget that handles the "bar part" of
+	 * this scroll bar widget. The bar represents the rangle of floating point
+	 * numbers between 0.0 and 1.0 where depending on the orientation 0.0 is
+	 * either on the left or at the top. The handle that is displayed inside
+	 * the bar represents a "window" within that range from 0 - 1 where the
+	 * start value is where the handle starts and the end value is where it ends. 
+	 * 
+	 * @author tako
+	 * @version $Revision: 261 $
+	 */
 	public class InnerBar extends Widget {
 		private Rectangle m_handleBounds, m_lessBounds, m_moreBounds;
 		
@@ -330,11 +345,21 @@ public class ScrollBar extends CompoundWidget {
 			m_bDragHandle = false;
 		}
 		
+		/**
+		 * Returns the current start value of the handle.
+		 * Its value is: 0.0 <= start_value < end_value
+		 * @return The current start value
+		 */
 		public float getStartValue() {
 			float fStart = (float)getValue() / getTotalSize();
 			return fStart;
 		}
 		
+		/**
+		 * Returns the current end value of the handle.
+		 * Its value is: start_value < end_value <= 1.0
+		 * @return The current end value
+		 */
 		public float getEndValue() {
 			long nSize = getTotalSize();
 			long nEndVal = getValue() + getVisibleAmount();
@@ -345,10 +370,18 @@ public class ScrollBar extends CompoundWidget {
 			return fEnd;
 		}
 		
+		/**
+		 * Returns the parent's actual orientation.
+		 * @return The parent's orientation
+		 */
 		public int getActualOrientation() {
 			return ScrollBar.this.getActualOrientation();
 		}
 
+		/**
+		 * Returns a Rectangle describing the boundaries of the "handle".
+		 * @return The boundaries of the handle
+		 */
 		public Rectangle getHandleBounds() {
 			m_handleBounds.setBounds(getInnerBounds());
 			if (getActualOrientation() == Orientation.VERTICAL) {
@@ -362,6 +395,12 @@ public class ScrollBar extends CompoundWidget {
 			return m_handleBounds;
 		}
 		
+		/**
+		 * Returns a Rectangle describing the boundaries of the space "before"
+		 * the handle (either on the left or above the handle depending on the
+		 * orientation).
+		 * @return The boundaries of the space "before" the handle
+		 */
 		public Rectangle getLessBounds() {
 			m_lessBounds.setBounds(getInnerBounds());
 			if (getActualOrientation() == Orientation.VERTICAL) {
@@ -373,6 +412,12 @@ public class ScrollBar extends CompoundWidget {
 			return m_lessBounds;
 		}
 		
+		/**
+		 * Returns a Rectangle describing the boundaries of the space "after"
+		 * the handle (either on the right or below the handle depending on the
+		 * orientation).
+		 * @return The boundaries of the space "before" the handle
+		 */
 		public Rectangle getMoreBounds() {
 			m_moreBounds.setBounds(getInnerBounds());
 			if (getActualOrientation() == Orientation.VERTICAL) {
@@ -439,6 +484,9 @@ public class ScrollBar extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.5  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.4  2004/05/07 23:29:51  tako
  * Fixed setTotalSize() validation.
  * Removed unnecessary code from doStep().

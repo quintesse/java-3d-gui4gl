@@ -31,8 +31,13 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
+ * This class implements a toggle/checkbox field. Its function is
+ * quite similar to that of a button with the exception that a
+ * toggle changes back and forth between its selected and unselected
+ * state whenever it gets activated.
+ *  
  * @author tako
- * @version $Revision: 239 $
+ * @version $Revision: 261 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
@@ -40,10 +45,18 @@ public class Toggle extends Widget {
 	
 	private List m_changeListeners;
 	
+	/**
+	 * Creates a new unselected Toggle without a caption.  
+	 */
 	public Toggle() {
 		this(null, false);
 	}
 
+	/**
+	 * Creates a new Toggle with the given caption and selection state.
+	 * @param _sCaption The caption for the new toggle widget
+	 * @param _bChecked The begin state of the new widget
+	 */
 	public Toggle(String _sCaption, boolean _bChecked) {
 		m_sCaption = _sCaption;
 		m_bChecked = _bChecked;
@@ -52,23 +65,44 @@ public class Toggle extends Widget {
 		m_changeListeners = new ArrayList();
 	}
 
+	/**
+	 * Returns the toggle's caption
+	 * @return The current caption of the toggle
+	 */
 	public String getCaption() {
 		return m_sCaption;
 	}
 	
+	/**
+	 * Sets the new caption for the toggle
+	 * @param _sCaption The new caption
+	 */
 	public void setCaption(String _sCaption) {
 		m_sCaption = _sCaption;
 	}
 	
+	/**
+	 * Returns if the toggle is currently in its checked state or not.
+	 * @return The current checked state of the toggle
+	 */
 	public boolean isChecked() {
 		return m_bChecked;
 	}
 	
+	/**
+	 * Sets the new checked state for the toggle.
+	 * @param _bChecked The new state
+	 */
 	public void setChecked(boolean _bChecked) {
 		m_bChecked = _bChecked;
 		fireChangeEvent();
 	}
 	
+	/**
+	 * Adds a listener for the GuiChange event that will be
+	 * fired when the user changes the state of the toggle.
+	 * @param _listener The listener to add to the list of listeners
+	 */
 	public void addChangeListener(GuiChangeListener _listener) {
 		m_changeListeners.add(_listener);
 	}
@@ -102,6 +136,9 @@ public class Toggle extends Widget {
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.9  2004/05/04 22:05:43  tako
  * Now using the new attribute map instead of individual property getters and setters.
  * Consolidated event firing code into separate methods.

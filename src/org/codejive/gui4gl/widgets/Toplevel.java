@@ -26,12 +26,20 @@ import java.util.Iterator;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
+ * TopLevel objects are the only objwcts that can appear directly as children
+ * of the Screen object and are the base class for widgets like windows and
+ * menu pop-ups. TopLevel widgets are also containers and can therefore contain
+ * other widgets.
+ * 
  * @author Tako
- * @version $Revision: 243 $
+ * @version $Revision: 261 $
  */
 public class Toplevel extends Container {
 	private boolean m_bDraggable;
 	
+	/**
+	 * Creates a new TopLevel.
+	 */
 	public Toplevel() {
 		m_bDraggable = true;
 	}
@@ -40,18 +48,37 @@ public class Toplevel extends Container {
 		return this;
 	}
 	
+	/**
+	 * Indicates if the toplevel widget is draggable or not.
+	 * @return A boolean indicating if the widget can be dragged
+	 */
 	public boolean isDraggable() {
 		return m_bDraggable;
 	}
 	
+	/**
+	 * Sets the fact that the widget is draggable or not.
+	 * @param _bDraggable A boolean indicating if it should be possible to drag the widget
+	 */
 	public void setDraggable(boolean _bDraggable) {
 		m_bDraggable = _bDraggable;
 	}
 	
+	/**
+	 * Returns true if and only if the widget is enabled and one of its children
+	 * (or grandchildren etc) has the keyboard focus.
+	 * @return A boolean indicating if the window is active
+	 */
 	public boolean isActive() {
 		return isEnabled() && (getFocusWidget() != null) && getFocusWidget().hasFocus();
 	}
 
+	/**
+	 * Activates the toplevel widget if it is enabled, visible and focusable.
+	 * Activating the toplevel means setting the focus the last child widget
+	 * that had the focus or to the first focusable child widget if no previous
+	 * focus existed.
+	 */
 	public void activate() {
 		if (isEnabled() && isVisible() && isFocusable()) {
 			if (getFocusWidget() == null) {
@@ -78,6 +105,9 @@ public class Toplevel extends Container {
 
 /*
  * $Log$
+ * Revision 1.7  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.6  2004/05/04 22:15:26  tako
  * Removed unnecessary constructors.
  *

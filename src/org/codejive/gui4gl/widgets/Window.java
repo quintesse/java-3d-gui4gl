@@ -27,36 +27,67 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.utils4gl.RenderContext;
 
 /**
+ * This class implements a Window widget that can be used as a child
+ * widget for any Screen widgets. The Window acts quite similar to
+ * windows in any kind of graphical user interface: it can be dragged
+ * (if allowed by its settings), it can be activated and deactivated
+ * and it can be layered and the order of the windows within their
+ * parent Screen can be changed. And all this by usning the mouse
+ * and/or keyboard.
+ * 
  * @author tako
- * @version $Revision: 244 $
+ * @version $Revision: 261 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
 	private boolean m_bCenterParent;
 	private boolean m_bDragging;
 	
+	/**
+	 * Creates a new Window without a title (and therefore also without a title bar).
+	 */
 	public Window() {
 		this(null);
 	}
 
+	/**
+	 * Creates a new Window with the given text in the title bar.
+	 * @param _sTitle
+	 */
 	public Window(String _sTitle) {
 		m_sTitle = _sTitle;
 		m_bCenterParent = false;
 		setVisible(false);
 	}
 
+	/**
+	 * Returns the current title text.
+	 * @return The current title
+	 */
 	public String getTitle() {
 		return m_sTitle;
 	}
 	
+	/**
+	 * Sets the new title text for the widget
+	 * @param _sTitle The new title to use
+	 */
 	public void setTitle(String _sTitle) {
 		m_sTitle = _sTitle;
 	}
 	
+	/**
+	 * Indicates if the window should be displayed in the center of its parent or not.
+	 * @return A boolean indicating if the window should be centered
+	 */
 	public boolean isCenterParent() {
 		return m_bCenterParent;
 	}
 	
+	/**
+	 * Sets the fact that the window should be centered within its parent ot not.
+	 * @param _bCenter A boolean indicating if the window should be centered
+	 */
 	public void setCenterParent(boolean _bCenter) {
 		m_bCenterParent = _bCenter;
 	}
@@ -127,6 +158,9 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.17  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.16  2004/05/04 22:15:59  tako
  * Now using the new attribute map instead of individual property getters and setters.
  *

@@ -33,8 +33,13 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.utils4gl.RenderContext;
 
 /**
+ * This is a very standard button-like widget that can either be activated
+ * by clicking on it with the mouse or by putting the keyboard focus on it
+ * and pressing the selection key (by default this would be something like
+ * SPACE or ENTER). When activated the widget will fire a GuiAction event.
+ * 
  * @author tako
- * @version $Revision: 239 $
+ * @version $Revision: 261 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -42,10 +47,17 @@ public class Button extends Widget {
 	private List m_actionListeners;
 	private boolean m_bSelected;
 	
+	/**
+	 * Creates a new button without a caption.
+	 */
 	public Button() {
 		this(null);
 	}
 
+	/**
+	 * Creates a new button with the given caption.
+	 * @param _sCaption Caption to display in the button
+	 */
 	public Button(String _sCaption) {
 		m_sCaption = _sCaption;
 		setFocusable(true);
@@ -54,22 +66,44 @@ public class Button extends Widget {
 		m_bSelected = false;
 	}
 
+	/**
+	 * Returns the button's caption
+	 * @return The current caption of the button
+	 */
 	public String getCaption() {
 		return m_sCaption;
 	}
 	
+	/**
+	 * Sets the new caption for the button
+	 * @param _sCaption The new caption
+	 */
 	public void setCaption(String _sCaption) {
 		m_sCaption = _sCaption;
 	}
 	
+	/**
+	 * Adds a listener for the GuiAction event that  will be
+	 * fired when the user selects the button (eg by clicking it).
+	 * @param _listener The listener to add to the list of listeners
+	 */
 	public void addActionListener(GuiActionListener _listener) {
 		m_actionListeners.add(_listener);
 	}
 	
+	/**
+	 * Acts like the user selected the button.
+	 */
 	public void click() {
 		fireActionEvent();
 	}
 	
+	/**
+	 * Returns if the button is currently being selected.
+	 * This means for example that the user is currently holding down
+	 * the left mouse button over the button.
+	 * @return The current selection state of the button
+	 */
 	public boolean isSelected() {
 		return m_bSelected;
 	}
@@ -142,6 +176,9 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.15  2004/05/10 23:48:10  tako
+ * Added javadocs for all public classes and methods.
+ *
  * Revision 1.14  2004/05/04 22:05:43  tako
  * Now using the new attribute map instead of individual property getters and setters.
  * Consolidated event firing code into separate methods.
