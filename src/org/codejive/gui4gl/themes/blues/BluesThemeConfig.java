@@ -35,7 +35,7 @@ import org.codejive.utils4gl.textures.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 221 $
+ * @version $Revision: 230 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -61,11 +61,6 @@ public class BluesThemeConfig implements ThemeConfig {
 		// Window
 		Theme.setValue(Window.class, "renderer", new WindowRenderer());
 		Theme.setFloatValue(Window.class, "transparancy", 0.6f);
-		try {
-			Theme.setValue(Window.class, "backgroundImage", TextureReader.readTexture(_context, "org/codejive/gui4gl/themes/blues/images/Prairie Wind.bmp", true));
-		} catch (IOException e) {
-			throw new ThemeConfigException("Could not set window background image", e);
-		}
 		Theme.setIntegerValue(Window.class, "titlebarHeight", 25);
 		Theme.setValue(Window.class, "titlebarColor", new GLColor(0.16f, 0.16f, 1.0f));
 		Theme.setFloatValue(Window.class, "titlebarTransparancy", 0.3f);
@@ -122,11 +117,17 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(TextField.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 		Theme.setFloatValue(TextField.class, "transparancy#focused", 0.0f);
 		Theme.setValue(TextField.class, "textFontColor#focused", new GLColor(0.0f, 0.0f, 0.0f));
+		
+		// Image
+		Theme.setValue(Image.class, "renderer", new ImageRenderer());
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.16  2004/03/17 00:41:17  tako
+ * Removed background image for Windows because it looked horrible.
+ *
  * Revision 1.15  2004/03/07 18:19:43  tako
  * configure() must now be passed a valid RenderContext.
  * The attribute "backgroundImage" is now properly affected by style
