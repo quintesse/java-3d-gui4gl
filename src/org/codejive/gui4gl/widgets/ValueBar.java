@@ -8,7 +8,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 82 $
+ * @version $Revision: 83 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -61,6 +61,14 @@ public class ValueBar extends Widget {
 		m_barColor = _color;
 	}
 	
+	public float getBarTransparancy() {
+		return m_fBarTransparancy;
+	}
+	
+	public void setBarTransparancy(float _fTransparancy) {
+		m_fBarTransparancy = _fTransparancy;
+	}
+	
 	public GLColor getFocusedBarColor() {
 		return m_focusedBarColor;
 	}
@@ -68,9 +76,20 @@ public class ValueBar extends Widget {
 	public void setFocusedBarColor(GLColor _color) {
 		m_focusedBarColor = _color;
 	}
+
+	public float getFocusedBarTransparancy() {
+		return m_fFocusedBarTransparancy;
+	}
+	
+	public void setFocusedBarTransparancy(float _fTransparancy) {
+		m_fFocusedBarTransparancy = _fTransparancy;
+	}	
 }
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:48:46  tako
+ * Had forgotten the getters and setters for the bar transparancy.
+ *
  * Revision 1.4  2003/11/19 00:46:35  tako
  * Added setters for min/max and value properties.
  * Adjusted some names to be more consistent with the used coding style.
