@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 98 $
+ * @version $Revision: 108 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -80,6 +80,24 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(Button.class, "selectedYPadding", 2);
 		Theme.setValue(Button.class, "selectedBackgroundColor", new GLColor(1.0f, 0.0f, 0.0f));
 		Theme.setFloatValue(Button.class, "selectedTransparancy", 0.5f);
+		
+		// Toggle
+		Theme.setValue(Toggle.class, "renderer", new ToggleRenderer());
+		Theme.setValue(Toggle.class, "captionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
+		Theme.setValue(Toggle.class, "captionFontColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setIntegerValue(Toggle.class, "xPadding", 2);
+		Theme.setIntegerValue(Toggle.class, "yPadding", 2);
+		Theme.setValue(Toggle.class, "checkColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setValue(Toggle.class, "checkBackgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setFloatValue(Toggle.class, "checkTransparancy", 0.0f);
+		Theme.setIntegerValue(Toggle.class, "captionAlignment", GLText.ALIGN_LEFT);
+		Theme.setValue(Toggle.class, "focusedCaptionFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
+		Theme.setValue(Toggle.class, "focusedCaptionFontColor", new GLColor(.96f, 1.0f, 0.2f));
+		Theme.setIntegerValue(Toggle.class, "focusedXPadding", 2);
+		Theme.setIntegerValue(Toggle.class, "focusedYPadding", 2);
+		Theme.setValue(Toggle.class, "focusedCheckColor", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setValue(Toggle.class, "focusedCheckBackgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setFloatValue(Toggle.class, "focusedCheckTransparancy", 0.0f);
 
 		// Text
 		Theme.setValue(Text.class, "renderer", new TextRenderer());
@@ -110,6 +128,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/21 01:27:46  tako
+ * Added properties for the new Toggle widget.
+ *
  * Revision 1.8  2003/11/20 00:40:49  tako
  * Added titlebarHeight property.
  *
