@@ -1,4 +1,22 @@
 /*
+ * [gui4gl] OpenGL game-oriented GUI library
+ * 
+ * Copyright (C) 2003 Steven Lagerweij
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
+ * option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
  * Created on Nov 5, 2003
  */
 package org.codejive.gui4gl.widgets;
@@ -17,7 +35,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 127 $
+ * @version $Revision: 158 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -225,6 +243,9 @@ public class TextField extends Widget {
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/25 16:28:00  tako
+ * All code is now subject to the Lesser GPL.
+ *
  * Revision 1.3  2003/11/23 02:03:55  tako
  * Added new property focusedFont.
  * Renamed some existing properties to be more like the standard.

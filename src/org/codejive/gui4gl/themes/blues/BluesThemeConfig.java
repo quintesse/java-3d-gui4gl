@@ -1,4 +1,22 @@
 /*
+ * [gui4gl] OpenGL game-oriented GUI library
+ * 
+ * Copyright (C) 2003 Tako Schotanus, Steven Lagerweij
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
+ * option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
  * Created on Oct 31, 2003
  */
 package org.codejive.gui4gl.themes.blues;
@@ -16,7 +34,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 124 $
+ * @version $Revision: 158 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -143,6 +161,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/25 16:27:59  tako
+ * All code is now subject to the Lesser GPL.
+ *
  * Revision 1.11  2003/11/23 01:58:41  tako
  * The Toggle now also has a beautifull yellow background color when focused.
  * Added several more properties for the TextField widget and renamed
