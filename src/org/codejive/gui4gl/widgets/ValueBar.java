@@ -3,30 +3,48 @@
  */
 package org.codejive.gui4gl.widgets;
 
+import java.awt.event.KeyEvent;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 83 $
+ * @version $Revision: 86 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
 	private float m_fMax;
 	private float m_fValue;
+	private float m_fStepSize;
 
 	private GLColor m_barColor;
 	private float m_fBarTransparancy;
 	private GLColor m_focusedBarColor;
 	private float m_fFocusedBarTransparancy;
 	
-	public ValueBar(float _min, float _max) {
-		m_fMin = _min;
-		m_fMax = _max;
+	private List m_changeListeners;
+	
+	public ValueBar(float _fMin, float _fMax) {
+		this(_fMin, _fMax, 1.0f);
+	}
+	
+	public ValueBar(float _fMin, float _fMax, float _fStepSize) {
+		m_fMin = _fMin;
+		m_fMax = _fMax;
+		m_fStepSize = _fStepSize;
 		m_barColor = (GLColor)Theme.getValue(getClass(), "barColor");
 		m_fBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy");
 		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), "focusedBarColor");
 		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), "focusedBarTransparancy");
+		m_changeListeners = new LinkedList();
+		setFocusable(true);
 	}
 	
 	public float getValue() {
@@ -51,6 +69,14 @@ public class ValueBar extends Widget {
 	
 	public void setMaxValue(float _fValue) {
 		m_fMax = _fValue;
+	}
+	
+	public float getStepSize() {
+		return m_fStepSize;
+	}
+	
+	public void setStepSize(float _fStepSize) {
+		m_fStepSize = _fStepSize;
 	}
 	
 	public GLColor getBarColor() {
@@ -84,9 +110,58 @@ public class ValueBar extends Widget {
 	public void setFocusedBarTransparancy(float _fTransparancy) {
 		m_fFocusedBarTransparancy = _fTransparancy;
 	}	
+	
+	public class ValueChangeEvent extends ChangeEvent {
+		private Object m_value;
+		
+		public ValueChangeEvent(Object _source, Object _value) {
+			super(_source);
+			m_value = _value;
+		}
+		
+		public Object getValue() {
+			return m_value;
+		}
+	}
+	
+	public void addChangeListener(ChangeListener _listener) {
+		m_changeListeners.add(_listener);
+	}
+	
+	protected void processKeyPressedEvent(KeyEvent _event) {
+		switch (_event.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				m_fValue -= m_fStepSize;
+				if (m_fValue > m_fMax) {
+					m_fValue = m_fMax;
+				}
+				break;
+			case KeyEvent.VK_RIGHT:
+				m_fValue += m_fStepSize;
+				if (m_fValue < m_fMin) {
+					m_fValue = m_fMin;
+				}
+				ValueChangeEvent e = new ValueChangeEvent(this, new Float(m_fValue));
+				if (!_event.isConsumed() && !m_changeListeners.isEmpty()) {
+					Iterator i = m_changeListeners.iterator();
+					while (i.hasNext() && !_event.isConsumed()) {
+						ChangeListener listener = (ChangeListener)i.next();
+						listener.stateChanged(e);
+					}
+				}
+				break;
+			default:
+				super.processKeyPressedEvent(_event);
+				break;
+		}
+	}
 }
 /*
  * $Log$
+ * Revision 1.6  2003/11/19 09:09:31  tako
+ * Implemented user interaction to be able to use the bar as a slider.
+ * Support ChangeListeners.
+ *
  * Revision 1.5  2003/11/19 00:48:46  tako
  * Had forgotten the getters and setters for the bar transparancy.
  *
