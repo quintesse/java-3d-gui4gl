@@ -36,7 +36,7 @@ import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author tako
- * @version $Revision: 242 $
+ * @version $Revision: 249 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -178,14 +178,14 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	 */
 	public void mouseEntered(MouseEvent _event) {
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
-		handleMouseHoover(w);
+		handleMouseHover(w);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
 	 */
 	public void mouseExited(MouseEvent _event) {
-		handleMouseHoover(null);
+		handleMouseHover(null);
 	}
 
 	/* (non-Javadoc)
@@ -194,7 +194,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	public void mousePressed(MouseEvent _event) {
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
 		m_widgetPressed = w;
-		handleMouseHoover(w);
+		handleMouseHover(w);
 		if (w != null) {
 			GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_PRESSED, _event.getButton(), _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			w.processMousePressedEvent(e);
@@ -209,7 +209,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	 */
 	public void mouseReleased(MouseEvent _event) {
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
-		handleMouseHoover(w);
+		handleMouseHover(w);
 		if (m_widgetPressed != null) {
 			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_RELEASED, _event.getButton(), _event.getModifiersEx(), _event.getX(), -1, -1, _event.getY(), _event.getClickCount());
 			m_widgetPressed.processMouseReleasedEvent(e);
@@ -250,7 +250,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		handleMouseMove(_event);
 	}
 	
-	protected void handleMouseHoover(Widget _widget) {
+	protected void handleMouseHover(Widget _widget) {
 		if (_widget != m_widgetUnderMouse) {
 			if (m_widgetUnderMouse != null) {
 				// TODO: Decide if we want to send MouseLeave events
@@ -264,7 +264,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 	protected void handleMouseMove(MouseEvent _event) {
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
-		handleMouseHoover(w);
+		handleMouseHover(w);
 		if (m_nLastXPos == -1) {
 			m_nLastXPos = _event.getX();
 			m_nLastYPos = _event.getY();
@@ -285,6 +285,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.18  2004/05/04 23:54:02  tako
+ * Fixed typo in method name.
+ *
  * Revision 1.17  2004/05/04 22:14:58  tako
  * Tried to make the getScreen() a bit more efficient.
  *
