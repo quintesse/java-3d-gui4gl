@@ -18,15 +18,17 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 128 $
+ * @version $Revision: 147 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
 	private Widget m_widgetPressed;
+	private int m_nLastXPos, m_nLastYPos;
 	
 	public Screen() {
 		m_widgetUnderMouse = null;
 		m_widgetPressed = null;
+		m_nLastXPos = m_nLastYPos = -1;
 	}
 	
 	public Toplevel getToplevel() {
@@ -61,16 +63,27 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		return null;
 	}
 	
+	protected void resize(RenderContext _context) {
+		GL gl = _context.getGl();
+		int viewport[] = new int[4];
+		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport);
+		setBounds(viewport[0], viewport[1], viewport[2], viewport[3]);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.codejive.world3d.Renderable#initRendering(org.codejive.world3d.RenderContext)
 	 */
 	public void initRendering(RenderContext _context) {
-		GL gl = _context.getGl();
-		int viewport[] = new int[4];
-		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport);
-		Rectangle rect = getRectangle();
-		rect.setBounds(viewport[0], viewport[1], viewport[2], viewport[3]);
+		resize(_context);
 		super.initRendering(_context);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.codejive.world3d.Renderable#updateRendering(org.codejive.world3d.RenderContext)
+	 */
+	public void updateRendering(RenderContext _context) {
+		resize(_context);
+		super.updateRendering(_context);
 	}
 
 	/* (non-Javadoc)
@@ -154,10 +167,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		m_widgetPressed = w;
 		handleMouseHoover(w);
 		if (w != null) {
-			GuiMouseEvent e = new GuiMouseEvent(w, _event.getModifiersEx(), _event.getX(), _event.getY(), _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(w, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			w.processMousePressedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			processMousePressedEvent(e);
 		}
 	}
@@ -169,18 +182,18 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
 		handleMouseHoover(w);
 		if (m_widgetPressed != null) {
-			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, _event.getModifiersEx(), _event.getX(), _event.getY(), _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, _event.getModifiersEx(), _event.getX(), -1, -1, _event.getY(), _event.getClickCount());
 			m_widgetPressed.processMouseReleasedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			processMouseReleasedEvent(e);
 		}
 		if (w == m_widgetPressed) {
 			if (w != null) {
-				GuiMouseEvent e = new GuiMouseEvent(w, _event.getModifiersEx(), _event.getX(), _event.getY(), _event.getClickCount());
+				GuiMouseEvent e = new GuiMouseEvent(w, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 				w.processMouseClickedEvent(e);
 			} else {
-				GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), _event.getClickCount());
+				GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 				processMouseClickedEvent(e);
 			}
 		}
@@ -193,21 +206,19 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	public void mouseClicked(MouseEvent _event) {
 		// We do our own click handling
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
-	 */
-	public void mouseDragged(MouseEvent _event) {
-		// TODO Auto-generated method stub
-
-	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 	 */
 	public void mouseMoved(MouseEvent _event) {
-		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
-		handleMouseHoover(w);
+		handleMouseMove(_event);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+	 */
+	public void mouseDragged(MouseEvent _event) {
+		handleMouseMove(_event);
 	}
 	
 	protected void handleMouseHoover(Widget _widget) {
@@ -221,10 +232,35 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 			}
 		}
 	}
+
+	protected void handleMouseMove(MouseEvent _event) {
+		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
+		handleMouseHoover(w);
+		if (m_nLastXPos == -1) {
+			m_nLastXPos = _event.getX();
+			m_nLastYPos = _event.getY();
+		}
+		int nDeltaX = _event.getX() - m_nLastXPos;
+		int nDeltaY = _event.getY() - m_nLastYPos;
+		if (m_widgetPressed == null) {
+			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
+			processMouseMovedEvent(e);
+		} else {
+			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
+			m_widgetPressed.processMouseDraggedEvent(e);
+		}
+		m_nLastXPos = _event.getX();
+		m_nLastYPos = _event.getY();
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/24 16:54:19  tako
+ * Implemented mouse move and drag event handling.
+ * Updated existing mouse event handling because of the new delta X and Y.
+ * Implemented updateRendering().
+ *
  * Revision 1.8  2003/11/23 02:04:27  tako
  * Added mouse support.
  *
