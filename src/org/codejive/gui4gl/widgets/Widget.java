@@ -237,6 +237,7 @@ public class Widget implements Renderable {
 	}
 	
 	public void updateBounds(int _parentWidth, int _parentHeight) {
+		// Override in subclass if needed
 	}
 	
 	/* (non-Javadoc)

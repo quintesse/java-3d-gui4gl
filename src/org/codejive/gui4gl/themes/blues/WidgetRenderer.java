@@ -21,6 +21,7 @@ public class WidgetRenderer implements WidgetRendererModel {
 	 * @see org.codejive.world3d.gui.WidgetRenderer#initRendering(org.codejive.world3d.gui.Widget, org.codejive.world3d.RenderContext)
 	 */
 	public void initRendering(Widget _widget, RenderContext _context) {
+		// No code necessary
 	}
 
 	/* (non-Javadoc)
