@@ -17,7 +17,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 96 $
+ * @version $Revision: 111 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -79,6 +79,10 @@ public class Widget implements Renderable {
 	
 	public Container getParent() {
 		return m_parent;
+	}
+	
+	public Toplevel getToplevel() {
+		return getParent().getToplevel();
 	}
 	
 	public Screen getScreen() {
@@ -385,6 +389,9 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/21 01:31:05  tako
+ * Added getToplevel().
+ *
  * Revision 1.8  2003/11/20 00:36:07  tako
  * Code change because of change from getPadding() to
  * updateInnerBounds(). This makes it possible for widgets to adjust the
