@@ -16,7 +16,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 103 $
+ * @version $Revision: 144 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -27,6 +27,10 @@ public class WindowRenderer implements WidgetRendererModel {
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Window.class, _widget, _context);
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
+		RenderHelper.updateSuperClass(Window.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -65,7 +69,7 @@ public class WindowRenderer implements WidgetRendererModel {
 
 			// Title bar
 			gl.glColor4f(titlebarColor.getRed(), titlebarColor.getGreen(), titlebarColor.getBlue(), 1.0f - fTitlebarTransparancy);
-			m_tmpBounds.setBounds(window.getBounds());
+			m_tmpBounds.setBounds(window.getCurrentBounds());
 			m_tmpBounds.height = window.getTitlebarHeight();
 			RenderHelper.drawRectangle(gl, m_tmpBounds);
 	
@@ -83,6 +87,10 @@ public class WindowRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/24 16:50:35  tako
+ * Implemented updateRendering().
+ * Renamed getBounds() to getCurrentBounds().
+ *
  * Revision 1.7  2003/11/21 00:19:18  tako
  * Minor code change because GLText signature was changed.
  *

@@ -14,12 +14,16 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 106 $
+ * @version $Revision: 144 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Button.class, _widget, _context);
+	}
+
+	public void updateRendering(Widget _widget, RenderContext _context) {
+		RenderHelper.updateSuperClass(Button.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -54,7 +58,7 @@ public class ButtonRenderer implements WidgetRendererModel {
 			GLColor selectedBackgroundColor = button.getSelectedBackgroundColor();
 			float fselectedTransparancy = button.getSelectedTransparancy();
 			gl.glColor4f(selectedBackgroundColor.getRed(), selectedBackgroundColor.getGreen(), selectedBackgroundColor.getBlue(), 1.0f - fselectedTransparancy);
-			RenderHelper.drawRectangle(gl, _widget.getBounds());
+			RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
 		}
 
 		gl.glEnd();
@@ -73,6 +77,10 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/24 16:50:35  tako
+ * Implemented updateRendering().
+ * Renamed getBounds() to getCurrentBounds().
+ *
  * Revision 1.7  2003/11/21 01:26:37  tako
  * Removed padding code, now using getInnerBounds().
  *
