@@ -35,7 +35,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author Tako
- * @version $Revision: 240 $
+ * @version $Revision: 256 $
  */
 public class ScrollBarRenderer implements WidgetRendererModel {
 	
@@ -53,23 +53,8 @@ public class ScrollBarRenderer implements WidgetRendererModel {
 		GL gl = _context.getGl();
 
 		ScrollBar.InnerBar bar = (ScrollBar.InnerBar)_widget;
+		Rectangle handleRect = bar.getHandleBounds();
 		
-		Rectangle barRect = _widget.getInnerBounds();
-		
-		int left = barRect.x;
-		int top = barRect.y;
-		int height = barRect.height;
-		int width = barRect.width;
-
-		int orientation = bar.getActualOrientation();
-		if (orientation == Orientation.VERTICAL) {
-			top = barRect.y + (int)(bar.getStartValue() * barRect.height);
-			height = (int)((bar.getEndValue() - bar.getStartValue()) * barRect.height);
-		} else {
-			left = barRect.x + (int)(bar.getStartValue() * barRect.width);
-			width = (int)((bar.getEndValue() - bar.getStartValue()) * barRect.width);
-		}
-
 		gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glBegin(GL.GL_QUADS);
 
@@ -88,7 +73,7 @@ public class ScrollBarRenderer implements WidgetRendererModel {
 			}
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
-		RenderHelper.drawRectangle(gl, left, top, width, height);
+		RenderHelper.drawRectangle(gl, handleRect);
 
 		gl.glEnd();
 		
@@ -99,6 +84,9 @@ public class ScrollBarRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.2  2004/05/07 20:46:04  tako
+ * Removed handle rectangle calculations because that info can now be retrieved from the widget.
+ *
  * Revision 1.1  2004/05/04 22:07:57  tako
  * First check-in of a new widget that implements a scroll bar.
  *
