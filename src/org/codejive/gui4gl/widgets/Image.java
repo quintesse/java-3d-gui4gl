@@ -21,34 +21,39 @@
  */
 package org.codejive.gui4gl.widgets;
 
+import org.codejive.utils4gl.textures.Texture;
+
 /**
  * @author gertjan
- * @version $Revision: 209 $
+ * @version $Revision: 231 $
  */
 public class Image extends Widget {
-	private int m_lTextureID;
+	private Texture m_image;
 	
 	
-	public Image(int _lTextureID) {
-		this(null, _lTextureID);
+	public Image(Texture _image) {
+		this(null, _image);
 	}
 
-	public Image(String _sName, int _lTextureID) {
+	public Image(String _sName, Texture _image) {
 		super(_sName);
-		m_lTextureID = _lTextureID;
+		m_image = _image;
 	}
 	
-	public int getTextureID() {
-		return m_lTextureID;
+	public Texture getImage() {
+		return m_image;
 	}
 	
-	public void setTextureID(int _lTextureID) {
-		m_lTextureID = _lTextureID;
+	public void setTexture(Texture _image) {
+		m_image = _image;
 	}
 	
 }
 /*
  * $Log$
+ * Revision 1.2  2004/03/17 00:44:59  tako
+ * Image widget now uses the new Texture system as well.
+ *
  * Revision 1.1  2004/01/27 13:29:19  steven
  * image widget patch by gertjan
  *
