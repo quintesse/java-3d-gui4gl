@@ -10,7 +10,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 90 $
+ * @version $Revision: 140 $
  */
 public class GuiChangeEvent extends GuiEvent {
 	private Object m_value;
@@ -22,6 +22,10 @@ public class GuiChangeEvent extends GuiEvent {
 		
 	public Object getValue() {
 		return m_value;
+	}
+	
+	public String toString() {
+		return super.toString() + " (value=" + m_value + ")";
 	}
 	
 	public static void fireChangeEvent(List _listeners, GuiChangeEvent _event) {
@@ -37,6 +41,9 @@ public class GuiChangeEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/24 16:46:33  tako
+ * Added toString().
+ *
  * Revision 1.1  2003/11/19 11:15:45  tako
  * First checkin of the event classes needed for the new Gui event system.
  *

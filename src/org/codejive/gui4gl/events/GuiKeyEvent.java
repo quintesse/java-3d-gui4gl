@@ -10,7 +10,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 90 $
+ * @version $Revision: 140 $
  */
 public class GuiKeyEvent extends GuiEvent {
 	private int m_nModifiers;
@@ -34,6 +34,10 @@ public class GuiKeyEvent extends GuiEvent {
 	
 	public char getKeyChar() {
 		return m_cKeyChar;
+	}
+	
+	public String toString() {
+		return super.toString() + " (modifiers=" + m_nModifiers + ", keycode=" + m_nKeyCode + ", keychar=" + m_cKeyChar + ")";
 	}
 	
 	public static void fireKeyPressed(List _listeners, GuiKeyEvent _event) {
@@ -69,6 +73,9 @@ public class GuiKeyEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/24 16:46:34  tako
+ * Added toString().
+ *
  * Revision 1.1  2003/11/19 11:15:45  tako
  * First checkin of the event classes needed for the new Gui event system.
  *
