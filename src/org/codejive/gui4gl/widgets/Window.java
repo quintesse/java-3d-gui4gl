@@ -24,56 +24,23 @@ package org.codejive.gui4gl.widgets;
 import java.awt.Rectangle;
 
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.themes.Theme;
-import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 233 $
+ * @version $Revision: 244 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
-	private int m_nTitlebarHeight;
-	private GLColor m_titlebarColor;
-	private float m_fTitlebarTransparancy;
-	private int m_nCaptionXPadding;
-	private int m_nCaptionYPadding;
-	private GLColor m_activeTitlebarColor;
-	private float m_fActiveTitlebarTransparancy;
-	private int m_nActiveCaptionXPadding;
-	private int m_nActiveCaptionYPadding;
-	private GLColor m_disabledTitlebarColor;
-	private float m_fDisabledTitlebarTransparancy;
-	private int m_nDisabledCaptionXPadding;
-	private int m_nDisabledCaptionYPadding;
 	private boolean m_bCenterParent;
 	private boolean m_bDragging;
 	
 	public Window() {
-		this(null, null);
+		this(null);
 	}
 
 	public Window(String _sTitle) {
-		this(null, _sTitle);
-	}
-	
-	public Window(String _sName, String _sTitle) {
-		super(_sName);
 		m_sTitle = _sTitle;
-		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), getFullName(), "titlebarHeight");
-		m_titlebarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor"));
-		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy");
-		m_nCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding");
-		m_nCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding");
-		m_activeTitlebarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#active"));
-		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#active");
-		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#active");
-		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#active");
-		m_disabledTitlebarColor = new GLColor((GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor#disabled"));
-		m_fDisabledTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#disabled");
-		m_nDisabledCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#disabled");
-		m_nDisabledCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#disabled");
 		m_bCenterParent = false;
 		setVisible(false);
 	}
@@ -84,110 +51,6 @@ public class Window extends Toplevel {
 	
 	public void setTitle(String _sTitle) {
 		m_sTitle = _sTitle;
-	}
-	
-	public int getTitlebarHeight() {
-		return m_nTitlebarHeight;
-	}
-	
-	public void setTitlebarHeight(int _nHeight) {
-		m_nTitlebarHeight = _nHeight;
-	}
-	
-	public GLColor getTitlebarColor() {
-		return m_titlebarColor;
-	}
-	
-	public void setTitlebarColor(GLColor _color) {
-		m_titlebarColor = _color;
-	}
-	
-	public float getTitlebarTransparancy() {
-		return m_fTitlebarTransparancy;
-	}
-	
-	public void setTitlebarTransparancy(float _fTransparancy) {
-		m_fTitlebarTransparancy = _fTransparancy;
-	}
-	
-	public int getCaptionXPadding() {
-		return m_nCaptionXPadding;
-	}
-	
-	public void setCaptionXPadding(int _nPadding) {
-		m_nCaptionXPadding = _nPadding;
-	}
-	
-	public int getCaptionYPadding() {
-		return m_nCaptionYPadding;
-	}
-	
-	public void setCaptionYPadding(int _nPadding) {
-		m_nCaptionYPadding = _nPadding;
-	}
-	
-	public GLColor getActiveTitlebarColor() {
-		return m_activeTitlebarColor;
-	}
-	
-	public void setActiveTitlebarColor(GLColor _color) {
-		m_activeTitlebarColor = _color;
-	}
-	
-	public float getActiveTitlebarTransparancy() {
-		return m_fActiveTitlebarTransparancy;
-	}
-	
-	public void setActiveTitlebarTransparancy(float _fTransparancy) {
-		m_fActiveTitlebarTransparancy = _fTransparancy;
-	}
-	
-	public int getActiveCaptionXPadding() {
-		return m_nActiveCaptionXPadding;
-	}
-	
-	public void setActiveCaptionXPadding(int _nPadding) {
-		m_nActiveCaptionXPadding = _nPadding;
-	}
-	
-	public int getActiveCaptionYPadding() {
-		return m_nActiveCaptionYPadding;
-	}
-	
-	public void setActiveCaptionYPadding(int _nPadding) {
-		m_nActiveCaptionYPadding = _nPadding;
-	}
-	
-	public GLColor getDisabledTitlebarColor() {
-		return m_disabledTitlebarColor;
-	}
-	
-	public void setDisabledTitlebarColor(GLColor _color) {
-		m_disabledTitlebarColor = _color;
-	}
-	
-	public float getDisabledTitlebarTransparancy() {
-		return m_fDisabledTitlebarTransparancy;
-	}
-	
-	public void setDisabledTitlebarTransparancy(float _fTransparancy) {
-		m_fDisabledTitlebarTransparancy = _fTransparancy;
-	}
-	
-	public int getDisabledCaptionXPadding() {
-		return m_nDisabledCaptionXPadding;
-	}
-	
-	public void setDisabledCaptionXPadding(int _nPadding) {
-		m_nDisabledCaptionXPadding = _nPadding;
-	}
-	
-	public int getDisabledCaptionYPadding() {
-		return m_nDisabledCaptionYPadding;
-	}
-	
-	public void setDisabledCaptionYPadding(int _nPadding) {
-		m_nDisabledCaptionYPadding = _nPadding;
 	}
 	
 	public boolean isCenterParent() {
@@ -210,7 +73,8 @@ public class Window extends Toplevel {
 		if (!_event.isConsumed()) {
 			Rectangle r = new Rectangle();
 			r.setBounds(getCurrentBounds());
-			r.height = getTitlebarHeight();
+			// TODO Think carefully if this really is how we want to do this?
+			r.height = getIntegerAttribute("titlebarHeight");
 			if (isDraggable() && r.contains(_event.getX(), _event.getY())) {
 				m_bDragging = true;
 			}
@@ -238,7 +102,8 @@ public class Window extends Toplevel {
 		super.updateInnerBounds(_context);
 		if (getTitle() != null) {
 			Rectangle rect = getInnerBounds();
-			int nTitleBarHeight = getTitlebarHeight();
+			// TODO Think carefully if this really is how we want to do this?
+			int nTitleBarHeight = getIntegerAttribute("titlebarHeight");
 			rect.y += nTitleBarHeight;
 			rect.height -= nTitleBarHeight;
 		}
@@ -262,6 +127,9 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.16  2004/05/04 22:15:59  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.15  2004/03/17 00:50:46  tako
  * Colors are now cloned during initialization to prevent others from messing
  * up the Themes.
