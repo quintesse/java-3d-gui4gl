@@ -33,10 +33,11 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
+import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 222 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -137,7 +138,7 @@ public class Button extends Widget {
 		m_actionListeners.add(_listener);
 	}
 	
-	protected void updateInnerBounds() {
+	protected void updateInnerBounds(RenderContext _context) {
 		if (isSelected()) {
 			int nXPad = getSelectedXPadding();
 			int nYPad = getSelectedYPadding();
@@ -147,7 +148,7 @@ public class Button extends Widget {
 			bounds.width -= 2 * nXPad;
 			bounds.height -= 2 * nYPad;
 		} else {
-			super.updateInnerBounds();
+			super.updateInnerBounds(_context);
 		}
 	}
 	
@@ -204,6 +205,9 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.12  2004/03/07 18:21:29  tako
+ * Bounds calculations and render functions now all have a RenderContext argument.
+ *
  * Revision 1.11  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

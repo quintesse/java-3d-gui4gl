@@ -11,10 +11,11 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 222 $
  */
 public class CompoundWidget extends Widget {
 	protected LinkedList m_children;
@@ -210,24 +211,27 @@ public class CompoundWidget extends Widget {
 		}
 	}
 
-	public void render(RenderContext _context) {
-		super.render(_context);
+	public void render(RenderContext _context, RenderObserver _observer) {
+		super.render(_context, _observer);
 		if (isVisible()) {
-			renderChildren(_context);
+			renderChildren(_context, _observer);
 		}
 	}
 
-	protected void renderChildren(RenderContext _context) {
+	protected void renderChildren(RenderContext _context, RenderObserver _observer) {
 		Iterator i = getChildren();
 		while (i.hasNext()) {
 			Widget w = (Widget)i.next();
-			w.render(_context);
+			w.render(_context, _observer);
 		}
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.4  2004/03/07 18:21:29  tako
+ * Bounds calculations and render functions now all have a RenderContext argument.
+ *
  * Revision 1.3  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

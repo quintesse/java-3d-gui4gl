@@ -30,7 +30,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 222 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -234,8 +234,8 @@ public class Window extends Toplevel {
 		}
 	}
 	
-	protected void updateInnerBounds() {
-		super.updateInnerBounds();
+	protected void updateInnerBounds(RenderContext _context) {
+		super.updateInnerBounds(_context);
 		if (getTitle() != null) {
 			Rectangle rect = getInnerBounds();
 			int nTitleBarHeight = getTitlebarHeight();
@@ -262,6 +262,9 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.14  2004/03/07 18:21:29  tako
+ * Bounds calculations and render functions now all have a RenderContext argument.
+ *
  * Revision 1.13  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

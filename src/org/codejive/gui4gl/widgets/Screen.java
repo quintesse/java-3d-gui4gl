@@ -31,11 +31,13 @@ import net.java.games.jogl.GL;
 
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
+import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author tako
- * @version $Revision: 207 $
+ * @version $Revision: 222 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -118,10 +120,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		super.updateRendering(_context);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.codejive.world3d.Renderable#render(org.codejive.world3d.RenderContext)
-	 */
-	public void render(RenderContext _context) {
+	public void render(RenderContext _context, RenderObserver _observer) {
 		GL gl = _context.getGl();
 
 		gl.glPushMatrix();
@@ -135,7 +134,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		_context.getGlu().gluOrtho2D(0, viewport[2], viewport[3], 0);
 		gl.glDepthFunc(GL.GL_ALWAYS);
 
-		super.render(_context);
+		super.render(_context, _observer);
 
 		gl.glDepthFunc(GL.GL_LESS);
 		gl.glPopMatrix();
@@ -288,6 +287,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.16  2004/03/07 18:21:29  tako
+ * Bounds calculations and render functions now all have a RenderContext argument.
+ *
  * Revision 1.15  2003/12/15 17:28:21  tako
  * Clicking in a Screen will now deactivate the active window.
  *
