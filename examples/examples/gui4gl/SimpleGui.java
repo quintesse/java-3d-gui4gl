@@ -41,7 +41,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 121 $
+ * @version $Revision: 123 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -109,6 +109,8 @@ class SimpleGui implements GLEventListener {
 		// If we're interested in interactive windows the screen
 		// must receive the appriopriate events
 		gLDrawable.addKeyListener(m_screen);
+		gLDrawable.addMouseListener(m_screen);
+		gLDrawable.addMouseMotionListener(m_screen);
 		
 		// If we want to get any keys the GUI doesn't handle
 		// (no windows active for example) we need to register
@@ -488,6 +490,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/23 01:56:43  tako
+ * Minor change to enable mouse support for the GUI.
+ *
  * Revision 1.8  2003/11/21 10:53:35  steven
  * NO longer makes the text widget focusable
  *
