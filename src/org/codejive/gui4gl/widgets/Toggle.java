@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 204 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
@@ -58,6 +58,13 @@ public class Toggle extends Widget {
 	public Toggle(String _sCaption, boolean _bChecked) {
 		m_sCaption = _sCaption;
 		m_bChecked = _bChecked;
+		setFocusable(true);
+		
+		m_changeListeners = new ArrayList();
+	}
+
+	protected void updateTheme() {
+		super.updateTheme();
 		m_checkColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor");
 		m_checkBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor");
 		m_fCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy");
@@ -67,11 +74,8 @@ public class Toggle extends Widget {
 		m_disabledCheckColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkColor#disabled");
 		m_disabledCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "checkBackgroundColor#disabled");
 		m_fDisabledCheckTransparancy = Theme.getFloatValue(getClass(), getFullName(), "checkTransparancy#disabled");
-		setFocusable(true);
-		
-		m_changeListeners = new ArrayList();
 	}
-
+	
 	public String getCaption() {
 		return m_sCaption;
 	}
@@ -190,6 +194,11 @@ public class Toggle extends Widget {
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/14 04:07:23  tako
+ * Moved property initialization code from the widget constructors to the new
+ * method updateTheme() because with the new hierarchical property
+ * system we have to wait until the entire widget tree has been constructed.
+ *
  * Revision 1.5  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within

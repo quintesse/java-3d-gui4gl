@@ -34,7 +34,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 203 $
+ * @version $Revision: 204 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -52,14 +52,17 @@ public class TextField extends Widget {
 	}
 
 	public TextField(String _sText) {
-		m_textCursorColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor");
-		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
-		
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
 		setText(_sText);
 	}
 
+	protected void updateTheme() {
+		super.updateTheme();
+		m_textCursorColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textCursorColor");
+		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), getFullName(), "textCursorBlinkSpeed");
+	}
+	
 	public String getText() {
 		return m_sText;
 	}
@@ -193,6 +196,11 @@ public class TextField extends Widget {
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/14 04:07:23  tako
+ * Moved property initialization code from the widget constructors to the new
+ * method updateTheme() because with the new hierarchical property
+ * system we have to wait until the entire widget tree has been constructed.
+ *
  * Revision 1.6  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within

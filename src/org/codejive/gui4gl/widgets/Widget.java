@@ -38,7 +38,7 @@ import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 204 $
  */
 public class Widget implements Renderable {
 	private CompoundWidget m_parent;
@@ -89,6 +89,19 @@ public class Widget implements Renderable {
 		m_parent = null;
 		m_sName = "";
 		m_bounds = new Rectangle();
+		m_bEnabled = true;
+		m_bVisible = true;
+		m_bCanHaveFocus = false;
+		
+		m_keyListeners = new ArrayList();
+		m_mouseListeners = new ArrayList();
+
+		m_currentBounds = new Rectangle();
+		m_innerBounds = new Rectangle();
+		m_padding = new Padding();
+	}
+	
+	protected void updateTheme() {
 		m_backgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor");
 		m_fTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy");
 		m_backgroundImage = (Texture)Theme.getValue(getClass(), getFullName(), "backgroundImage");
@@ -111,16 +124,6 @@ public class Widget implements Renderable {
 		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#disabled");
 		m_disabledTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#disabled");
 		m_disabledTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#disabled");
-		m_bEnabled = true;
-		m_bVisible = true;
-		m_bCanHaveFocus = false;
-		
-		m_keyListeners = new ArrayList();
-		m_mouseListeners = new ArrayList();
-
-		m_currentBounds = new Rectangle();
-		m_innerBounds = new Rectangle();
-		m_padding = new Padding();
 	}
 	
 	public String getName() {
@@ -592,6 +595,7 @@ public class Widget implements Renderable {
 	}
 	
 	protected void initWidget(RenderContext _context) {
+		updateTheme();
 		calculateBounds();
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
@@ -600,6 +604,7 @@ public class Widget implements Renderable {
 	}
 	
 	protected void updateWidget(RenderContext _context) {
+		updateTheme();
 		calculateBounds();
 		WidgetRendererModel renderer = (WidgetRendererModel)Theme.getValue(getClass(), getFullName(), "renderer");
 		if (renderer != null) {
@@ -627,6 +632,11 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/14 04:07:23  tako
+ * Moved property initialization code from the widget constructors to the new
+ * method updateTheme() because with the new hierarchical property
+ * system we have to wait until the entire widget tree has been constructed.
+ *
  * Revision 1.16  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within

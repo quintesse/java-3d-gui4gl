@@ -36,7 +36,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 204 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -56,18 +56,22 @@ public class Button extends Widget {
 
 	public Button(String _sCaption) {
 		m_sCaption = _sCaption;
-		m_selectedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#selected");
-		m_selectedTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#selected");
-		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#selected");
-		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#selected");
-		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#selected");
-		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#selected");
 		setFocusable(true);
 		
 		m_actionListeners = new ArrayList();
 		m_bSelected = false;
 	}
 
+	protected void updateTheme() {
+		super.updateTheme();
+		m_selectedTextFont = (Font)Theme.getValue(getClass(), getFullName(), "textFont#selected");
+		m_selectedTextFontColor = (GLColor)Theme.getValue(getClass(), getFullName(), "textFontColor#selected");
+		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), getFullName(), "xPadding#selected");
+		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), getFullName(), "yPadding#selected");
+		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), getFullName(), "backgroundColor#selected");
+		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), getFullName(), "transparancy#selected");
+	}
+	
 	public String getCaption() {
 		return m_sCaption;
 	}
@@ -199,6 +203,11 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/14 04:07:23  tako
+ * Moved property initialization code from the widget constructors to the new
+ * method updateTheme() because with the new hierarchical property
+ * system we have to wait until the entire widget tree has been constructed.
+ *
  * Revision 1.9  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within

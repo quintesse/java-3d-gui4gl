@@ -30,7 +30,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 203 $
+ * @version $Revision: 204 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -56,6 +56,12 @@ public class Window extends Toplevel {
 
 	public Window(String _sTitle) {
 		m_sTitle = _sTitle;
+		m_bCenterParent = false;
+		setVisible(false);
+	}
+
+	protected void updateTheme() {
+		super.updateTheme();
 		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), getFullName(), "titlebarHeight");
 		m_titlebarColor = (GLColor)Theme.getValue(getClass(), getFullName(), "titlebarColor");
 		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy");
@@ -69,8 +75,6 @@ public class Window extends Toplevel {
 		m_fDisabledTitlebarTransparancy = Theme.getFloatValue(getClass(), getFullName(), "titlebarTransparancy#disabled");
 		m_nDisabledCaptionXPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionXPadding#disabled");
 		m_nDisabledCaptionYPadding = Theme.getIntegerValue(getClass(), getFullName(), "captionYPadding#disabled");
-		m_bCenterParent = false;
-		setVisible(false);
 	}
 
 	public String getTitle() {
@@ -257,6 +261,11 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/14 04:07:23  tako
+ * Moved property initialization code from the widget constructors to the new
+ * method updateTheme() because with the new hierarchical property
+ * system we have to wait until the entire widget tree has been constructed.
+ *
  * Revision 1.11  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within
