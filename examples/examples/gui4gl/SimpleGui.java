@@ -59,7 +59,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 159 $
+ * @version $Revision: 186 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -183,6 +183,7 @@ public class SimpleGui implements GLEventListener {
 			add(b);
 			b = new Button("Options");
 			b.setBounds(5, 65, 290, 20);
+			b.setEnabled(false);
 			add(b);
 			b = new Button("Exit this example");
 /*
@@ -240,13 +241,9 @@ b.addKeyListener(new GuiKeyAdapter() {
 				}
 			});
 			
-			
 			TextField tf = new TextField("Edit me");
 			tf.setBounds(5, 145, 290, 20);
 			add(tf);
-			
-			
-			
 
 			addKeyListener(new GuiKeyAdapter() {
 				public void keyPressed(GuiKeyEvent _event) {
@@ -512,6 +509,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/05 01:08:58  tako
+ * Updated the example to show what a disabled widget looks like.
+ *
  * Revision 1.12  2003/11/26 00:12:32  tako
  * Class is now public like it should be.
  *
