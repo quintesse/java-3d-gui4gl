@@ -17,7 +17,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 62 $
+ * @version $Revision: 77 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
@@ -41,36 +41,22 @@ public class ValueBarRenderer implements WidgetRendererModel {
 
 		ValueBar bar = (ValueBar)_widget;
 		
-		gl.glDisable(GL.GL_TEXTURE_2D);
+		Rectangle barRect = new Rectangle(_widget.getInnerBounds());
 		
-		GLColor bg = bar.getFillColor();
+		if(barRect.height > barRect.width) {
+			int maxHeight = barRect.height;
+			barRect.height = getPixelValueForBar(bar, maxHeight);
+			barRect.y += (maxHeight - barRect.height);
+		} else {
+			barRect.width = getPixelValueForBar(bar, barRect.width);
+		}
+
+		gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glBegin(GL.GL_QUADS);
 
-		if(bg != null) {
-			gl.glColor4f(bg.getRed(), bg.getGreen(), bg.getBlue(), 1.0f);			
-			RenderHelper.drawRectangle(gl, _widget.getBounds());
-		}
-			
-		Rectangle barRect = new Rectangle(_widget.getBounds());
-		
-		barRect.y += bar.getYPadding();
-		barRect.x += bar.getXPadding();
-		if(barRect.height > barRect.width) {
-			int maxHeight = barRect.height - bar.getYPadding() * 2;
-			barRect.width -= bar.getXPadding() * 2;
-			barRect.height = getPixelValueForBar(bar, maxHeight);
-			
-			barRect.y += (maxHeight - barRect.height);
-			
-		} else {
-			barRect.height -= bar.getYPadding() * 2;
-			barRect.width = getPixelValueForBar(bar, barRect.width - bar.getXPadding() * 2);
-		}
-
-		GLColor fg = bar.getValueColor();
-		gl.glColor4f(fg.getRed(), fg.getGreen(), fg.getBlue(), 1.0f);
+		GLColor barColor = bar.getBarColor();
+		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f);
 		RenderHelper.drawRectangle(gl, barRect);
-		
 		
 		gl.glEnd();
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -80,7 +66,7 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		float v = _bar.getValue() - _bar.getMinValue();
 		float w = _bar.getMaxValue() - _bar.getMinValue();
 		
-		int o = (int) ( ((float)_maxWidth) / w * v);
+		int o = (int)(_maxWidth / w * v);
 
 		return o >= 0 ? (o <= _maxWidth ? o:_maxWidth) : 0;
 	}
@@ -88,6 +74,10 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.2  2003/11/19 00:11:19  tako
+ * Simplyfied code a bit by making more use of exisiting options in the
+ * Widget base class.
+ *
  * Revision 1.1  2003/11/18 15:59:17  steven
  * Renders the ValueBar widget
  *
