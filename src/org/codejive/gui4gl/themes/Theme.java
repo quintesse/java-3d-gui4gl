@@ -30,7 +30,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 247 $
+ * @version $Revision: 252 $
  */
 public class Theme {
 	private HashMap m_values;
@@ -72,7 +72,7 @@ public class Theme {
 		return value;
 	}
 	
-	public static Object getValue(Widget _widget, String _sKey) {
+	private static Object getValueByName(Widget _widget, String _sKey) {
 		Object value = null;
 		// First see if the widget has a parent
 		Widget parent = _widget.getParent();
@@ -81,22 +81,27 @@ public class Theme {
 			String sName = _widget.getName(); 
 			if ((sName != null) && !(parent instanceof Container)) {
 				// Let's see if out parent stores settings for us because they will override any local settings
-				value = getValue(parent, sName + "." + _sKey);
+				value = getValueByName(parent, sName + "." + _sKey);
 			}
 		}
 		// If the parent didn't supply a value we try local settings
 		if (value == null) {
-			// First try to find an exact match for the key
 			Class cls = _widget.getClass();
 			value = getClassesValue(cls, _sKey);
-			if (value == null) {
-				// Then see if the key contains a # and try
-				// again using only the part before the #
-				int p = _sKey.lastIndexOf('#');
-				if (p > 0) {
-					String sName = _sKey.substring(0, p);
-					value = getClassesValue(cls, sName);
-				}
+		}
+		return value;
+	}
+	
+	public static Object getValue(Widget _widget, String _sKey) {
+		// First try to find an exact match for the key
+		Object value = getValueByName(_widget, _sKey);
+		if (value == null) {
+			// Then see if the key contains a # and try
+			// again using only the part before the #
+			int p = _sKey.lastIndexOf('#');
+			if (p > 0) {
+				String sName = _sKey.substring(0, p);
+				value = getValueByName(_widget, sName);
 			}
 		}
 		return value;
@@ -156,6 +161,10 @@ public class Theme {
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/04 23:58:21  tako
+ * Theme will now try for an exact match first in parent and local widget before
+ * stripping off any state modifiers and trying again.
+ *
  * Revision 1.9  2004/05/04 22:30:23  tako
  * Theme attribute getters and setters now also take a Widget as argument.
  * This to support the Widget's new attribute maps.
