@@ -16,7 +16,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 146 $
+ * @version $Revision: 148 $
  */
 public class Container extends Widget {
 	private LinkedList m_children;
@@ -29,6 +29,7 @@ public class Container extends Widget {
 		m_children = new LinkedList();
 		m_childNames = new HashMap();
 		m_focusWidget = null;
+		setFocusable(true);
 	}
 	
 	public void add(Widget _child) {
@@ -69,8 +70,12 @@ public class Container extends Widget {
 		return found;
 	}
 
-	public boolean isFocusable() {
+	public boolean hasFocus() {
 		return false;
+	}
+	
+	public void setFocus() {
+		// Don't allow this
 	}
 	
 	public Widget getFocusWidget() {
@@ -252,6 +257,12 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/24 17:16:08  tako
+ * Containers are now focusable by default although they won't react to
+ * setFocus() calls and will always return false for hasFocus().
+ * The reason is that isFocusable() is now used to determine if a container's
+ * children are allowed to have focus or not.
+ *
  * Revision 1.10  2003/11/24 16:52:25  tako
  * Added moveChildToFront() and moveChildToBack().
  * getWidgetUnderPoint() no longer returns references to invisible widgets.
