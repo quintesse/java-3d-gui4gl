@@ -14,14 +14,12 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 201 $
+ * @version $Revision: 202 $
  */
 public class CompoundWidget extends Widget {
 	protected LinkedList m_children;
 	protected Map m_childNames;
 	protected Widget m_focusWidget;
-
-	private static int m_nWidgetNr = 0;
 
 	public CompoundWidget() {
 		m_children = new LinkedList();
@@ -31,7 +29,9 @@ public class CompoundWidget extends Widget {
 	}
 
 	protected void add(Widget _child) {
-		add(_child, "widget" + m_nWidgetNr++);
+		m_children.add(_child);
+		_child.setParent(this);
+		_child.setName("");
 	}
 
 	protected void add(Widget _child, String _sName) {
@@ -228,6 +228,11 @@ public class CompoundWidget extends Widget {
 
 /*
  * $Log$
+ * Revision 1.2  2003/12/14 03:09:55  tako
+ * Adding a widget without a name will no longer give it an internally generated
+ * name, it will just be nameless and Themes properties won't be able to
+ * refer to it.
+ *
  * Revision 1.1  2003/12/14 02:36:26  tako
  * CompoundWidget added that has almost all the functionality of Container
  * but with all protected methods meant for complex widgets. Container has
