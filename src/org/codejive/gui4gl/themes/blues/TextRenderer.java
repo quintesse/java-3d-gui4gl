@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 103 $
+ * @version $Revision: 114 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
@@ -31,11 +31,7 @@ public class TextRenderer implements WidgetRendererModel {
 		
 		Font textFont = text.getTextFont();
 		GLColor textFontColor;
-		if(text.hasFocus()) {
-			textFontColor = text.getTextFontFocusedColor();
-		} else {
-			textFontColor = text.getTextFontColor();
-		}
+		textFontColor = text.getTextFontColor();
 		int nTextAlignment = text.getTextAlignment();
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -44,12 +40,6 @@ public class TextRenderer implements WidgetRendererModel {
 		if (sText != null) {
 			// Caption text			
 			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, textFont, textFontColor, true, nTextAlignment, sText, "...");
-		
-			/*
-			if(text.hasFocus()) {
-				// show cursor
-				// BUT WHERE???? TAKO! :)
-			}*/
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -58,6 +48,9 @@ public class TextRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/21 10:00:51  steven
+ * Moved editing support to a different class
+ *
  * Revision 1.7  2003/11/21 00:19:18  tako
  * Minor code change because GLText signature was changed.
  *
