@@ -45,7 +45,7 @@ import org.codejive.utils4gl.RenderObserver;
  * system-events to the widgets that want/need them.
  * 
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 264 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -124,14 +124,6 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	public void initRendering(RenderContext _context) {
 		resize(_context);
 		super.initRendering(_context);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.codejive.world3d.Renderable#updateRendering(org.codejive.world3d.RenderContext)
-	 */
-	public void updateRendering(RenderContext _context) {
-		resize(_context);
-		super.updateRendering(_context);
 	}
 
 	public void render(RenderContext _context, RenderObserver _observer) {
@@ -301,6 +293,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.20  2004/10/17 11:07:33  tako
+ * Removed updateRendering().
+ *
  * Revision 1.19  2004/05/10 23:48:10  tako
  * Added javadocs for all public classes and methods.
  *
