@@ -17,38 +17,34 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 84 $
+ * @version $Revision: 89 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
 
-	/* (non-Javadoc)
-	 * @see org.codejive.gui4gl.themes.WidgetRendererModel#initRendering(org.codejive.gui4gl.widgets.Widget, org.codejive.utils4gl.RenderContext)
-	 */
 	public void initRendering(Widget _widget, RenderContext _context) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do.
 	}
 
-	/* (non-Javadoc)
-	 * @see org.codejive.gui4gl.themes.WidgetRendererModel#render(org.codejive.gui4gl.widgets.Widget, org.codejive.utils4gl.RenderContext)
-	 */
 	public void render(Widget _widget, RenderContext _context) {
-		// TODO Auto-generated method stub
 		RenderHelper.renderSuperClass(ValueBar.class, _widget, _context);
 
 		GL gl = _context.getGl();
 
 		ValueBar bar = (ValueBar)_widget;
 		
-		Rectangle barRect = new Rectangle(_widget.getInnerBounds());
+		Rectangle barRect = _widget.getInnerBounds();
+		
+		int left = barRect.x;
+		int top = barRect.y;
+		int height = barRect.height;
+		int width = barRect.width;
 		
 		if(barRect.height > barRect.width) {
-			int maxHeight = barRect.height;
-			barRect.height = getPixelValueForBar(bar, maxHeight);
-			barRect.y += (maxHeight - barRect.height);
+			height = getPixelValueForBar(bar, barRect.height);
+			top += (barRect.height - height);
 		} else {
-			barRect.width = getPixelValueForBar(bar, barRect.width);
+			width = getPixelValueForBar(bar, barRect.width);
 		}
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -64,7 +60,7 @@ public class ValueBarRenderer implements WidgetRendererModel {
 			barTransparancy = bar.getBarTransparancy();
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
-		RenderHelper.drawRectangle(gl, barRect);
+		RenderHelper.drawRectangle(gl, left, top, width, height);
 		
 		gl.glEnd();
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -82,6 +78,9 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 10:02:15  steven
+ * No longer creates a rectangle every render operation
+ *
  * Revision 1.4  2003/11/19 00:49:49  tako
  * Now using correct transparancy properties for the bar.
  *
