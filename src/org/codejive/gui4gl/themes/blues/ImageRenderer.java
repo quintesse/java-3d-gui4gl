@@ -31,7 +31,7 @@ import org.codejive.gui4gl.themes.RenderHelper;
 
 /**
  * @author gertjan
- * @version $Revision: 225 $
+ * @version $Revision: 232 $
  */
 public class ImageRenderer implements WidgetRendererModel {
 
@@ -48,20 +48,27 @@ public class ImageRenderer implements WidgetRendererModel {
 
 		GL gl = _context.getGl();
 		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 
-		gl.glBindTexture(GL.GL_TEXTURE_2D, ((Image)_widget).getTextureID());
+		((Image)_widget).getImage().bind();
 		
+		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 		gl.glBegin(GL.GL_QUADS);
-
-		RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
-
+		RenderHelper.drawRectangle(gl, _widget.getInnerBounds());
 		gl.glEnd();
+		
+		gl.glDisable(GL.GL_TEXTURE_2D);
+		gl.glDisable(GL.GL_BLEND);
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.3  2004/03/17 00:45:55  tako
+ * Now uses the new Texture system.
+ *
  * Revision 1.2  2004/03/07 18:27:01  tako
  * The methods now properly call their "super class" implementations.
  *
