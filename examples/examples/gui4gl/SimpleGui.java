@@ -59,9 +59,9 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 159 $
  */
-class SimpleGui implements GLEventListener {
+public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
 	FrameRateCounter m_fpsCounter;
 	
@@ -512,6 +512,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/26 00:12:32  tako
+ * Class is now public like it should be.
+ *
  * Revision 1.11  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *
