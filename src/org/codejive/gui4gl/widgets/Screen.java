@@ -17,7 +17,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 149 $
+ * @version $Revision: 155 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -113,10 +113,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	public void keyPressed(KeyEvent _event) {
 		Widget w = getFocusWidget();
 		if (w != null) {
-			GuiKeyEvent e = new GuiKeyEvent(w, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			GuiKeyEvent e = new GuiKeyEvent(w, KeyEvent.KEY_PRESSED, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			w.processKeyPressedEvent(e);
 		} else {
-			GuiKeyEvent e = new GuiKeyEvent(this, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			GuiKeyEvent e = new GuiKeyEvent(this, KeyEvent.KEY_PRESSED, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			processKeyPressedEvent(e);
 		}
 	}
@@ -124,10 +124,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	public void keyReleased(KeyEvent _event) {
 		Widget w = getFocusWidget();
 		if (w != null) {
-			GuiKeyEvent e = new GuiKeyEvent(w, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			GuiKeyEvent e = new GuiKeyEvent(w, KeyEvent.KEY_RELEASED, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			w.processKeyReleasedEvent(e);
 		} else {
-			GuiKeyEvent e = new GuiKeyEvent(this, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			GuiKeyEvent e = new GuiKeyEvent(this, KeyEvent.KEY_RELEASED, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			processKeyReleasedEvent(e);
 		}
 	}
@@ -135,10 +135,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	public void keyTyped(KeyEvent _event) {
 		Widget w = getFocusWidget();
 		if (w != null) {
-			GuiKeyEvent e = new GuiKeyEvent(w, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			GuiKeyEvent e = new GuiKeyEvent(w, KeyEvent.KEY_TYPED, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			w.processKeyTypedEvent(e);
 		} else {
-			GuiKeyEvent e = new GuiKeyEvent(this, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
+			GuiKeyEvent e = new GuiKeyEvent(this, KeyEvent.KEY_TYPED, _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar());
 			processKeyTypedEvent(e);
 		}
 	}
@@ -166,10 +166,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		m_widgetPressed = w;
 		handleMouseHoover(w);
 		if (w != null) {
-			GuiMouseEvent e = new GuiMouseEvent(w, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_PRESSED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			w.processMousePressedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_PRESSED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			processMousePressedEvent(e);
 		}
 	}
@@ -181,18 +181,18 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		Widget w = getWidgetUnderPoint(_event.getX(), _event.getY());
 		handleMouseHoover(w);
 		if (m_widgetPressed != null) {
-			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, _event.getModifiersEx(), _event.getX(), -1, -1, _event.getY(), _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_RELEASED, _event.getModifiersEx(), _event.getX(), -1, -1, _event.getY(), _event.getClickCount());
 			m_widgetPressed.processMouseReleasedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_RELEASED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 			processMouseReleasedEvent(e);
 		}
 		if (w == m_widgetPressed) {
 			if (w != null) {
-				GuiMouseEvent e = new GuiMouseEvent(w, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+				GuiMouseEvent e = new GuiMouseEvent(w, MouseEvent.MOUSE_CLICKED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 				w.processMouseClickedEvent(e);
 			} else {
-				GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
+				GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_CLICKED, _event.getModifiersEx(), _event.getX(), _event.getY(), -1, -1, _event.getClickCount());
 				processMouseClickedEvent(e);
 			}
 		}
@@ -242,10 +242,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		int nDeltaX = _event.getX() - m_nLastXPos;
 		int nDeltaY = _event.getY() - m_nLastYPos;
 		if (m_widgetPressed == null) {
-			GuiMouseEvent e = new GuiMouseEvent(this, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(this, MouseEvent.MOUSE_MOVED, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
 			processMouseMovedEvent(e);
 		} else {
-			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
+			GuiMouseEvent e = new GuiMouseEvent(m_widgetPressed, MouseEvent.MOUSE_DRAGGED, _event.getModifiersEx(), _event.getX(), _event.getY(), nDeltaX, nDeltaY, _event.getClickCount());
 			m_widgetPressed.processMouseDraggedEvent(e);
 		}
 		m_nLastXPos = _event.getX();
@@ -255,6 +255,10 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/24 19:19:32  tako
+ * Added possibility for events to have an Id (like AWTEvents have) so
+ * you can distinguish between the different event sub-types.
+ *
  * Revision 1.10  2003/11/24 17:17:17  tako
  * Got rid of warning.
  *

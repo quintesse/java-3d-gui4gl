@@ -10,7 +10,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 141 $
+ * @version $Revision: 155 $
  */
 public class GuiMouseEvent extends GuiEvent {
 	private int m_nModifiers;
@@ -20,8 +20,8 @@ public class GuiMouseEvent extends GuiEvent {
 	private int m_nDeltaYPos;
 	private int m_nClickCount;
 	
-	public GuiMouseEvent(Widget _source, int _nModifiers, int _nXPos, int _nYPos, int _nDeltaXPos, int _nDeltaYPos, int _nClickCount) {
-		super(_source);
+	public GuiMouseEvent(Widget _source, int _nId, int _nModifiers, int _nXPos, int _nYPos, int _nDeltaXPos, int _nDeltaYPos, int _nClickCount) {
+		super(_source, _nId);
 		m_nModifiers = _nModifiers;
 		m_nXPos = _nXPos;
 		m_nYPos = _nYPos;
@@ -111,6 +111,10 @@ public class GuiMouseEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/24 19:19:32  tako
+ * Added possibility for events to have an Id (like AWTEvents have) so
+ * you can distinguish between the different event sub-types.
+ *
  * Revision 1.2  2003/11/24 16:47:54  tako
  * Added delta X and Y coordinates and getters for them.
  * Added fireMouseMoved()/Dragged().

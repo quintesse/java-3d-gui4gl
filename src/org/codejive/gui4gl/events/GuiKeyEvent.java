@@ -10,15 +10,15 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 140 $
+ * @version $Revision: 155 $
  */
 public class GuiKeyEvent extends GuiEvent {
 	private int m_nModifiers;
 	private int m_nKeyCode;
 	private char m_cKeyChar;
 	
-	public GuiKeyEvent(Widget _source, int _nModifiers, int _nKeyCode, char _cKeyChar) {
-		super(_source);
+	public GuiKeyEvent(Widget _source, int _nId, int _nModifiers, int _nKeyCode, char _cKeyChar) {
+		super(_source, _nId);
 		m_nModifiers = _nModifiers;
 		m_nKeyCode = _nKeyCode;
 		m_cKeyChar = _cKeyChar;
@@ -73,6 +73,10 @@ public class GuiKeyEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/24 19:19:32  tako
+ * Added possibility for events to have an Id (like AWTEvents have) so
+ * you can distinguish between the different event sub-types.
+ *
  * Revision 1.2  2003/11/24 16:46:34  tako
  * Added toString().
  *
