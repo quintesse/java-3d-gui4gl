@@ -37,7 +37,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 203 $
+ * @version $Revision: 208 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
@@ -152,9 +152,9 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		
 		gl.glEnd();
 		
-		gl.glColor3fv(m_textFontColor.toArray3f());
 		
 		if(bar.isShowValue()) {
+			gl.glColor3fv(m_textFontColor.toArray3f());
 			gl.glRasterPos2i(textXPos, textYPos);
 			m_textFont.renderText(_context, sValueAsString);
 		}
@@ -190,6 +190,9 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.11  2003/12/16 09:15:09  steven
+ * text color is only set when a label is used
+ *
  * Revision 1.10  2003/12/14 03:13:57  tako
  * Widgets used in CompoundWidgets can now have their properties set
  * specifically within the CompoundWidgets hierarchy. Each widget within
