@@ -24,26 +24,33 @@ package org.codejive.gui4gl.widgets;
 import org.codejive.utils4gl.textures.Texture;
 
 /**
+ * This widget simply displays an image using a single non-repeating Texture.
  * @author gertjan
- * @version $Revision: 231 $
+ * @version $Revision: 238 $
  */
 public class Image extends Widget {
 	private Texture m_image;
 	
-	
+	/**
+	 * Constructs a new Image using the given Texture
+	 * @param _image The Texture to use for the image
+	 */
 	public Image(Texture _image) {
-		this(null, _image);
-	}
-
-	public Image(String _sName, Texture _image) {
-		super(_sName);
 		m_image = _image;
 	}
 	
+	/**
+	 * Returns the Texture that is currently being displayed
+	 * @return The curent Texture being displayed
+	 */
 	public Texture getImage() {
 		return m_image;
 	}
 	
+	/**
+	 * Sets the Texture to be displayed
+	 * @param _image The Texture to be displayed
+	 */
 	public void setTexture(Texture _image) {
 		m_image = _image;
 	}
@@ -51,6 +58,9 @@ public class Image extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.3  2004/05/04 22:00:55  tako
+ * Added comments.
+ *
  * Revision 1.2  2004/03/17 00:44:59  tako
  * Image widget now uses the new Texture system as well.
  *
