@@ -3,7 +3,6 @@
  */
 package org.codejive.gui4gl.widgets;
 
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -18,7 +17,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 147 $
+ * @version $Revision: 149 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -256,6 +255,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/24 17:17:17  tako
+ * Got rid of warning.
+ *
  * Revision 1.9  2003/11/24 16:54:19  tako
  * Implemented mouse move and drag event handling.
  * Updated existing mouse event handling because of the new delta X and Y.
