@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.Text;
+import org.codejive.gui4gl.widgets.ValueBar;
 import org.codejive.gui4gl.widgets.Window;
 import org.codejive.utils4gl.FrameRateCounter;
 import org.codejive.utils4gl.RenderContext;
@@ -35,7 +36,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 59 $
+ * @version $Revision: 64 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -200,6 +201,7 @@ b.addKeyListener(new KeyAdapter() {
 
 	class InfoWindow extends Window {
 		Text m_fps, m_objectCount, m_liveCount, m_mortalCount;
+		ValueBar m_gfpsHorizontal, m_gfpsVertical;
 	
 		public InfoWindow() {
 			setBounds(10, -110, 150, 100);
@@ -232,6 +234,16 @@ b.addKeyListener(new KeyAdapter() {
 			m_mortalCount = new Text("?");
 			m_mortalCount.setBounds(80, 65, 60, 20);
 			add(m_mortalCount);
+			
+			m_gfpsHorizontal = new ValueBar(0,700);
+			m_gfpsHorizontal.setBounds(5,85, 100, 10);
+			add(m_gfpsHorizontal);
+
+			m_gfpsVertical = new ValueBar(0,700);
+			m_gfpsVertical.setBounds(130,5, 10, 80);
+			//m_gfpsVertical.setFillColor(null); // Would leave out the background fill 
+			add(m_gfpsVertical);
+			
 		}
 	
 		public void setFps(float _fFps) {
@@ -240,6 +252,8 @@ b.addKeyListener(new KeyAdapter() {
 			nf.setMaximumFractionDigits(1);
 			Float f = new Float(_fFps);
 			m_fps.setText(nf.format(f));
+			m_gfpsHorizontal.setValue(_fFps);
+			m_gfpsVertical.setValue(_fFps);
 		}
 	
 		public void setObjectCount(String _sCount) {
@@ -430,6 +444,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/18 16:01:08  steven
+ * Added example for a horizontal and vertical bar which showing the fps
+ *
  * Revision 1.2  2003/11/18 15:54:57  tako
  * Added some silly test code.
  *
