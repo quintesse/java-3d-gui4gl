@@ -6,6 +6,9 @@ package org.codejive.gui4gl.widgets;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.java.games.jogl.GL;
 
@@ -15,10 +18,10 @@ import org.codejive.utils4gl.RenderContext;
  * @author tako
  */
 public class Screen extends Container implements KeyListener {
-	private KeyListener m_keyListener;
+	private List m_keyListeners;
 	
 	public Screen() {
-		m_keyListener = null;
+		m_keyListeners = new LinkedList();
 	}
 	
 	public Widget getPreviousFocusWidget(Widget _widget) {
@@ -37,8 +40,12 @@ public class Screen extends Container implements KeyListener {
 		return null;
 	}
 	
-	public void setKeyListener(KeyListener _listener) {
-		m_keyListener = _listener;
+	public void addKeyListener(KeyListener _listener) {
+		m_keyListeners.add(_listener);
+	}
+	
+	public void removeKeyListener(KeyListener _listener) {
+		m_keyListeners.remove(_listener);
 	}
 	
 	public void keyPressed(KeyEvent _event) {
@@ -47,7 +54,10 @@ public class Screen extends Container implements KeyListener {
 			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
 			w.processKeyPressedEvent(e);
 		} else {
-			m_keyListener.keyPressed(_event);
+			Iterator i = m_keyListeners.iterator();
+			while (i.hasNext()) {
+				((KeyListener)i.next()).keyPressed(_event);
+			}
 		}
 	}
 		
@@ -57,7 +67,10 @@ public class Screen extends Container implements KeyListener {
 			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
 			w.processKeyReleasedEvent(e);
 		} else {
-			m_keyListener.keyReleased(_event);
+			Iterator i = m_keyListeners.iterator();
+			while (i.hasNext()) {
+				((KeyListener)i.next()).keyReleased(_event);
+			}
 		}
 	}
 		
@@ -67,7 +80,10 @@ public class Screen extends Container implements KeyListener {
 			KeyEvent e = new KeyEvent(_event.getComponent(), _event.getID(), _event.getWhen(), _event.getModifiersEx(), _event.getKeyCode(), _event.getKeyChar(), _event.getKeyLocation());
 			w.processKeyTypedEvent(e);
 		} else {
-			m_keyListener.keyTyped(_event);
+			Iterator i = m_keyListeners.iterator();
+			while (i.hasNext()) {
+				((KeyListener)i.next()).keyTyped(_event);
+			}
 		}
 	}
 
