@@ -29,6 +29,7 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.Text;
+import org.codejive.gui4gl.widgets.Toggle;
 import org.codejive.gui4gl.widgets.ValueBar;
 import org.codejive.gui4gl.widgets.Window;
 import org.codejive.utils4gl.FrameRateCounter;
@@ -39,7 +40,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 92 $
+ * @version $Revision: 105 $
  */
 class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -147,10 +148,11 @@ class SimpleGui implements GLEventListener {
 			super("Test Window");
 			setCenterParent(true);
 			setWidth(300);
-			setHeight(150);
+			setHeight(170);
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
 			t.setBounds(5, 5, 290, 40);
+			t.setFocusable(true);
 			add(t);
 			Button b = new Button("Resume");
 			b.setBounds(5, 45, 290, 20);
@@ -194,8 +196,18 @@ b.addKeyListener(new GuiKeyAdapter() {
 			});
 			add(b);
 			
+			Toggle tg = new Toggle("Show info window", true);
+			tg.setBounds(5, 105, 290, 20);
+			add(tg);
+			tg.addChangeListener(new GuiChangeListener() {
+				public void stateChanged(GuiChangeEvent _event) {
+					Boolean value = (Boolean)_event.getValue();
+					m_infoWindow.setVisible(value.booleanValue());
+				}
+			});
+			
 			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f);
-			vb.setBounds(5, 110, 290, 10);
+			vb.setBounds(5, 130, 290, 10);
 			add(vb);
 			vb.addChangeListener(new GuiChangeListener() {
 				public void stateChanged(GuiChangeEvent _event) {
@@ -466,6 +478,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 01:25:00  tako
+ * Updated example to make use of the new Toggle widget.
+ *
  * Revision 1.5  2003/11/19 11:21:48  tako
  * Updated the code to use the new event system.
  *
