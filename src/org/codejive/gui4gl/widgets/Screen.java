@@ -35,7 +35,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 207 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -70,6 +70,12 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 			super.add(_child);
 		} else {
 			throw new RuntimeException("Screen only accepts Toplevel widgets as it children");
+		}
+	}
+	
+	public void setFocus() {
+		if (isFocusable()) {
+			setFocusWidget(null);
 		}
 	}
 	
@@ -282,6 +288,9 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/15 17:28:21  tako
+ * Clicking in a Screen will now deactivate the active window.
+ *
  * Revision 1.14  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor
