@@ -16,7 +16,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 115 $
+ * @version $Revision: 119 $
  */
 public class TextField extends Widget {
 	private String m_sText;
@@ -128,79 +128,81 @@ public class TextField extends Widget {
 	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
 		GuiChangeEvent e;
-		switch (_event.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				if (!_event.isConsumed()) {
+		if (!_event.isConsumed()) {
+			switch (_event.getKeyCode()) {
+				case KeyEvent.VK_LEFT:
+					_event.consume();
 					m_nCursorPos--;
 					if(m_nCursorPos < 0) {
 						m_nCursorPos = 0;
 					}					
-				}
-				break;
-			case KeyEvent.VK_RIGHT:
-				if (!_event.isConsumed()) {
+					break;
+				case KeyEvent.VK_RIGHT:
+					_event.consume();
 					m_nCursorPos++;
 					if(m_nCursorPos > m_sText.length()) {
 						m_nCursorPos = m_sText.length();
 					}
-				}
-				break;
-
-			case KeyEvent.VK_HOME :
-				if (!_event.isConsumed()) {
+					break;
+	
+				case KeyEvent.VK_HOME :
+					_event.consume();
 					m_nCursorPos=0;
-				}
-				break;
-				
-			case KeyEvent.VK_END :
-				if (!_event.isConsumed()) {
+					break;
+					
+				case KeyEvent.VK_END :
+					_event.consume();
 					m_nCursorPos=m_sText.length();
 					m_nViewOffset = 0;
-				}
-				break;
-				
-				
-			case KeyEvent.VK_DELETE :
-				if(m_nCursorPos < m_sText.length()) {
-					m_sText = m_sText.substring(0, m_nCursorPos) + m_sText.substring(m_nCursorPos + 1);
-					e = new GuiChangeEvent(this, m_sText);
-					GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
 					break;
-				}
-				// fallthrough to work as backspace when at end of text
-			case KeyEvent.VK_BACK_SPACE :
-				if(m_nCursorPos > 0) {
-					m_sText = m_sText.substring(0, m_nCursorPos-1) + m_sText.substring(m_nCursorPos);
-					m_nCursorPos--;
-					e = new GuiChangeEvent(this, m_sText);
-					GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
-				}
-				break;
-				
-			default:				
-				char cKeyChar = _event.getKeyChar();
-				
-				if((cKeyChar != KeyEvent.CHAR_UNDEFINED) && (_event.getKeyCode() != KeyEvent.VK_ESCAPE) && (_event.getKeyCode() != KeyEvent.VK_ENTER)) {
-					m_sText = m_sText.substring(0, m_nCursorPos) + String.valueOf(cKeyChar) + m_sText.substring(m_nCursorPos);
-					m_nCursorPos++;
-					e = new GuiChangeEvent(this, m_sText);
-					GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
-				} else {
-					super.processKeyPressedEvent(_event);
-				}
-				break;
+					
+					
+				case KeyEvent.VK_DELETE :
+					_event.consume();
+					if(m_nCursorPos < m_sText.length()) {
+						m_sText = m_sText.substring(0, m_nCursorPos) + m_sText.substring(m_nCursorPos + 1);
+						e = new GuiChangeEvent(this, m_sText);
+						GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+						break;
+					}
+					// fallthrough to work as backspace when at end of text
+				case KeyEvent.VK_BACK_SPACE :
+					_event.consume();
+					if(m_nCursorPos > 0) {
+						m_sText = m_sText.substring(0, m_nCursorPos-1) + m_sText.substring(m_nCursorPos);
+						m_nCursorPos--;
+						e = new GuiChangeEvent(this, m_sText);
+						GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+					}
+					break;
+					
+				default:				
+					char cKeyChar = _event.getKeyChar();
+					
+					if((cKeyChar != KeyEvent.CHAR_UNDEFINED) && (_event.getKeyCode() != KeyEvent.VK_ESCAPE) && (_event.getKeyCode() != KeyEvent.VK_ENTER)) {
+						_event.consume();
+						m_sText = m_sText.substring(0, m_nCursorPos) + String.valueOf(cKeyChar) + m_sText.substring(m_nCursorPos);
+						m_nCursorPos++;
+						e = new GuiChangeEvent(this, m_sText);
+						GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+					} else {
+						super.processKeyPressedEvent(_event);
+					}
+					break;
+			}
 		}
-		
 		if(m_nViewOffset > m_nCursorPos) {
 			m_nViewOffset = m_nCursorPos;
 		}
-		
 	}	
 	
 }
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/21 10:40:55  steven
+ * update processing of events to actually consume when responded
+ *
  * Revision 1.1  2003/11/21 10:01:12  steven
  * A single line textfield with editing support
  *
