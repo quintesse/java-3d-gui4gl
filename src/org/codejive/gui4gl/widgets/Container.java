@@ -28,17 +28,9 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 
 /**
  * @author tako
- * @version $Revision: 205 $
+ * @version $Revision: 243 $
  */
 public class Container extends CompoundWidget {
-	
-	public Container() {
-		this(null);
-	}
-	
-	public Container(String _sName) {
-		super(_sName);
-	}
 	
 	public void add(Widget _child) {
 		super.add(_child);
@@ -96,6 +88,9 @@ public class Container extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.16  2004/05/04 22:13:32  tako
+ * Removed unnecessary constructors.
+ *
  * Revision 1.15  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor

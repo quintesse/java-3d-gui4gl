@@ -27,17 +27,12 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
  * @author Tako
- * @version $Revision: 205 $
+ * @version $Revision: 243 $
  */
 public class Toplevel extends Container {
 	private boolean m_bDraggable;
 	
 	public Toplevel() {
-		m_bDraggable = true;
-	}
-	
-	public Toplevel(String _sName) {
-		super(_sName);
 		m_bDraggable = true;
 	}
 	
@@ -83,6 +78,9 @@ public class Toplevel extends Container {
 
 /*
  * $Log$
+ * Revision 1.6  2004/05/04 22:15:26  tako
+ * Removed unnecessary constructors.
+ *
  * Revision 1.5  2003/12/15 11:06:00  tako
  * Did a rollback of the previous code because it was introducing more
  * problems than solving them. A widget's name is now set in the constructor
