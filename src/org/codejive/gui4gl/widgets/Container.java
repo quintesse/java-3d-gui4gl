@@ -16,7 +16,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 99 $
+ * @version $Revision: 100 $
  */
 public class Container extends Widget {
 	private List m_children;
@@ -163,26 +163,27 @@ public class Container extends Widget {
 	}
 	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
-		switch (_event.getKeyCode()) {
-			case KeyEvent.VK_UP:
-				if (getFocusWidget() != null) {
-					Widget w = getFocusWidget().previousFocus();
+		if (getFocusWidget() != null) {
+			Widget w;
+			switch (_event.getKeyCode()) {
+				case KeyEvent.VK_UP:
+					w = getFocusWidget().previousFocus();
 					if (w != null) {
 						w.setFocus();
 					}
-				}
-				break;
-			case KeyEvent.VK_DOWN:
-				if (getFocusWidget() != null) {
-					Widget w = getFocusWidget().nextFocus();
+					break;
+				case KeyEvent.VK_DOWN:
+					w = getFocusWidget().nextFocus();
 					if (w != null) {
 						w.setFocus();
 					}
-				}
-				break;
-			default:
-				super.processKeyPressedEvent(_event);
-				break;
+					break;
+				default:
+					super.processKeyPressedEvent(_event);
+					break;
+			}
+		} else {
+			super.processKeyPressedEvent(_event);
 		}
 	}
 	
@@ -225,6 +226,9 @@ public class Container extends Widget {
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/20 14:20:58  tako
+ * Fixed problem with unfocused containers throwing away their key events.
+ *
  * Revision 1.7  2003/11/20 13:12:23  tako
  * Made focus changes a bit more robust.
  *
