@@ -28,9 +28,10 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 158 $
+ * @version $Revision: 189 $
  */
 public class GuiMouseEvent extends GuiEvent {
+	private int m_nButton;
 	private int m_nModifiers;
 	private int m_nXPos;
 	private int m_nYPos;
@@ -38,8 +39,9 @@ public class GuiMouseEvent extends GuiEvent {
 	private int m_nDeltaYPos;
 	private int m_nClickCount;
 	
-	public GuiMouseEvent(Widget _source, int _nId, int _nModifiers, int _nXPos, int _nYPos, int _nDeltaXPos, int _nDeltaYPos, int _nClickCount) {
+	public GuiMouseEvent(Widget _source, int _nId, int _nButton, int _nModifiers, int _nXPos, int _nYPos, int _nDeltaXPos, int _nDeltaYPos, int _nClickCount) {
 		super(_source, _nId);
+		m_nButton = _nButton;
 		m_nModifiers = _nModifiers;
 		m_nXPos = _nXPos;
 		m_nYPos = _nYPos;
@@ -48,6 +50,10 @@ public class GuiMouseEvent extends GuiEvent {
 		m_nClickCount = _nClickCount;
 	}
 
+	public int getButton() {
+		return m_nButton;
+	}
+	
 	public int getModifiers() {
 		return m_nModifiers;
 	}
@@ -129,6 +135,9 @@ public class GuiMouseEvent extends GuiEvent {
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/11 10:48:18  tako
+ * Added the 1.4 getButton() method to the event.
+ *
  * Revision 1.4  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *
