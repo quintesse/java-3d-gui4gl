@@ -30,7 +30,7 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 247 $
+ * @version $Revision: 265 $
  */
 public class RenderHelper {
 	
@@ -68,23 +68,29 @@ public class RenderHelper {
 		}
 	}
 
-	public static void updateSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
-		if (renderer != null) {
-			renderer.updateRendering(_widget, _context);
-		}
-	}
-
 	public static void renderSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
 		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
 		if (renderer != null) {
 			renderer.render(_widget, _context);
 		}
 	}	
+
+	public static Rectangle getMinimalBoundsSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
+		Rectangle bounds = null;
+		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
+		if (renderer != null) {
+			bounds = renderer.getMinimalBounds(_widget, _context);
+		}
+		return bounds;
+	}	
 }
 
 /*
  * $Log$
+ * Revision 1.11  2004/10/17 11:10:46  tako
+ * Removed updateRenderingSuperClass().
+ * Added getMinimalBoundsSuperClass().
+ *
  * Revision 1.10  2004/05/04 22:30:23  tako
  * Theme attribute getters and setters now also take a Widget as argument.
  * This to support the Widget's new attribute maps.
