@@ -33,6 +33,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.text.NumberFormat;
 
 import javax.swing.JFrame;
@@ -47,6 +48,7 @@ import org.codejive.gui4gl.events.GuiKeyAdapter;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.gui4gl.widgets.Button;
+import org.codejive.gui4gl.widgets.Image;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.Text;
 import org.codejive.gui4gl.widgets.TextField;
@@ -56,12 +58,14 @@ import org.codejive.gui4gl.widgets.Window;
 import org.codejive.utils4gl.FrameRateCounter;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.SimpleFrameRateCounter;
+import org.codejive.utils4gl.textures.Texture;
+import org.codejive.utils4gl.textures.TextureReader;
 
 import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 226 $
+ * @version $Revision: 234 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -71,6 +75,7 @@ public class SimpleGui implements GLEventListener {
 	Screen m_screen;
 	MenuWindow m_menuWindow;
 	InfoWindow m_infoWindow;
+	TestWindow m_testWindow;
 	
 	public static void main(String[] args) {
 		GLDisplay display = GLDisplay.createGLDisplay("Simple gui4gl example");
@@ -128,6 +133,11 @@ public class SimpleGui implements GLEventListener {
 		m_infoWindow.setVisible(true);
 		m_screen.add(m_infoWindow);
 		
+		// Create a third window
+		m_testWindow = new TestWindow(m_context);
+		m_testWindow.setVisible(true);
+		m_screen.add(m_testWindow);
+		
 		// If we're interested in interactive windows the screen
 		// must receive the appriopriate events
 		gLDrawable.addKeyListener(m_screen);
@@ -175,7 +185,7 @@ public class SimpleGui implements GLEventListener {
 		public MenuWindow() {
 			super("Test Window");
 			setCenterParent(true);
-			setWidth(350);
+			setWidth(300);
 			setHeight(200);
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
@@ -189,7 +199,6 @@ public class SimpleGui implements GLEventListener {
 			b.setBounds(5, 65, 290, 20);
 			b.setEnabled(false);
 			add(b);
-			b = new Button("Exit this example");
 /*
 // BEGIN TEST
 b.addKeyListener(new GuiKeyAdapter() {
@@ -217,6 +226,7 @@ b.addKeyListener(new GuiKeyAdapter() {
 });
 // END TEST
 */
+			b = new Button("Exit this example");
 			b.setBounds(5, 85, 290, 20);
 			b.addActionListener(new GuiActionListener() {
 				public void actionPerformed(GuiActionEvent _event) {
@@ -245,10 +255,9 @@ b.addKeyListener(new GuiKeyAdapter() {
 				}
 			});
 	
-			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f, true, GLText.ALIGN_RIGHT);
-			vb.setBounds(310, 5, 25, 150);
-			add(vb);
-			
+//			ValueBar vb = new ValueBar(0.0f, 100.0f, 5.0f, true, GLText.ALIGN_RIGHT);
+//			vb.setBounds(310, 5, 25, 150);
+//			add(vb);			
 			
 			TextField tf = new TextField("Edit me");
 			tf.setBounds(5, 145, 290, 20);
@@ -341,8 +350,29 @@ b.addKeyListener(new GuiKeyAdapter() {
 			m_mortalCount.setText(_sCount);
 		}
 	}
-}
 
+	class TestWindow extends Window {
+		Text m_fps, m_value, m_liveCount, m_mortalCount;
+		ValueBar m_gfpsHorizontal, m_gfpsVertical;
+		
+		public TestWindow(RenderContext _context) {
+			super("Test Window");
+			setBounds(-160, 10, 150, 120);
+			
+			Texture img = null;
+			try {
+				img = TextureReader.readTexture(_context, "examples/gui4gl/toucan.png", true);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Image imgw = new Image(img);
+			imgw.setBounds(5, 5, 140, 90);
+//			imgw.setBackgroundColor(1.0f, 0.0f, 0.0f);
+			add(imgw);
+		}
+	}
+}
 
 class GLDisplay {
 	private static final int DEFAULT_WIDTH = 640;
@@ -518,6 +548,9 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.16  2004/03/17 00:52:27  tako
+ * Updated the example app to include an Image widget.
+ *
  * Revision 1.15  2004/03/07 18:28:51  tako
  * Updated the example to set the default theme.
  *
