@@ -15,7 +15,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 116 $
+ * @version $Revision: 120 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
 	
@@ -31,19 +31,14 @@ public class TextFieldRenderer implements WidgetRendererModel {
 		TextField textField = (TextField)_widget;
 		
 		GLColor textFontColor;
-		int xPad, yPad;
 		if(textField.hasFocus()) {
 			textFontColor = textField.getTextFontFocusedColor();
-			xPad = textField.getFocusedXPadding();
-			yPad = textField.getFocusedYPadding();
 		} else {
 			textFontColor = textField.getTextFontColor();
-			xPad = textField.getXPadding();
-			yPad = textField.getYPadding();
 		}
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
-		drawTextWithCursor(_context, _widget.getInnerBounds(), xPad, yPad, textFontColor, textField);
+		drawTextWithCursor(_context, _widget.getInnerBounds(), 0, 0, textFontColor, textField);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
@@ -133,6 +128,9 @@ public class TextFieldRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/21 10:48:39  steven
+ * should not have used padding in combination with innerbounds
+ *
  * Revision 1.1  2003/11/21 10:01:29  steven
  * A renderer for the TextField class
  *
