@@ -23,38 +23,29 @@ package org.codejive.gui4gl.themes.blues;
 
 import net.java.games.jogl.GL;
 
-
 import org.codejive.gui4gl.themes.WidgetRendererModel;
 import org.codejive.gui4gl.widgets.Widget;
 import org.codejive.gui4gl.widgets.Image;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.gui4gl.themes.RenderHelper;
+
 /**
  * @author gertjan
- * @version $Revision: 209 $
+ * @version $Revision: 225 $
  */
 public class ImageRenderer implements WidgetRendererModel {
 
-	/* (non-Javadoc)
-	 * @see org.codejive.gui4gl.themes.WidgetRendererModel#initRendering(org.codejive.gui4gl.widgets.Widget, org.codejive.utils4gl.RenderContext)
-	 */
 	public void initRendering(Widget _widget, RenderContext _context) {
-		// TODO Auto-generated method stub
-		
+		RenderHelper.initSuperClass(Image.class, _widget, _context);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.codejive.gui4gl.themes.WidgetRendererModel#updateRendering(org.codejive.gui4gl.widgets.Widget, org.codejive.utils4gl.RenderContext)
-	 */
 	public void updateRendering(Widget _widget, RenderContext _context) {
-		// TODO Auto-generated method stub
-		
+		RenderHelper.updateSuperClass(Image.class, _widget, _context);
 	}
-
-	/* (non-Javadoc)
-	 * @see org.codejive.gui4gl.themes.WidgetRendererModel#render(org.codejive.gui4gl.widgets.Widget, org.codejive.utils4gl.RenderContext)
-	 */
+	
 	public void render(Widget _widget, RenderContext _context) {
+		RenderHelper.renderSuperClass(Image.class, _widget, _context);
+
 		GL gl = _context.getGl();
 		gl.glEnable(GL.GL_BLEND);
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -66,12 +57,14 @@ public class ImageRenderer implements WidgetRendererModel {
 		RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
 
 		gl.glEnd();
-		
 	}
-
 }
+
 /*
  * $Log$
+ * Revision 1.2  2004/03/07 18:27:01  tako
+ * The methods now properly call their "super class" implementations.
+ *
  * Revision 1.1  2004/01/27 13:29:30  steven
  * image widget patch by gertjan
  *
