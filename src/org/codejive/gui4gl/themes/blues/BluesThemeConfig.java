@@ -32,7 +32,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 248 $
+ * @version $Revision: 250 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -111,7 +111,6 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(ScrollBar.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 		Theme.setFloatValue(ScrollBar.class, "transparancy#focused", 0.0f);
 		Theme.setValue(ScrollBar.class, "innerBar.renderer", new ScrollBarRenderer());
-		Theme.setIntegerValue(ScrollBar.class, "innerBar.xPadding", 1);
 		Theme.setValue(ScrollBar.class, "innerBar.barColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setFloatValue(ScrollBar.class, "innerBar.barTransparancy", 0.0f);
 		Theme.setValue(ScrollBar.class, "innerBar.barColor#focused", new GLColor(0.45f, 0.45f, 1.0f));
@@ -142,6 +141,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.18  2004/05/04 23:54:53  tako
+ * Minor change in scrollbar layout.
+ *
  * Revision 1.17  2004/05/04 22:31:23  tako
  * Added scrollbar attribute values.
  * Changed the names of a couple of TextField attributes.

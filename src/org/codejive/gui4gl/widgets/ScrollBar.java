@@ -51,7 +51,7 @@ import org.codejive.gui4gl.layouts.Layouter;
  * <li>the position or offset of the Display Window within the entire data set</li>
  * 
  * @author Tako
- * @version $Revision: 240 $
+ * @version $Revision: 250 $
  */
 public class ScrollBar extends CompoundWidget {
 	private int m_nOrientation;
@@ -300,7 +300,7 @@ public class ScrollBar extends CompoundWidget {
 					buttonSize = barRect.width;
 				}
 				m_lessButton.setBounds(0, 0, barRect.width, buttonSize);
-				m_innerBar.setBounds(0, buttonSize, barRect.width, barRect.height - 2 * buttonSize );
+				m_innerBar.setBounds(0, buttonSize + 1, barRect.width, barRect.height - 2 * buttonSize - 2);
 				m_moreButton.setBounds(0, barRect.height - buttonSize, barRect.width, buttonSize);
 			} else {
 				int buttonSize = barRect.width / 10;
@@ -308,7 +308,7 @@ public class ScrollBar extends CompoundWidget {
 					buttonSize = barRect.height;
 				}
 				m_lessButton.setBounds(0, 0, buttonSize, barRect.height);
-				m_innerBar.setBounds(buttonSize, 0, barRect.width - 2 * buttonSize, barRect.height);
+				m_innerBar.setBounds(buttonSize + 1, 0, barRect.width - 2 * buttonSize - 2, barRect.height);
 				m_moreButton.setBounds(barRect.width - buttonSize, 0, buttonSize, barRect.height);
 			}
 		}
@@ -344,6 +344,9 @@ public class ScrollBar extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.2  2004/05/04 23:54:53  tako
+ * Minor change in scrollbar layout.
+ *
  * Revision 1.1  2004/05/04 22:07:57  tako
  * First check-in of a new widget that implements a scroll bar.
  *
