@@ -3,6 +3,7 @@
  */
 package org.codejive.gui4gl.widgets;
 
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,12 +11,13 @@ import java.util.List;
 import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 91 $
+ * @version $Revision: 128 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -142,9 +144,25 @@ public class ValueBar extends Widget {
 				break;
 		}
 	}
+	
+	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+		super.processMouseClickedEvent(_event);
+		if (!_event.isConsumed()) {
+			Rectangle bounds = getInnerBounds();
+			float fPct = (float)(_event.getX() - bounds.x) / bounds.width;
+			float fRelVal = fPct * (m_fMax - m_fMin);
+			fRelVal = (int)((fRelVal + m_fStepSize / 2) / m_fStepSize) * m_fStepSize;
+			m_fValue = m_fMin + fRelVal;
+			GuiChangeEvent e = new GuiChangeEvent(this, new Float(m_fValue));
+			GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+		}
+	}
 }
 /*
  * $Log$
+ * Revision 1.8  2003/11/23 02:04:27  tako
+ * Added mouse support.
+ *
  * Revision 1.7  2003/11/19 11:19:41  tako
  * Implemented completely new event system because tryin to re-use the
  * AWT and Swing events just was too much trouble.

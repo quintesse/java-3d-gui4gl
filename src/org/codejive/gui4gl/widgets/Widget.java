@@ -13,11 +13,13 @@ import org.codejive.utils4gl.Renderable;
 import org.codejive.utils4gl.Texture;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiKeyListener;
+import org.codejive.gui4gl.events.GuiMouseEvent;
+import org.codejive.gui4gl.events.GuiMouseListener;
 import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 111 $
+ * @version $Revision: 128 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -34,6 +36,7 @@ public class Widget implements Renderable {
 	private boolean m_bCanHaveFocus;
 
 	private List m_keyListeners;
+	private List m_mouseListeners;
 
 	public class Padding {
 		public int xPadding, yPadding;
@@ -67,6 +70,7 @@ public class Widget implements Renderable {
 		m_bCanHaveFocus = false;
 		
 		m_keyListeners = new ArrayList();
+		m_mouseListeners = new ArrayList();
 
 		m_bounds = new Rectangle();
 		m_innerBounds = new Rectangle();
@@ -124,6 +128,16 @@ public class Widget implements Renderable {
 	
 	public Widget previousFocus() {
 		return getParent().getPreviousFocusWidget(this);
+	}
+	
+	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
+		Widget result;
+		if (getBounds().contains(_nXPos, _nYPos)) {
+			result = this;
+		} else {
+			result = null;
+		}
+		return result;
 	}
 	
 	public int getLeft() {
@@ -325,6 +339,10 @@ public class Widget implements Renderable {
 		m_keyListeners.add(_listener);
 	}
 	
+	public void addMouseListener(GuiMouseListener _listener) {
+		m_mouseListeners.add(_listener);
+	}
+	
 	protected void processKeyPressedEvent(GuiKeyEvent _event) {
 		GuiKeyEvent.fireKeyPressed(m_keyListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
@@ -343,6 +361,28 @@ public class Widget implements Renderable {
 		GuiKeyEvent.fireKeyTyped(m_keyListeners, _event);
 		if (!_event.isConsumed() && (getParent() != null)) {
 			getParent().processKeyTypedEvent(_event);
+		}
+	}
+	
+	protected void processMousePressedEvent(GuiMouseEvent _event) {
+		setFocus();
+		GuiMouseEvent.fireMousePressed(m_mouseListeners, _event);
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processMousePressedEvent(_event);
+		}
+	}
+	
+	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+		GuiMouseEvent.fireMousePressed(m_mouseListeners, _event);
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processMouseReleasedEvent(_event);
+		}
+	}
+	
+	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+		GuiMouseEvent.fireMousePressed(m_mouseListeners, _event);
+		if (!_event.isConsumed() && (getParent() != null)) {
+			getParent().processMouseClickedEvent(_event);
 		}
 	}
 	
@@ -389,6 +429,9 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/23 02:04:27  tako
+ * Added mouse support.
+ *
  * Revision 1.9  2003/11/21 01:31:05  tako
  * Added getToplevel().
  *

@@ -11,13 +11,14 @@ import java.util.List;
 import org.codejive.gui4gl.events.GuiActionEvent;
 import org.codejive.gui4gl.events.GuiActionListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 94 $
+ * @version $Revision: 128 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
@@ -205,6 +206,24 @@ public class Button extends Widget {
 		}
 	}
 
+	protected void processMousePressedEvent(GuiMouseEvent _event) {
+		m_bSelected = true;
+		super.processMousePressedEvent(_event);
+	}
+	
+	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+		m_bSelected = false;
+		super.processMouseReleasedEvent(_event);
+	}
+	
+	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+		super.processMouseClickedEvent(_event);
+		if (!_event.isConsumed()) {
+			GuiActionEvent e = new GuiActionEvent(this);
+			GuiActionEvent.fireActionPerformed(m_actionListeners, e);
+		}
+	}
+	
 	public boolean isSelected() {
 		return m_bSelected;
 	}
@@ -212,6 +231,9 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/23 02:04:27  tako
+ * Added mouse support.
+ *
  * Revision 1.5  2003/11/20 00:32:11  tako
  * Code change because of change from getPadding() to
  * updateInnerBounds().

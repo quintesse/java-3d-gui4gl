@@ -10,13 +10,14 @@ import java.util.List;
 import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 113 $
+ * @version $Revision: 128 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
@@ -179,10 +180,22 @@ public class Toggle extends Widget {
 				break;
 		}
 	}
+	
+	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+		super.processMouseClickedEvent(_event);
+		if (!_event.isConsumed()) {
+			m_bChecked = !m_bChecked;
+			GuiChangeEvent e = new GuiChangeEvent(this, new Boolean(m_bChecked));
+			GuiChangeEvent.fireChangeEvent(m_changeListeners, e);
+		}
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/23 02:04:27  tako
+ * Added mouse support.
+ *
  * Revision 1.1  2003/11/21 01:33:30  tako
  * First check-in of the new toggle widget.
  *
