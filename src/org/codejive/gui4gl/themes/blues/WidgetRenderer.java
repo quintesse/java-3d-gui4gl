@@ -32,7 +32,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 224 $
+ * @version $Revision: 237 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -58,18 +58,18 @@ public class WidgetRenderer implements WidgetRendererModel {
 		Texture backgroundImage;
 
 		if (_widget.hasFocus()) {
-			backgroundColor = _widget.getFocusedBackgroundColor();
-			fTransparancy = _widget.getFocusedTransparancy();
-			backgroundImage = _widget.getFocusedBackgroundImage();
+			backgroundColor = (GLColor)_widget.getAttribute("backgroundColor#focused");
+			fTransparancy = _widget.getFloatAttribute("transparancy#focused");
+			backgroundImage = (Texture)_widget.getAttribute("backgroundImage#focused");
 		} else {
 			if (_widget.isEnabled()) {
-				backgroundColor = _widget.getBackgroundColor();
-				fTransparancy = _widget.getTransparancy();
-				backgroundImage = _widget.getBackgroundImage();
+				backgroundColor = (GLColor)_widget.getAttribute("backgroundColor");
+				fTransparancy = _widget.getFloatAttribute("transparancy");
+				backgroundImage = (Texture)_widget.getAttribute("backgroundImage");
 			} else {
-				backgroundColor = _widget.getDisabledBackgroundColor();
-				fTransparancy = _widget.getDisabledTransparancy();
-				backgroundImage = _widget.getDisabledBackgroundImage();
+				backgroundColor = (GLColor)_widget.getAttribute("backgroundColor#disabled");
+				fTransparancy = _widget.getFloatAttribute("transparancy#disabled");
+				backgroundImage = (Texture)_widget.getAttribute("backgroundImage#disabled");
 			}
 		}
 		
@@ -99,6 +99,9 @@ public class WidgetRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.9  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.8  2004/03/07 18:25:48  tako
  * Fixed problem that backgroundColor was not allowed to be null.
  * The backgroundImage is now properly bound.

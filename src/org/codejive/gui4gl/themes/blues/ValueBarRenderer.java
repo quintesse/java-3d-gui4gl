@@ -1,7 +1,7 @@
 /*
  * [gui4gl] OpenGL game-oriented GUI library
  * 
- * Copyright (C) 2003 Steven Lagerweij
+ * Copyright (C) 2003 Steven Lagerweij, Tako Schotanus
  * 
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by the
@@ -30,6 +30,7 @@ import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.RenderHelper;
 import org.codejive.gui4gl.themes.WidgetRendererModel;
+import org.codejive.gui4gl.widgets.Orientation;
 import org.codejive.gui4gl.widgets.ValueBar;
 import org.codejive.gui4gl.widgets.Widget;
 import org.codejive.utils4gl.GLColor;
@@ -37,12 +38,10 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 208 $
+ * @version $Revision: 237 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
-	private Font m_textFont;
-	private GLColor m_textFontColor;
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(ValueBar.class, _widget, _context);
@@ -65,23 +64,37 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		int top = barRect.y;
 		int height = barRect.height;
 		int width = barRect.width;
-
 		
 		int textXPos = 0;
 		int textYPos = 0;
 		
+		Font textFont = null;
+		GLColor textFontColor = null;
+
 		String sValueAsString = "";
 		if(bar.isShowValue()) {
-			setFontAndFontColor(bar);
+			if(bar.hasFocus()) {
+				textFont = (Font)bar.getAttribute("textFont#focused");
+				textFontColor = (GLColor)bar.getAttribute("textFontColor#focused");
+			} else {
+				if (bar.isEnabled()) {
+					textFont = (Font)bar.getAttribute("textFont");
+					textFontColor = (GLColor)bar.getAttribute("textFontColor");
+				} else {
+					textFont = (Font)bar.getAttribute("textFont#disabled");
+					textFontColor = (GLColor)bar.getAttribute("textFontColor#disabled");
+				}
+			}
 			
 			sValueAsString = String.valueOf(bar.getValue());
 		}
 		
 		
-		if(barRect.height > barRect.width) {
+		int orientation = bar.getActualOrientation();
+		if (orientation == Orientation.VERTICAL) {
 			
 			if(bar.isShowValue()) {
-				int h = (int)m_textFont.getSize(_context);
+				int h = (int)textFont.getSize(_context);
 				switch(bar.getAlignment()) {
 					case GLText.ALIGN_LEFT : // = top
 						textYPos = top + h;
@@ -96,7 +109,7 @@ public class ValueBarRenderer implements WidgetRendererModel {
 						textYPos = top + height / 2 + h/2;
 						break;
 				}
-				textXPos = left + width/2 - (int)(m_textFont.getTextWidth(_context, sValueAsString) / 2);
+				textXPos = left + width/2 - (int)(textFont.getTextWidth(_context, sValueAsString) / 2);
 			}
 			
 			
@@ -106,13 +119,13 @@ public class ValueBarRenderer implements WidgetRendererModel {
 			
 			if(bar.isShowValue()) {
 				int w = Math.max(
-					(int)m_textFont.getTextWidth(_context, String.valueOf(bar.getMinValue())),
-					(int)m_textFont.getTextWidth(_context, String.valueOf(bar.getMaxValue()))
+					(int)textFont.getTextWidth(_context, String.valueOf(bar.getMinValue())),
+					(int)textFont.getTextWidth(_context, String.valueOf(bar.getMaxValue()))
 				);
 				
 				switch(bar.getAlignment()) {					
 					case GLText.ALIGN_LEFT :
-						textXPos = left + w - (int)m_textFont.getTextWidth(_context, String.valueOf(bar.getValue()));
+						textXPos = left + w - (int)textFont.getTextWidth(_context, String.valueOf(bar.getValue()));
 						width -= w;
 						left += w;
 						break;
@@ -121,10 +134,10 @@ public class ValueBarRenderer implements WidgetRendererModel {
 						width -= w;
 						break;
 					case GLText.ALIGN_CENTER :
-						textXPos = left + width/2 - (int)(m_textFont.getTextWidth(_context, String.valueOf(bar.getValue())) / 2);
+						textXPos = left + width/2 - (int)(textFont.getTextWidth(_context, String.valueOf(bar.getValue())) / 2);
 						break;
 				}
-				textYPos = top - 1 + height / 2 + (int)(m_textFont.getSize(_context)/2f);
+				textYPos = top - 1 + height / 2 + (int)(textFont.getSize(_context)/2f);
 			}
 			
 			width = getPixelValueForBar(bar, width);
@@ -136,15 +149,15 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		GLColor barColor;
 		float barTransparancy;
 		if (bar.hasFocus()) {
-			barColor = bar.getFocusedBarColor();
-			barTransparancy = bar.getFocusedBarTransparancy();
+			barColor = (GLColor)bar.getAttribute("barColor#focused");
+			barTransparancy = bar.getFloatAttribute("barTransparancy#focused");
 		} else {
 			if (bar.isEnabled()) {
-				barColor = bar.getBarColor();
-				barTransparancy = bar.getBarTransparancy();
+				barColor = (GLColor)bar.getAttribute("barColor");
+				barTransparancy = bar.getFloatAttribute("barTransparancy");
 			} else {
-				barColor = bar.getDisabledBarColor();
-				barTransparancy = bar.getDisabledBarTransparancy();
+				barColor = (GLColor)bar.getAttribute("barColor#disabled");
+				barTransparancy = bar.getFloatAttribute("barTransparancy#disabled");
 			}
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
@@ -154,9 +167,9 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		
 		
 		if(bar.isShowValue()) {
-			gl.glColor3fv(m_textFontColor.toArray3f());
+			gl.glColor3fv(textFontColor.toArray3f());
 			gl.glRasterPos2i(textXPos, textYPos);
-			m_textFont.renderText(_context, sValueAsString);
+			textFont.renderText(_context, sValueAsString);
 		}
 		
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -170,26 +183,12 @@ public class ValueBarRenderer implements WidgetRendererModel {
 
 		return o >= 0 ? (o <= _maxWidth ? o:_maxWidth) : 0;
 	}
-	
-	private void setFontAndFontColor(ValueBar _bar) {
-
-		if (_bar.hasFocus()) {
-			m_textFont = _bar.getFocusedTextFont();
-			m_textFontColor = _bar.getFocusedTextFontColor();
-		} else {
-			if (_bar.isEnabled()) {
-				m_textFont = _bar.getTextFont();
-				m_textFontColor = _bar.getTextFontColor();
-			} else {
-				m_textFont = _bar.getDisabledTextFont();
-				m_textFontColor = _bar.getDisabledTextFontColor();
-			}
-		}		
-	}
-
 }
 /*
  * $Log$
+ * Revision 1.12  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.11  2003/12/16 09:15:09  steven
  * text color is only set when a label is used
  *

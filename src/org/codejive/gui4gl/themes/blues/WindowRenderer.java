@@ -34,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 183 $
+ * @version $Revision: 237 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -63,27 +63,27 @@ public class WindowRenderer implements WidgetRendererModel {
 		int nCaptionXPadding, nCaptionYPadding;
 		Window window = (Window)_widget;
 		if (window.isActive()) {
-			captionFont = window.getFocusedTextFont();
-			captionFontColor = window.getFocusedTextFontColor();
-			titlebarColor = window.getActiveTitlebarColor();
-			fTitlebarTransparancy = window.getActiveTitlebarTransparancy();
-			nCaptionXPadding = window.getActiveCaptionXPadding();
-			nCaptionYPadding = window.getActiveCaptionYPadding();
+			captionFont = (Font)window.getAttribute("textFont#active");
+			captionFontColor = (GLColor)window.getAttribute("textFontColor#active");
+			titlebarColor = (GLColor)window.getAttribute("titlebarColor#active");
+			fTitlebarTransparancy = window.getFloatAttribute("titlebarTransparancy#active");
+			nCaptionXPadding = window.getIntegerAttribute("captionXPadding#active");
+			nCaptionYPadding = window.getIntegerAttribute("captionYPadding#active");
 		} else {
 			if (window.isEnabled()) {
-				captionFont = window.getTextFont();
-				captionFontColor = window.getTextFontColor();
-				titlebarColor = window.getTitlebarColor();
-				fTitlebarTransparancy = window.getTitlebarTransparancy();
-				nCaptionXPadding = window.getCaptionXPadding();
-				nCaptionYPadding = window.getCaptionYPadding();
+				captionFont = (Font)window.getAttribute("textFont");
+				captionFontColor = (GLColor)window.getAttribute("textFontColor");
+				titlebarColor = (GLColor)window.getAttribute("titlebarColor");
+				fTitlebarTransparancy = window.getFloatAttribute("titlebarTransparancy");
+				nCaptionXPadding = window.getIntegerAttribute("captionXPadding");
+				nCaptionYPadding = window.getIntegerAttribute("captionYPadding");
 			} else {
-				captionFont = window.getDisabledTextFont();
-				captionFontColor = window.getDisabledTextFontColor();
-				titlebarColor = window.getDisabledTitlebarColor();
-				fTitlebarTransparancy = window.getDisabledTitlebarTransparancy();
-				nCaptionXPadding = window.getDisabledCaptionXPadding();
-				nCaptionYPadding = window.getDisabledCaptionYPadding();
+				captionFont = (Font)window.getAttribute("textFont#disabled");
+				captionFontColor = (GLColor)window.getAttribute("textFontColor#disabled");
+				titlebarColor = (GLColor)window.getAttribute("titlebarColor#disabled");
+				fTitlebarTransparancy = window.getFloatAttribute("titlebarTransparancy#disabled");
+				nCaptionXPadding = window.getIntegerAttribute("captionXPadding#disabled");
+				nCaptionYPadding = window.getIntegerAttribute("captionYPadding#disabled");
 			}
 		}
 
@@ -97,14 +97,14 @@ public class WindowRenderer implements WidgetRendererModel {
 			// Title bar
 			gl.glColor4f(titlebarColor.getRed(), titlebarColor.getGreen(), titlebarColor.getBlue(), 1.0f - fTitlebarTransparancy);
 			m_tmpBounds.setBounds(window.getCurrentBounds());
-			m_tmpBounds.height = window.getTitlebarHeight();
+			m_tmpBounds.height = window.getIntegerAttribute("titlebarHeight");
 			RenderHelper.drawRectangle(gl, m_tmpBounds);
 	
 			gl.glEnd();
 			gl.glDisable(GL.GL_BLEND);
 	
 			// Title text
-			int nCaptionAlignment = window.getTextAlignment();
+			int nCaptionAlignment = window.getIntegerAttribute("textAlignment");
 			GLText.drawText(_context, m_tmpBounds, nCaptionXPadding, nCaptionYPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle, "...");
 
 			gl.glEnable(GL.GL_TEXTURE_2D);
@@ -114,6 +114,9 @@ public class WindowRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.11  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.10  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

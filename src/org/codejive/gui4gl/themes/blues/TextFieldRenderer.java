@@ -34,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 183 $
+ * @version $Revision: 237 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
 	
@@ -56,15 +56,15 @@ public class TextFieldRenderer implements WidgetRendererModel {
 		Font textFont;
 		GLColor textFontColor;
 		if(textField.hasFocus()) {
-			textFont = textField.getFocusedTextFont();
-			textFontColor = textField.getFocusedTextFontColor();
+			textFont = (Font)textField.getAttribute("textFont#focused");
+			textFontColor = (GLColor)textField.getAttribute("textFontColor#focused");
 		} else {
 			if (textField.isEnabled()) {
-				textFont = textField.getTextFont();
-				textFontColor = textField.getTextFontColor();
+				textFont = (Font)textField.getAttribute("textFont");
+				textFontColor = (GLColor)textField.getAttribute("textFontColor");
 			} else {
-				textFont = textField.getDisabledTextFont();
-				textFontColor = textField.getDisabledTextFontColor();
+				textFont = (Font)textField.getAttribute("textFont#disabled");
+				textFontColor = (GLColor)textField.getAttribute("textFontColor#disabled");
 			}
 		}
 
@@ -141,10 +141,10 @@ public class TextFieldRenderer implements WidgetRendererModel {
 		// Only show a cursor if we have focus
 		if(_textField.hasFocus()) {
 			// The cursor blinks, so let's check if we should draw it or not
-			int spd = _textField.getCursorBlinkSpeed();
+			int spd = _textField.getIntegerAttribute("cursorBlinkSpeed");
 			if(System.currentTimeMillis() % spd < (spd/2)) {
 				// Draw cursor
-				GLColor c = _textField.getTextCursorColor();
+				GLColor c = (GLColor)_textField.getAttribute("cursorColor");
 				gl.glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 				gl.glBegin(GL.GL_QUADS);
 				RenderHelper.drawRectangle(_context.getGl(), (int)fCursorXPos, (int)(fYPos - fFontHeight), (int)fCursorWidth, (int)(fFontHeight + fFontPadding));
@@ -156,6 +156,9 @@ public class TextFieldRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.7  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.6  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

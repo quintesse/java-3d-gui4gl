@@ -32,7 +32,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 183 $
+ * @version $Revision: 237 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
@@ -53,19 +53,21 @@ public class TextRenderer implements WidgetRendererModel {
 		
 		Font textFont;
 		GLColor textFontColor;
-		if (text.hasFocus()) {
-			textFont = text.getFocusedTextFont();
-			textFontColor = text.getFocusedTextFontColor();
+		if(text.hasFocus()) {
+			textFont = (Font)text.getAttribute("textFont#focused");
+			textFontColor = (GLColor)text.getAttribute("textFontColor#focused");
 		} else {
 			if (text.isEnabled()) {
-				textFont = text.getTextFont();
-				textFontColor = text.getTextFontColor();
+				textFont = (Font)text.getAttribute("textFont");
+				textFontColor = (GLColor)text.getAttribute("textFontColor");
 			} else {
-				textFont = text.getDisabledTextFont();
-				textFontColor = text.getDisabledTextFontColor();
+				textFont = (Font)text.getAttribute("textFont#disabled");
+				textFontColor = (GLColor)text.getAttribute("textFontColor#disabled");
 			}
 		}
-		int nTextAlignment = text.getTextAlignment();
+		int nTextAlignment = text.getIntegerAttribute("textAlignment");
+		// TODO Decide if this should be a widget property instead of a render attribute
+		//int nTextAlignment = text.getTextAlignment();
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
 
@@ -81,6 +83,9 @@ public class TextRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.12  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.11  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

@@ -34,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 183 $
+ * @version $Revision: 237 $
  */
 public class ToggleRenderer implements WidgetRendererModel {
 
@@ -59,24 +59,24 @@ public class ToggleRenderer implements WidgetRendererModel {
 		
 		Toggle toggle = (Toggle)_widget;
 		if (toggle.hasFocus()) {
-			captionFont = toggle.getFocusedTextFont();
-			captionFontColor = toggle.getFocusedTextFontColor();
-			checkColor = toggle.getFocusedCheckColor();
-			checkBackgroundColor = toggle.getFocusedCheckBackgroundColor();
-			fcheckTransparancy = toggle.getFocusedCheckTransparancy();
+			captionFont = (Font)toggle.getAttribute("textFont#focused");
+			captionFontColor = (GLColor)toggle.getAttribute("textFontColor#focused");
+			checkColor = (GLColor)toggle.getAttribute("checkColor#focused");
+			checkBackgroundColor = (GLColor)toggle.getAttribute("checkBackgroundColor#focused");
+			fcheckTransparancy = toggle.getFloatAttribute("checkTransparancy#focused");
 		} else {
 			if (toggle.isEnabled()) {
-				captionFont = toggle.getTextFont();
-				captionFontColor = toggle.getTextFontColor();
-				checkColor = toggle.getCheckColor();
-				checkBackgroundColor = toggle.getCheckBackgroundColor();
-				fcheckTransparancy = toggle.getCheckTransparancy();
+				captionFont = (Font)toggle.getAttribute("textFont");
+				captionFontColor = (GLColor)toggle.getAttribute("textFontColor");
+				checkColor = (GLColor)toggle.getAttribute("checkColor");
+				checkBackgroundColor = (GLColor)toggle.getAttribute("checkBackgroundColor");
+				fcheckTransparancy = toggle.getFloatAttribute("checkTransparancy");
 			} else {
-				captionFont = toggle.getDisabledTextFont();
-				captionFontColor = toggle.getDisabledTextFontColor();
-				checkColor = toggle.getDisabledCheckColor();
-				checkBackgroundColor = toggle.getDisabledCheckBackgroundColor();
-				fcheckTransparancy = toggle.getDisabledCheckTransparancy();
+				captionFont = (Font)toggle.getAttribute("textFont#disabled");
+				captionFontColor = (GLColor)toggle.getAttribute("textFontColor#disabled");
+				checkColor = (GLColor)toggle.getAttribute("checkColor#disabled");
+				checkBackgroundColor = (GLColor)toggle.getAttribute("checkBackgroundColor#disabled");
+				fcheckTransparancy = toggle.getFloatAttribute("checkTransparancy#disabled");
 			}
 		}
 
@@ -101,7 +101,7 @@ public class ToggleRenderer implements WidgetRendererModel {
 		String sCaption = toggle.getCaption();
 		if (sCaption != null) {
 			// Caption text
-			int nCaptionAlignment = toggle.getTextAlignment();
+			int nCaptionAlignment = toggle.getIntegerAttribute("textAlignment");
 			bounds.x += bounds.height + 5;
 			GLText.drawText(_context, bounds, 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
@@ -112,6 +112,9 @@ public class ToggleRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.5  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.4  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of

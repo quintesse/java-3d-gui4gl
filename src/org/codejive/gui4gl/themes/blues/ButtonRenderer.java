@@ -32,7 +32,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 183 $
+ * @version $Revision: 237 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
@@ -54,19 +54,19 @@ public class ButtonRenderer implements WidgetRendererModel {
 		
 		Button button = (Button)_widget;
 		if (button.isSelected()) {
-			captionFont = button.getSelectedTextFont();
-			captionFontColor = button.getSelectedTextFontColor();
+			captionFont = (Font)button.getAttribute("textFont#selected");
+			captionFontColor = (GLColor)button.getAttribute("textFontColor#selected");
 		} else {
 			if (button.hasFocus()) {
-				captionFont = button.getFocusedTextFont();
-				captionFontColor = button.getFocusedTextFontColor();
+				captionFont = (Font)button.getAttribute("textFont#focused");
+				captionFontColor = (GLColor)button.getAttribute("textFontColor#focused");
 			} else {
 				if (button.isEnabled()) {
-					captionFont = button.getTextFont();
-					captionFontColor = button.getTextFontColor();
+					captionFont = (Font)button.getAttribute("textFont");
+					captionFontColor = (GLColor)button.getAttribute("textFontColor");
 				} else {
-					captionFont = button.getDisabledTextFont();
-					captionFontColor = button.getDisabledTextFontColor();
+					captionFont = (Font)button.getAttribute("textFont#disabled");
+					captionFontColor = (GLColor)button.getAttribute("textFontColor#disabled");
 				}
 			}
 		}
@@ -78,8 +78,8 @@ public class ButtonRenderer implements WidgetRendererModel {
 		gl.glBegin(GL.GL_QUADS);
 
 		if (button.isSelected()) {
-			GLColor selectedBackgroundColor = button.getSelectedBackgroundColor();
-			float fselectedTransparancy = button.getSelectedTransparancy();
+			GLColor selectedBackgroundColor = (GLColor)button.getAttribute("backgroundColor#selected");
+			float fselectedTransparancy = button.getFloatAttribute("transparancy#selected");
 			gl.glColor4f(selectedBackgroundColor.getRed(), selectedBackgroundColor.getGreen(), selectedBackgroundColor.getBlue(), 1.0f - fselectedTransparancy);
 			RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
 		}
@@ -90,7 +90,7 @@ public class ButtonRenderer implements WidgetRendererModel {
 		String sCaption = button.getCaption();
 		if (sCaption != null) {
 			// Caption text
-			int nCaptionAlignment = button.getTextAlignment();
+			int nCaptionAlignment = button.getIntegerAttribute("textAlignment");
 			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
 
@@ -100,6 +100,9 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.11  2004/05/04 21:59:24  tako
+ * Now using the new attribute map instead of individual property getters and setters.
+ *
  * Revision 1.10  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of
