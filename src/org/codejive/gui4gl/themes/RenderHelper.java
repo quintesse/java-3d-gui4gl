@@ -12,19 +12,23 @@ import net.java.games.jogl.GL;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 88 $
  */
 public class RenderHelper {
 	
 	public static void drawRectangle(GL _gl, Rectangle _rect) {
+		drawRectangle(_gl, _rect.x, _rect.y, _rect.width, _rect.height);
+	}
+	
+	public static void drawRectangle(GL _gl, int _left, int _top, int _width, int _height) {
 		_gl.glTexCoord2f(0.0f, 0.0f);
-		_gl.glVertex2f(_rect.x, _rect.y);
+		_gl.glVertex2f(_left, _top);
 		_gl.glTexCoord2f(0.0f, 1.0f);
-		_gl.glVertex2f(_rect.x, _rect.y + _rect.height);
+		_gl.glVertex2f(_left, _top + _height);
 		_gl.glTexCoord2f(1.0f, 1.0f);
-		_gl.glVertex2f(_rect.x + _rect.width, _rect.y + _rect.height);
+		_gl.glVertex2f(_left + _width, _top + _height);
 		_gl.glTexCoord2f(1.0f, 0.0f);
-		_gl.glVertex2f(_rect.x + _rect.width, _rect.y);
+		_gl.glVertex2f(_left + _width, _top);
 	}
 
 	protected static WidgetRendererModel findFirstSuperClassRenderer(Class _widgetClass) {
@@ -56,6 +60,9 @@ public class RenderHelper {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 10:01:55  steven
+ * added a drawRectangle with primitive arguments to prevent unnecessary Rectangle creation in render methods
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
