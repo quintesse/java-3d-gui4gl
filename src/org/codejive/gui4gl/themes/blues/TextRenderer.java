@@ -15,13 +15,13 @@ import org.codejive.gui4gl.widgets.*;
 /**
  * @author tako
  */
-public class TextRenderer implements AbstractWidgetRenderer {
+public class TextRenderer implements WidgetRendererModel {
 
-	public void initRendering(AbstractWidget _widget, RenderContext _context) {
+	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Text.class, _widget, _context);
 	}
 
-	public void render(AbstractWidget _widget, RenderContext _context) {
+	public void render(Widget _widget, RenderContext _context) {
 		RenderHelper.renderSuperClass(Text.class, _widget, _context);
 
 		GL gl = _context.getGl();

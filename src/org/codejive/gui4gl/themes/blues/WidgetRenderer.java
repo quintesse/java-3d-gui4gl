@@ -8,25 +8,25 @@ import net.java.games.jogl.GL;
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.utils4gl.Texture;
-import org.codejive.gui4gl.themes.AbstractWidgetRenderer;
+import org.codejive.gui4gl.themes.WidgetRendererModel;
 import org.codejive.gui4gl.themes.RenderHelper;
 import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
  */
-public class WidgetRenderer implements AbstractWidgetRenderer {
+public class WidgetRenderer implements WidgetRendererModel {
 
 	/* (non-Javadoc)
 	 * @see org.codejive.world3d.gui.WidgetRenderer#initRendering(org.codejive.world3d.gui.Widget, org.codejive.world3d.RenderContext)
 	 */
-	public void initRendering(AbstractWidget _widget, RenderContext _context) {
+	public void initRendering(Widget _widget, RenderContext _context) {
 	}
 
 	/* (non-Javadoc)
 	 * @see org.codejive.gui4gl.themes.WidgetRenderer#render(org.codejive.gui4gl.widgets.AbstractWidget, org.codejive.world3d.RenderContext)
 	 */
-	public void render(AbstractWidget _widget, RenderContext _context) {
+	public void render(Widget _widget, RenderContext _context) {
 		GL gl = _context.getGl();
 
 		GLColor backgroundColor;

@@ -17,18 +17,18 @@ import org.codejive.gui4gl.widgets.*;
 /**
  * @author tako
  */
-public class WindowRenderer implements AbstractWidgetRenderer {
+public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
 	
 	public WindowRenderer() {
 		m_tmpBounds = new Rectangle();
 	}
 	
-	public void initRendering(AbstractWidget _widget, RenderContext _context) {
+	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Window.class, _widget, _context);
 	}
 
-	public void render(AbstractWidget _widget, RenderContext _context) {
+	public void render(Widget _widget, RenderContext _context) {
 		RenderHelper.renderSuperClass(Window.class, _widget, _context);
 		
 		GL gl = _context.getGl();
