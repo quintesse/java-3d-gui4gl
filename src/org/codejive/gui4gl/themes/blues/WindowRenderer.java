@@ -34,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 237 $
+ * @version $Revision: 266 $
  */
 public class WindowRenderer implements WidgetRendererModel {
 	private Rectangle m_tmpBounds;
@@ -45,10 +45,6 @@ public class WindowRenderer implements WidgetRendererModel {
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Window.class, _widget, _context);
-	}
-
-	public void updateRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.updateSuperClass(Window.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -110,10 +106,18 @@ public class WindowRenderer implements WidgetRendererModel {
 			gl.glEnable(GL.GL_TEXTURE_2D);
 		}
 	}
+
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
+		return RenderHelper.getMinimalBoundsSuperClass(Window.class, _widget, _context);
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.12  2004/10/17 11:09:51  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.11  2004/05/04 21:59:24  tako
  * Now using the new attribute map instead of individual property getters and setters.
  *

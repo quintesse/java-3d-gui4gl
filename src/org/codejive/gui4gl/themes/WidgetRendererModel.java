@@ -21,21 +21,27 @@
  */
 package org.codejive.gui4gl.themes;
 
+import java.awt.Rectangle;
+
 import org.codejive.utils4gl.RenderContext;
 import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 266 $
  */
 public interface WidgetRendererModel {
-	public void initRendering(Widget _widget, RenderContext _context); 
-	public void updateRendering(Widget _widget, RenderContext _context); 
+	public void initRendering(Widget _widget, RenderContext _context);
 	public void render(Widget _widget, RenderContext _context);
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context);
 }
 
 /*
  * $Log$
+ * Revision 1.6  2004/10/17 11:10:07  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.5  2003/11/25 16:27:59  tako
  * All code is now subject to the Lesser GPL.
  *

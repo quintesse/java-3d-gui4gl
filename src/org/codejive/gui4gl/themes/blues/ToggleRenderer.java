@@ -34,16 +34,12 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 237 $
+ * @version $Revision: 266 $
  */
 public class ToggleRenderer implements WidgetRendererModel {
 
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(Toggle.class, _widget, _context);
-	}
-
-	public void updateRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.updateSuperClass(Toggle.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -108,10 +104,18 @@ public class ToggleRenderer implements WidgetRendererModel {
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
+
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
+		return RenderHelper.getMinimalBoundsSuperClass(Toggle.class, _widget, _context);
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.6  2004/10/17 11:09:51  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.5  2004/05/04 21:59:24  tako
  * Now using the new attribute map instead of individual property getters and setters.
  *

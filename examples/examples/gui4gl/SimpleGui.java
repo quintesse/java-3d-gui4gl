@@ -49,6 +49,7 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Image;
+//import org.codejive.gui4gl.widgets.ListBox;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.ScrollBar;
 import org.codejive.gui4gl.widgets.ScrollContainer;
@@ -67,7 +68,7 @@ import net.java.games.jogl.*;
 
 /**
  * @author tako
- * @version $Revision: 260 $
+ * @version $Revision: 266 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -179,7 +180,7 @@ public class SimpleGui implements GLEventListener {
 		gl.glLoadIdentity();
 
 		// Update the GUI because of the new dimensions
-		m_screen.updateRendering(m_context);
+		m_screen.initRendering(m_context);
 	}
 
 
@@ -188,7 +189,7 @@ public class SimpleGui implements GLEventListener {
 			super("Test Window");
 			setCenterParent(true);
 			setWidth(300);
-			setHeight(220);
+			setHeight(305);
 		
 			Text t = new Text("This text is being displayed inside a Text widget. Below this widget you can see several buttons");
 			t.setBounds(5, 5, 290, 40);
@@ -269,6 +270,13 @@ b.addKeyListener(new GuiKeyAdapter() {
 			tf.setBounds(5, 165, 290, 20);
 			add(tf);
 
+/*			ListBox lb = new ListBox();
+			lb.addItem("Aap");
+			lb.addItem("Noot");
+			lb.addItem("Mies");
+			lb.setBounds(5, 190, 290, 80);
+			add(lb);
+*/
 			addKeyListener(new GuiKeyAdapter() {
 				public void keyPressed(GuiKeyEvent _event) {
 					switch (_event.getKeyCode()) {
@@ -558,6 +566,10 @@ class GLDisplay {
 
 /*
  * $Log$
+ * Revision 1.19  2004/10/17 11:12:03  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.18  2004/05/07 23:30:13  tako
  * Tiny aspect ratio fix for the image.
  *

@@ -21,6 +21,8 @@
  */
 package org.codejive.gui4gl.themes.blues;
 
+import java.awt.Rectangle;
+
 import net.java.games.jogl.GL;
 
 import org.codejive.utils4gl.GLColor;
@@ -32,7 +34,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 237 $
+ * @version $Revision: 266 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -40,10 +42,6 @@ public class WidgetRenderer implements WidgetRendererModel {
 	 * @see org.codejive.world3d.gui.WidgetRenderer#initRendering(org.codejive.world3d.gui.Widget, org.codejive.world3d.RenderContext)
 	 */
 	public void initRendering(Widget _widget, RenderContext _context) {
-		// No code necessary
-	}
-
-	public void updateRendering(Widget _widget, RenderContext _context) {
 		// No code necessary
 	}
 
@@ -95,10 +93,18 @@ public class WidgetRenderer implements WidgetRendererModel {
 		gl.glDisable(GL.GL_BLEND);
 	}
 
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
+		return _widget.getBounds();
+	}
+
 }
 
 /*
  * $Log$
+ * Revision 1.10  2004/10/17 11:09:51  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.9  2004/05/04 21:59:24  tako
  * Now using the new attribute map instead of individual property getters and setters.
  *

@@ -34,16 +34,12 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 237 $
+ * @version $Revision: 266 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(TextField.class, _widget, _context);
-	}
-
-	public void updateRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.updateSuperClass(TextField.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -152,10 +148,18 @@ public class TextFieldRenderer implements WidgetRendererModel {
 			}
 		}
 	}
+
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
+		return RenderHelper.getMinimalBoundsSuperClass(TextField.class, _widget, _context);
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.8  2004/10/17 11:09:51  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.7  2004/05/04 21:59:24  tako
  * Now using the new attribute map instead of individual property getters and setters.
  *

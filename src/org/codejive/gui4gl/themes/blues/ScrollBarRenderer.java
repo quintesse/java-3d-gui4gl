@@ -35,16 +35,12 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author Tako
- * @version $Revision: 256 $
+ * @version $Revision: 266 $
  */
 public class ScrollBarRenderer implements WidgetRendererModel {
 	
 	public void initRendering(Widget _widget, RenderContext _context) {
 		RenderHelper.initSuperClass(ScrollBar.class, _widget, _context);
-	}
-
-	public void updateRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.updateSuperClass(ScrollBar.class, _widget, _context);
 	}
 
 	public void render(Widget _widget, RenderContext _context) {
@@ -79,11 +75,19 @@ public class ScrollBarRenderer implements WidgetRendererModel {
 		
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
+
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
+		return RenderHelper.getMinimalBoundsSuperClass(ScrollBar.class, _widget, _context);
+	}
 }
 
 
 /*
  * $Log$
+ * Revision 1.3  2004/10/17 11:09:51  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.2  2004/05/07 20:46:04  tako
  * Removed handle rectangle calculations because that info can now be retrieved from the widget.
  *

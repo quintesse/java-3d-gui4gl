@@ -21,6 +21,8 @@
  */
 package org.codejive.gui4gl.themes.blues;
 
+import java.awt.Rectangle;
+
 import net.java.games.jogl.GL;
 
 import org.codejive.gui4gl.themes.WidgetRendererModel;
@@ -31,7 +33,7 @@ import org.codejive.gui4gl.themes.RenderHelper;
 
 /**
  * @author gertjan
- * @version $Revision: 232 $
+ * @version $Revision: 266 $
  */
 public class ImageRenderer implements WidgetRendererModel {
 
@@ -39,10 +41,6 @@ public class ImageRenderer implements WidgetRendererModel {
 		RenderHelper.initSuperClass(Image.class, _widget, _context);
 	}
 
-	public void updateRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.updateSuperClass(Image.class, _widget, _context);
-	}
-	
 	public void render(Widget _widget, RenderContext _context) {
 		RenderHelper.renderSuperClass(Image.class, _widget, _context);
 
@@ -62,10 +60,18 @@ public class ImageRenderer implements WidgetRendererModel {
 		gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glDisable(GL.GL_BLEND);
 	}
+
+	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
+		return RenderHelper.getMinimalBoundsSuperClass(Image.class, _widget, _context);
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.4  2004/10/17 11:09:51  tako
+ * Removed updateRendering().
+ * Added getMinimalBounds().
+ *
  * Revision 1.3  2004/03/17 00:45:55  tako
  * Now uses the new Texture system.
  *
