@@ -16,20 +16,19 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 74 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
 	private Font m_captionFont;
 	private GLColor m_captionFontColor;
-	private int m_nCaptionPadding;
 	private int m_nCaptionAlignment;
 	private Font m_focusedCaptionFont;
 	private GLColor m_focusedCaptionFontColor;
-	private int m_nFocusedCaptionPadding;
 	private Font m_selectedCaptionFont;
 	private GLColor m_selectedCaptionFontColor;
-	private int m_nSelectedCaptionPadding;
+	private int m_nSelectedXPadding;
+	private int m_nSelectedYPadding;
 	private GLColor m_selectedBackgroundColor;
 	private float m_fSelectedTransparancy;
 	
@@ -44,14 +43,13 @@ public class Button extends Widget {
 		m_sCaption = _sCaption;
 		m_captionFont = (Font)Theme.getValue(getClass(), "captionFont");
 		m_captionFontColor = (GLColor)Theme.getValue(getClass(), "captionFontColor");
-		m_nCaptionPadding = Theme.getIntegerValue(getClass(), "captionPadding");
 		m_nCaptionAlignment = Theme.getIntegerValue(getClass(), "captionAlignment");
 		m_focusedCaptionFont = (Font)Theme.getValue(getClass(), "focusedCaptionFont");
 		m_focusedCaptionFontColor = (GLColor)Theme.getValue(getClass(), "focusedCaptionFontColor");
-		m_nFocusedCaptionPadding = Theme.getIntegerValue(getClass(), "focusedCaptionPadding");
 		m_selectedCaptionFont = (Font)Theme.getValue(getClass(), "selectedCaptionFont");
 		m_selectedCaptionFontColor = (GLColor)Theme.getValue(getClass(), "selectedCaptionFontColor");
-		m_nSelectedCaptionPadding = Theme.getIntegerValue(getClass(), "selectedCaptionPadding");
+		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), "selectedXPadding");
+		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), "selectedYPadding");
 		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), "selectedBackgroundColor");
 		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), "selectedTransparancy");
 		setFocusable(true);
@@ -84,14 +82,6 @@ public class Button extends Widget {
 		m_captionFontColor = _color;
 	}
 	
-	public int getCaptionPadding() {
-		return m_nCaptionPadding;
-	}
-	
-	public void setCaptionPadding(int _nPadding) {
-		m_nCaptionPadding = _nPadding;
-	}
-	
 	public int getCaptionAlignment() {
 		return m_nCaptionAlignment;
 	}
@@ -116,14 +106,6 @@ public class Button extends Widget {
 		m_focusedCaptionFontColor = _color;
 	}
 	
-	public int getFocusedCaptionPadding() {
-		return m_nFocusedCaptionPadding;
-	}
-	
-	public void setFocusedCaptionPadding(int _nPadding) {
-		m_nFocusedCaptionPadding = _nPadding;
-	}
-	
 	public Font getSelectedCaptionFont() {
 		return m_selectedCaptionFont;
 	}
@@ -140,12 +122,20 @@ public class Button extends Widget {
 		m_selectedCaptionFontColor = _color;
 	}
 	
-	public int getSelectedCaptionPadding() {
-		return m_nSelectedCaptionPadding;
+	public int getSelectedXPadding() {
+		return m_nSelectedXPadding;
 	}
 	
-	public void setSelectedCaptionPadding(int _nPadding) {
-		m_nSelectedCaptionPadding = _nPadding;
+	public void setSelectedXPadding(int _nPadding) {
+		m_nSelectedXPadding = _nPadding;
+	}
+	
+	public int getSelectedYPadding() {
+		return m_nSelectedYPadding;
+	}
+	
+	public void setSelectedYPadding(int _nPadding) {
+		m_nSelectedYPadding = _nPadding;
 	}
 	
 	public GLColor getSelectedBackgroundColor() {
@@ -172,7 +162,17 @@ public class Button extends Widget {
 		m_actionListeners.add(_listener);
 	}
 	
-	public void processKeyPressedEvent(KeyEvent _event) {
+	protected Padding getPadding() {
+		if (isSelected()) {
+			m_padding.xPadding = getSelectedXPadding();
+			m_padding.yPadding = getSelectedYPadding();
+		} else {
+			super.getPadding();
+		}
+		return m_padding;
+	}
+	
+	protected void processKeyPressedEvent(KeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_ENTER:
@@ -184,7 +184,7 @@ public class Button extends Widget {
 		}
 	}
 	
-	public void processKeyReleasedEvent(KeyEvent _event) {
+	protected void processKeyReleasedEvent(KeyEvent _event) {
 		m_bSelected = false;
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
@@ -211,6 +211,11 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/19 00:12:31  tako
+ * Added support for seperate X and Y padding.
+ * Removed as much widget-specific paddings and replaced them by the
+ * ones in the Widget base class.
+ *
  * Revision 1.2  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *

@@ -14,7 +14,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 48 $
+ * @version $Revision: 74 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
@@ -29,22 +29,25 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 		Font captionFont;
 		GLColor captionFontColor;
-		int nCaptionPadding;
+		int nXPadding, nYPadding;
 		
 		Button button = (Button)_widget;
 		if (button.isSelected()) {
 			captionFont = button.getSelectedCaptionFont();
 			captionFontColor = button.getSelectedCaptionFontColor();
-			nCaptionPadding = button.getSelectedCaptionPadding();
+			nXPadding = button.getSelectedXPadding();
+			nYPadding = button.getSelectedYPadding();
 		} else {
 			if (button.hasFocus()) {
 				captionFont = button.getFocusedCaptionFont();
 				captionFontColor = button.getFocusedCaptionFontColor();
-				nCaptionPadding = button.getFocusedCaptionPadding();
+				nXPadding = button.getFocusedXPadding();
+				nYPadding = button.getFocusedYPadding();
 			} else {
 				captionFont = button.getCaptionFont();
 				captionFontColor = button.getCaptionFontColor();
-				nCaptionPadding = button.getCaptionPadding();
+				nXPadding = button.getXPadding();
+				nYPadding = button.getYPadding();
 			}
 		}
 
@@ -68,7 +71,7 @@ public class ButtonRenderer implements WidgetRendererModel {
 		if (sCaption != null) {
 			// Caption text
 			int nCaptionAlignment = button.getCaptionAlignment();
-			GLText.drawText(_context, _widget.getBounds(), nCaptionPadding, captionFont, captionFontColor, true, nCaptionAlignment, sCaption);
+			GLText.drawText(_context, _widget.getBounds(), nXPadding, nYPadding, captionFont, captionFontColor, true, nCaptionAlignment, sCaption);
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
@@ -77,6 +80,11 @@ public class ButtonRenderer implements WidgetRendererModel {
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/19 00:10:14  tako
+ * Added support for seperate X and Y padding.
+ * Removed as much widget-specific paddings and replaced them by the
+ * ones in the Widget base class.
+ *
  * Revision 1.4  2003/11/17 10:54:49  tako
  * Added CVS macros for revision and log.
  *
