@@ -34,7 +34,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 183 $
+ * @version $Revision: 199 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -107,6 +107,8 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setFloatValue(ValueBar.class, "barTransparancy", 0.0f);
 		Theme.setValue(ValueBar.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 		Theme.setFloatValue(ValueBar.class, "transparancy#focused", 0.0f);
+		Theme.setValue(ValueBar.class, "textFontColor#focused", new GLColor(0.0f, 0.0f, 0.0f));
+		Theme.setValue(ValueBar.class, "textFontColor", new GLColor(0.0f, 0.0f, 0.0f));
 		
 		// TextField
 		Theme.setValue(TextField.class, "renderer", new TextFieldRenderer());
@@ -125,6 +127,9 @@ public class BluesThemeConfig implements ThemeConfig {
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/14 00:29:04  steven
+ * added & changed text font color for the valuebar widget
+ *
  * Revision 1.13  2003/12/05 01:05:11  tako
  * Implemented rendering of enabled/disabled state for widgets.
  * Renamed all caption properties to text properties leaving only one set of
