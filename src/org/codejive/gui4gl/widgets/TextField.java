@@ -10,27 +10,30 @@ import java.util.List;
 import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
+import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 119 $
+ * @version $Revision: 127 $
  */
 public class TextField extends Widget {
 	private String m_sText;
 	
 	private Font m_textFont;
-	private GLColor m_textCursorColor;
 	private GLColor m_textFontColor;
-	private GLColor m_textFontFocusedColor;
+	private Font m_focusedTextFont;
+	private GLColor m_focusedTextFontColor;
+	private GLColor m_textCursorColor;
+	private int m_nCursorBlinkSpeed;
+
 	private int m_nTextAlignment;
 	private List m_changeListeners;
 
 	private int m_nCursorPos;
 	private int m_nViewOffset;
-	private int m_nCursorBlinkSpeed;
 	
 	public TextField() {
 		this("");
@@ -39,7 +42,8 @@ public class TextField extends Widget {
 	public TextField(String _sText) {
 		m_textFont = (Font)Theme.getValue(getClass(), "textFont");
 		m_textFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor");
-		m_textFontFocusedColor = (GLColor)Theme.getValue(getClass(), "textFontFocusedColor");
+		m_focusedTextFont = (Font)Theme.getValue(getClass(), "focusedTextFont");
+		m_focusedTextFontColor = (GLColor)Theme.getValue(getClass(), "focusedTextFontColor");
 		m_textCursorColor = (GLColor)Theme.getValue(getClass(), "textCursorColor");
 		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), "textCursorBlinkSpeed");
 		
@@ -66,28 +70,36 @@ public class TextField extends Widget {
 		m_textFont = _font;
 	}
 
-	public GLColor getTextCursorColor() {
-		return m_textCursorColor;
-	}
-	
-	public void setTextCursorColor(GLColor _color) {
-		m_textCursorColor = _color;
-	}
-	
-	public GLColor getTextFontFocusedColor() {
-		return m_textFontFocusedColor;
-	}
-	
-	public void setTextFontFocusedColor(GLColor _color) {
-		m_textFontFocusedColor = _color;
-	}
-	
 	public GLColor getTextFontColor() {
 		return m_textFontColor;
 	}
 	
 	public void setTextFontColor(GLColor _color) {
 		m_textFontColor = _color;
+	}
+	
+	public Font getFocusedTextFont() {
+		return m_focusedTextFont;
+	}
+	
+	public void setFocusedTextFont(Font _font) {
+		m_focusedTextFont = _font;
+	}
+
+	public GLColor getFocusedTextFontColor() {
+		return m_focusedTextFontColor;
+	}
+	
+	public void setFocusedTextFontColor(GLColor _color) {
+		m_focusedTextFontColor = _color;
+	}
+	
+	public GLColor getTextCursorColor() {
+		return m_textCursorColor;
+	}
+	
+	public void setTextCursorColor(GLColor _color) {
+		m_textCursorColor = _color;
 	}
 	
 	public int getTextAlignment() {
@@ -118,8 +130,14 @@ public class TextField extends Widget {
 		return m_nCursorPos;
 	}
 	
-	public int setCursorPos(int _nCursorOffset) {
-		return m_nCursorPos;
+	public void setCursorPos(int _nCursorOffset) {
+		m_nCursorPos = _nCursorOffset;
+		if(m_nCursorPos < 0) {
+			m_nCursorPos = 0;
+		}
+		if(m_nCursorPos > m_sText.length()) {
+			m_nCursorPos = m_sText.length();
+		}
 	}
 	
 	public void addChangeListener(GuiChangeListener _listener) {
@@ -196,10 +214,21 @@ public class TextField extends Widget {
 		}
 	}	
 	
+	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+		super.processMouseClickedEvent(_event);
+		if (!_event.isConsumed()) {
+			// TODO Handling clicks to position the cursor will have to wait until
+			// we have a way to do some font calculations in this part of the code
+		}
+	}
 }
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/23 02:03:55  tako
+ * Added new property focusedFont.
+ * Renamed some existing properties to be more like the standard.
+ *
  * Revision 1.2  2003/11/21 10:40:55  steven
  * update processing of events to actually consume when responded
  *
