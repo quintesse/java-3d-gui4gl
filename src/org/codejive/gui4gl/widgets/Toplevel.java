@@ -27,7 +27,7 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
 
 /**
  * @author Tako
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class Toplevel extends Container {
 	private boolean m_bDraggable;
@@ -49,11 +49,11 @@ public class Toplevel extends Container {
 	}
 	
 	public boolean isActive() {
-		return (getFocusWidget() != null) && getFocusWidget().hasFocus();
+		return isEnabled() && (getFocusWidget() != null) && getFocusWidget().hasFocus();
 	}
 
 	public void activate() {
-		if (isVisible() && isFocusable()) {
+		if (isEnabled() && isVisible() && isFocusable()) {
 			if (getFocusWidget() == null) {
 				Iterator i = getChildren();
 				while (i.hasNext()) {
@@ -78,6 +78,15 @@ public class Toplevel extends Container {
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.3  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

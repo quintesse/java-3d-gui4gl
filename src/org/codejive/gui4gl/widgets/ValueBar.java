@@ -35,7 +35,7 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class ValueBar extends Widget {
 	private float m_fMin;
@@ -47,6 +47,8 @@ public class ValueBar extends Widget {
 	private float m_fBarTransparancy;
 	private GLColor m_focusedBarColor;
 	private float m_fFocusedBarTransparancy;
+	private GLColor m_disabledBarColor;
+	private float m_fDisabledBarTransparancy;
 	
 	private List m_changeListeners;
 	
@@ -60,8 +62,10 @@ public class ValueBar extends Widget {
 		m_fStepSize = _fStepSize;
 		m_barColor = (GLColor)Theme.getValue(getClass(), "barColor");
 		m_fBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy");
-		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), "focusedBarColor");
-		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), "focusedBarTransparancy");
+		m_focusedBarColor = (GLColor)Theme.getValue(getClass(), "barColor#focused");
+		m_fFocusedBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy#focused");
+		m_disabledBarColor = (GLColor)Theme.getValue(getClass(), "barColor#disabled");
+		m_fDisabledBarTransparancy = Theme.getFloatValue(getClass(), "barTransparancy#disabled");
 		m_changeListeners = new LinkedList();
 		setFocusable(true);
 	}
@@ -130,6 +134,22 @@ public class ValueBar extends Widget {
 		m_fFocusedBarTransparancy = _fTransparancy;
 	}	
 	
+	public GLColor getDisabledBarColor() {
+		return m_disabledBarColor;
+	}
+	
+	public void setDisabledBarColor(GLColor _color) {
+		m_disabledBarColor = _color;
+	}
+
+	public float getDisabledBarTransparancy() {
+		return m_fDisabledBarTransparancy;
+	}
+	
+	public void setDisabledBarTransparancy(float _fTransparancy) {
+		m_fDisabledBarTransparancy = _fTransparancy;
+	}	
+	
 	public void addChangeListener(GuiChangeListener _listener) {
 		m_changeListeners.add(_listener);
 	}
@@ -187,6 +207,15 @@ public class ValueBar extends Widget {
 }
 /*
  * $Log$
+ * Revision 1.11  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.10  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

@@ -36,17 +36,12 @@ import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class Button extends Widget {
 	private String m_sCaption;
-	private Font m_captionFont;
-	private GLColor m_captionFontColor;
-	private int m_nCaptionAlignment;
-	private Font m_focusedCaptionFont;
-	private GLColor m_focusedCaptionFontColor;
-	private Font m_selectedCaptionFont;
-	private GLColor m_selectedCaptionFontColor;
+	private Font m_selectedTextFont;
+	private GLColor m_selectedTextFontColor;
 	private int m_nSelectedXPadding;
 	private int m_nSelectedYPadding;
 	private GLColor m_selectedBackgroundColor;
@@ -61,17 +56,12 @@ public class Button extends Widget {
 
 	public Button(String _sCaption) {
 		m_sCaption = _sCaption;
-		m_captionFont = (Font)Theme.getValue(getClass(), "captionFont");
-		m_captionFontColor = (GLColor)Theme.getValue(getClass(), "captionFontColor");
-		m_nCaptionAlignment = Theme.getIntegerValue(getClass(), "captionAlignment");
-		m_focusedCaptionFont = (Font)Theme.getValue(getClass(), "focusedCaptionFont");
-		m_focusedCaptionFontColor = (GLColor)Theme.getValue(getClass(), "focusedCaptionFontColor");
-		m_selectedCaptionFont = (Font)Theme.getValue(getClass(), "selectedCaptionFont");
-		m_selectedCaptionFontColor = (GLColor)Theme.getValue(getClass(), "selectedCaptionFontColor");
-		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), "selectedXPadding");
-		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), "selectedYPadding");
-		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), "selectedBackgroundColor");
-		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), "selectedTransparancy");
+		m_selectedTextFont = (Font)Theme.getValue(getClass(), "textFont#selected");
+		m_selectedTextFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor#selected");
+		m_nSelectedXPadding = Theme.getIntegerValue(getClass(), "xPadding#selected");
+		m_nSelectedYPadding = Theme.getIntegerValue(getClass(), "yPadding#selected");
+		m_selectedBackgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor#selected");
+		m_fSelectedTransparancy = Theme.getFloatValue(getClass(), "transparancy#selected");
 		setFocusable(true);
 		
 		m_actionListeners = new ArrayList();
@@ -86,60 +76,20 @@ public class Button extends Widget {
 		m_sCaption = _sCaption;
 	}
 	
-	public Font getCaptionFont() {
-		return m_captionFont;
+	public Font getSelectedTextFont() {
+		return m_selectedTextFont;
 	}
 	
-	public void setCaptionFont(Font _font) {
-		m_captionFont = _font;
+	public void setSelectedTextFont(Font _font) {
+		m_selectedTextFont = _font;
 	}
 	
-	public GLColor getCaptionFontColor() {
-		return m_captionFontColor;
+	public GLColor getSelectedTextFontColor() {
+		return m_selectedTextFontColor;
 	}
 	
-	public void setCaptionFontColor(GLColor _color) {
-		m_captionFontColor = _color;
-	}
-	
-	public int getCaptionAlignment() {
-		return m_nCaptionAlignment;
-	}
-	
-	public void setCaptionAlignment(int _nCaptionAlignment) {
-		m_nCaptionAlignment = _nCaptionAlignment;
-	}	
-	
-	public Font getFocusedCaptionFont() {
-		return m_focusedCaptionFont;
-	}
-	
-	public void setFocusedCaptionFont(Font _font) {
-		m_focusedCaptionFont = _font;
-	}
-	
-	public GLColor getFocusedCaptionFontColor() {
-		return m_focusedCaptionFontColor;
-	}
-	
-	public void setFocusedCaptionFontColor(GLColor _color) {
-		m_focusedCaptionFontColor = _color;
-	}
-	
-	public Font getSelectedCaptionFont() {
-		return m_selectedCaptionFont;
-	}
-	
-	public void setSelectedCaptionFont(Font _font) {
-		m_selectedCaptionFont = _font;
-	}
-	
-	public GLColor getSelectedCaptionFontColor() {
-		return m_selectedCaptionFontColor;
-	}
-	
-	public void setSelectedCaptionFontColor(GLColor _color) {
-		m_selectedCaptionFontColor = _color;
+	public void setSelectedTextFontColor(GLColor _color) {
+		m_selectedTextFontColor = _color;
 	}
 	
 	public int getSelectedXPadding() {
@@ -249,6 +199,15 @@ public class Button extends Widget {
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.7  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

@@ -33,11 +33,12 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiKeyListener;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.events.GuiMouseListener;
+import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.*;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class Widget implements Renderable {
 	private Container m_parent;
@@ -46,10 +47,22 @@ public class Widget implements Renderable {
 	private float m_fTransparancy;
 	private Texture m_backgroundImage;
 	private int m_nXPadding, m_nYPadding;
+	private Font m_textFont;
+	private GLColor m_textFontColor;
+	private int m_nTextAlignment;	
 	private GLColor m_focusedBackgroundColor;
 	private float m_fFocusedTransparancy;
 	private Texture m_focusedBackgroundImage;
 	private int m_nFocusedXPadding, m_nFocusedYPadding;
+	private Font m_focusedTextFont;
+	private GLColor m_focusedTextFontColor;
+	private GLColor m_disabledBackgroundColor;
+	private float m_fDisabledTransparancy;
+	private Texture m_disabledBackgroundImage;
+	private int m_nDisabledXPadding, m_nDisabledYPadding;
+	private Font m_disabledTextFont;
+	private GLColor m_disabledTextFontColor;
+	private boolean m_bEnabled;
 	private boolean m_bVisible;
 	private boolean m_bCanHaveFocus;
 
@@ -79,11 +92,24 @@ public class Widget implements Renderable {
 		m_backgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage");
 		m_nXPadding = Theme.getIntegerValue(getClass(), "xPadding");
 		m_nYPadding = Theme.getIntegerValue(getClass(), "yPadding");
-		m_focusedBackgroundColor = (GLColor)Theme.getValue(getClass(), "focusedBackgroundColor");
-		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), "focusedTransparancy");
-		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), "focusedBackgroundImage");
-		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), "focusedXPadding");
-		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), "focusedYPadding");
+		m_textFont = (Font)Theme.getValue(getClass(), "textFont");
+		m_textFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor");
+		m_nTextAlignment = Theme.getIntegerValue(getClass(), "textAlignment");
+		m_focusedBackgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor#focused");
+		m_fFocusedTransparancy = Theme.getFloatValue(getClass(), "transparancy#focused");
+		m_focusedBackgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage#focused");
+		m_nFocusedXPadding = Theme.getIntegerValue(getClass(), "xPadding#focused");
+		m_nFocusedYPadding = Theme.getIntegerValue(getClass(), "yPadding#focused");
+		m_focusedTextFont = (Font)Theme.getValue(getClass(), "textFont#focused");
+		m_focusedTextFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor#focused");
+		m_disabledBackgroundColor = (GLColor)Theme.getValue(getClass(), "backgroundColor#disabled");
+		m_fDisabledTransparancy = Theme.getFloatValue(getClass(), "transparancy#disabled");
+		m_disabledBackgroundImage = (Texture)Theme.getValue(getClass(), "backgroundImage#disabled");
+		m_nDisabledXPadding = Theme.getIntegerValue(getClass(), "xPadding#disabled");
+		m_nDisabledYPadding = Theme.getIntegerValue(getClass(), "yPadding#disabled");
+		m_disabledTextFont = (Font)Theme.getValue(getClass(), "textFont#disabled");
+		m_disabledTextFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor#disabled");
+		m_bEnabled = true;
 		m_bVisible = true;
 		m_bCanHaveFocus = false;
 		
@@ -123,7 +149,7 @@ public class Widget implements Renderable {
 	}
 	
 	public boolean isFocusable() {
-		return m_bCanHaveFocus && ((getParent() == null) || getParent().isFocusable());
+		return m_bCanHaveFocus && m_bEnabled && m_bVisible && ((getParent() == null) || getParent().isFocusable());
 	}
 	
 	public void setFocusable(boolean _bCanHaveFocus) {
@@ -150,7 +176,7 @@ public class Widget implements Renderable {
 	
 	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
 		Widget result;
-		if (isVisible() && getCurrentBounds().contains(_nXPos, _nYPos)) {
+		if (isEnabled() && isVisible() && getCurrentBounds().contains(_nXPos, _nYPos)) {
 			result = this;
 		} else {
 			result = null;
@@ -246,6 +272,30 @@ public class Widget implements Renderable {
 		m_nYPadding = _nPadding;
 	}
 	
+	public Font getTextFont() {
+		return m_textFont;
+	}
+	
+	public void setTextFont(Font _font) {
+		m_textFont = _font;
+	}
+
+	public GLColor getTextFontColor() {
+		return m_textFontColor;
+	}
+	
+	public void setTextFontColor(GLColor _color) {
+		m_textFontColor = _color;
+	}
+	
+	public int getTextAlignment() {
+		return m_nTextAlignment;
+	}
+	
+	public void setTextAlignment(int _nTextAlignment) {
+		m_nTextAlignment = _nTextAlignment;
+	}	
+	
 	public GLColor getFocusedBackgroundColor() {
 		return m_focusedBackgroundColor;
 	}
@@ -288,6 +338,90 @@ public class Widget implements Renderable {
 	
 	public void setFocusedYPadding(int _nPadding) {
 		m_nFocusedYPadding = _nPadding;
+	}
+
+	public Font getFocusedTextFont() {
+		return m_focusedTextFont;
+	}
+	
+	public void setFocusedTextFont(Font _font) {
+		m_focusedTextFont = _font;
+	}
+
+	public GLColor getFocusedTextFontColor() {
+		return m_focusedTextFontColor;
+	}
+	
+	public void setFocusedTextFontColor(GLColor _color) {
+		m_focusedTextFontColor = _color;
+	}
+	
+	public GLColor getDisabledBackgroundColor() {
+		return m_disabledBackgroundColor;
+	}
+	
+	public void setDisabledBackgroundColor(float _fRed, float _fGreen, float _fBlue) {
+		m_disabledBackgroundColor.set(_fRed, _fGreen, _fBlue);
+	}
+	
+	public void setDisabledBackgroundColor(GLColor _color) {
+		m_disabledBackgroundColor.set(_color);
+	}
+	
+	public float getDisabledTransparancy() {
+		return m_fDisabledTransparancy;
+	}
+	
+	public void setDisabledTransparancy(float _fTransparancy) {
+		m_fDisabledTransparancy = _fTransparancy;
+	}
+	
+	public Texture getDisabledBackgroundImage() {
+		return m_disabledBackgroundImage;
+	}
+	
+	public void setDisabledBackgroundImage(Texture _image) {
+		m_disabledBackgroundImage = _image;
+	}
+	
+	public int getDisabledXPadding() {
+		return m_nDisabledXPadding;
+	}
+	
+	public void setDisabledXPadding(int _nPadding) {
+		m_nDisabledXPadding = _nPadding;
+	}
+	
+	public int getDisabledYPadding() {
+		return m_nDisabledYPadding;
+	}
+	
+	public void setDisabledYPadding(int _nPadding) {
+		m_nDisabledYPadding = _nPadding;
+	}
+
+	public Font getDisabledTextFont() {
+		return m_disabledTextFont;
+	}
+	
+	public void setDisabledTextFont(Font _font) {
+		m_disabledTextFont = _font;
+	}
+
+	public GLColor getDisabledTextFontColor() {
+		return m_disabledTextFontColor;
+	}
+	
+	public void setDisabledTextFontColor(GLColor _color) {
+		m_disabledTextFontColor = _color;
+	}
+	
+	public boolean isEnabled() {
+		return m_bEnabled && ((getParent() == null) || getParent().isEnabled());
+	}
+	
+	public void setEnabled(boolean _bEnabled) {
+		m_bEnabled = _bEnabled;
 	}
 	
 	public boolean isVisible() {
@@ -468,6 +602,15 @@ public class Widget implements Renderable {
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.14  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

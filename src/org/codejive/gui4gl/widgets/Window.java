@@ -24,31 +24,29 @@ package org.codejive.gui4gl.widgets;
 import java.awt.Rectangle;
 
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
 	private int m_nTitlebarHeight;
 	private GLColor m_titlebarColor;
 	private float m_fTitlebarTransparancy;
-	private Font m_captionFont;
-	private GLColor m_captionFontColor;
 	private int m_nCaptionXPadding;
 	private int m_nCaptionYPadding;
-	private int m_nCaptionAlignment;
 	private GLColor m_activeTitlebarColor;
 	private float m_fActiveTitlebarTransparancy;
-	private Font m_activeCaptionFont;
-	private GLColor m_activeCaptionFontColor;
 	private int m_nActiveCaptionXPadding;
 	private int m_nActiveCaptionYPadding;
+	private GLColor m_disabledTitlebarColor;
+	private float m_fDisabledTitlebarTransparancy;
+	private int m_nDisabledCaptionXPadding;
+	private int m_nDisabledCaptionYPadding;
 	private boolean m_bCenterParent;
 	private boolean m_bDragging;
 	
@@ -61,17 +59,16 @@ public class Window extends Toplevel {
 		m_nTitlebarHeight = Theme.getIntegerValue(getClass(), "titlebarHeight");
 		m_titlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor");
 		m_fTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy");
-		m_captionFont = (Font)Theme.getValue(getClass(), "captionFont");
-		m_captionFontColor = (GLColor)Theme.getValue(getClass(), "captionFontColor");
 		m_nCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding");
 		m_nCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding");
-		m_nCaptionAlignment = Theme.getIntegerValue(getClass(), "captionAlignment");
-		m_activeTitlebarColor = (GLColor)Theme.getValue(getClass(), "activeTitlebarColor");
-		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), "activeTitlebarTransparancy");
-		m_activeCaptionFont = (Font)Theme.getValue(getClass(), "activeCaptionFont");
-		m_activeCaptionFontColor = (GLColor)Theme.getValue(getClass(), "activeCaptionFontColor");
-		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), "activeCaptionXPadding");
-		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), "activeCaptionYPadding");
+		m_activeTitlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor#active");
+		m_fActiveTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy#active");
+		m_nActiveCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding#active");
+		m_nActiveCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding#active");
+		m_disabledTitlebarColor = (GLColor)Theme.getValue(getClass(), "titlebarColor#disabled");
+		m_fDisabledTitlebarTransparancy = Theme.getFloatValue(getClass(), "titlebarTransparancy#disabled");
+		m_nDisabledCaptionXPadding = Theme.getIntegerValue(getClass(), "captionXPadding#disabled");
+		m_nDisabledCaptionYPadding = Theme.getIntegerValue(getClass(), "captionYPadding#disabled");
 		m_bCenterParent = false;
 		setVisible(false);
 	}
@@ -108,22 +105,6 @@ public class Window extends Toplevel {
 		m_fTitlebarTransparancy = _fTransparancy;
 	}
 	
-	public Font getCaptionFont() {
-		return m_captionFont;
-	}
-	
-	public void setCaptionFont(Font _font) {
-		m_captionFont = _font;
-	}
-	
-	public GLColor getCaptionFontColor() {
-		return m_captionFontColor;
-	}
-	
-	public void setCaptionFontColor(GLColor _color) {
-		m_captionFontColor = _color;
-	}
-	
 	public int getCaptionXPadding() {
 		return m_nCaptionXPadding;
 	}
@@ -138,14 +119,6 @@ public class Window extends Toplevel {
 	
 	public void setCaptionYPadding(int _nPadding) {
 		m_nCaptionYPadding = _nPadding;
-	}
-	
-	public int getCaptionAlignment() {
-		return m_nCaptionAlignment;
-	}
-	
-	public void setCaptionAlignment(int _nAlignment) {
-		m_nCaptionAlignment = _nAlignment;
 	}
 	
 	public GLColor getActiveTitlebarColor() {
@@ -164,22 +137,6 @@ public class Window extends Toplevel {
 		m_fActiveTitlebarTransparancy = _fTransparancy;
 	}
 	
-	public Font getActiveCaptionFont() {
-		return m_activeCaptionFont;
-	}
-	
-	public void setActiveCaptionFont(Font _font) {
-		m_activeCaptionFont = _font;
-	}
-	
-	public GLColor getActiveCaptionFontColor() {
-		return m_activeCaptionFontColor;
-	}
-	
-	public void setActiveCaptionFontColor(GLColor _color) {
-		m_activeCaptionFontColor = _color;
-	}
-	
 	public int getActiveCaptionXPadding() {
 		return m_nActiveCaptionXPadding;
 	}
@@ -194,6 +151,38 @@ public class Window extends Toplevel {
 	
 	public void setActiveCaptionYPadding(int _nPadding) {
 		m_nActiveCaptionYPadding = _nPadding;
+	}
+	
+	public GLColor getDisabledTitlebarColor() {
+		return m_disabledTitlebarColor;
+	}
+	
+	public void setDisabledTitlebarColor(GLColor _color) {
+		m_disabledTitlebarColor = _color;
+	}
+	
+	public float getDisabledTitlebarTransparancy() {
+		return m_fDisabledTitlebarTransparancy;
+	}
+	
+	public void setDisabledTitlebarTransparancy(float _fTransparancy) {
+		m_fDisabledTitlebarTransparancy = _fTransparancy;
+	}
+	
+	public int getDisabledCaptionXPadding() {
+		return m_nDisabledCaptionXPadding;
+	}
+	
+	public void setDisabledCaptionXPadding(int _nPadding) {
+		m_nDisabledCaptionXPadding = _nPadding;
+	}
+	
+	public int getDisabledCaptionYPadding() {
+		return m_nDisabledCaptionYPadding;
+	}
+	
+	public void setDisabledCaptionYPadding(int _nPadding) {
+		m_nDisabledCaptionYPadding = _nPadding;
 	}
 	
 	public boolean isCenterParent() {
@@ -268,6 +257,15 @@ public class Window extends Toplevel {
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.9  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

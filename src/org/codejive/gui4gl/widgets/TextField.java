@@ -29,25 +29,19 @@ import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author steven
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class TextField extends Widget {
 	private String m_sText;
 	
-	private Font m_textFont;
-	private GLColor m_textFontColor;
-	private Font m_focusedTextFont;
-	private GLColor m_focusedTextFontColor;
 	private GLColor m_textCursorColor;
 	private int m_nCursorBlinkSpeed;
 
-	private int m_nTextAlignment;
 	private List m_changeListeners;
 
 	private int m_nCursorPos;
@@ -58,10 +52,6 @@ public class TextField extends Widget {
 	}
 
 	public TextField(String _sText) {
-		m_textFont = (Font)Theme.getValue(getClass(), "textFont");
-		m_textFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor");
-		m_focusedTextFont = (Font)Theme.getValue(getClass(), "focusedTextFont");
-		m_focusedTextFontColor = (GLColor)Theme.getValue(getClass(), "focusedTextFontColor");
 		m_textCursorColor = (GLColor)Theme.getValue(getClass(), "textCursorColor");
 		m_nCursorBlinkSpeed = Theme.getIntegerValue(getClass(), "textCursorBlinkSpeed");
 		
@@ -80,38 +70,6 @@ public class TextField extends Widget {
 		m_nViewOffset = 0;
 	}
 	
-	public Font getTextFont() {
-		return m_textFont;
-	}
-	
-	public void setTextFont(Font _font) {
-		m_textFont = _font;
-	}
-
-	public GLColor getTextFontColor() {
-		return m_textFontColor;
-	}
-	
-	public void setTextFontColor(GLColor _color) {
-		m_textFontColor = _color;
-	}
-	
-	public Font getFocusedTextFont() {
-		return m_focusedTextFont;
-	}
-	
-	public void setFocusedTextFont(Font _font) {
-		m_focusedTextFont = _font;
-	}
-
-	public GLColor getFocusedTextFontColor() {
-		return m_focusedTextFontColor;
-	}
-	
-	public void setFocusedTextFontColor(GLColor _color) {
-		m_focusedTextFontColor = _color;
-	}
-	
 	public GLColor getTextCursorColor() {
 		return m_textCursorColor;
 	}
@@ -120,14 +78,6 @@ public class TextField extends Widget {
 		m_textCursorColor = _color;
 	}
 	
-	public int getTextAlignment() {
-		return m_nTextAlignment;
-	}
-	
-	public void setTextAlignment(int _nTextAlignment) {
-		m_nTextAlignment = _nTextAlignment;
-	}
-
 	public int getViewOffset() {
 		return m_nViewOffset;
 	}
@@ -243,6 +193,15 @@ public class TextField extends Widget {
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.4  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

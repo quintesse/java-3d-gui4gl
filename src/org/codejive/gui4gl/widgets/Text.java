@@ -21,20 +21,12 @@
  */
 package org.codejive.gui4gl.widgets;
 
-import org.codejive.gui4gl.fonts.Font;
-import org.codejive.gui4gl.themes.Theme;
-import org.codejive.utils4gl.GLColor;
-
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class Text extends Widget {
 	private String m_sText;
-	
-	private Font m_textFont;
-	private GLColor m_textFontColor;
-	private int m_nTextAlignment;
 	
 	public Text() {
 		this(null);
@@ -42,9 +34,6 @@ public class Text extends Widget {
 
 	public Text(String _sText) {
 		m_sText = _sText;
-		m_textFont = (Font)Theme.getValue(getClass(), "textFont");
-		m_textFontColor = (GLColor)Theme.getValue(getClass(), "textFontColor");
-		m_nTextAlignment = Theme.getIntegerValue(getClass(), "textAlignment");
 	}
 
 	public String getText() {
@@ -54,34 +43,19 @@ public class Text extends Widget {
 	public void setText(String _sText) {
 		m_sText = _sText;
 	}
-	
-	public Font getTextFont() {
-		return m_textFont;
-	}
-	
-	public void setTextFont(Font _font) {
-		m_textFont = _font;
-	}
-
-	public GLColor getTextFontColor() {
-		return m_textFontColor;
-	}
-	
-	public void setTextFontColor(GLColor _color) {
-		m_textFontColor = _color;
-	}
-	
-	public int getTextAlignment() {
-		return m_nTextAlignment;
-	}
-	
-	public void setTextAlignment(int _nTextAlignment) {
-		m_nTextAlignment = _nTextAlignment;
-	}	
 }
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.6  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *

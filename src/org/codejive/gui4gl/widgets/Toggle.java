@@ -29,28 +29,25 @@ import org.codejive.gui4gl.events.GuiChangeEvent;
 import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
-import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.utils4gl.GLColor;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 184 $
  */
 public class Toggle extends Widget {
 	private String m_sCaption;
 	private boolean m_bChecked;
-	private Font m_captionFont;
-	private GLColor m_captionFontColor;
-	private int m_nCaptionAlignment;
 	private GLColor m_checkColor;
 	private GLColor m_checkBackgroundColor;
 	private float m_fCheckTransparancy;
-	private Font m_focusedCaptionFont;
-	private GLColor m_focusedCaptionFontColor;
 	private GLColor m_focusedCheckColor;
 	private GLColor m_focusedCheckBackgroundColor;
 	private float m_fFocusedCheckTransparancy;
+	private GLColor m_disabledCheckColor;
+	private GLColor m_disabledCheckBackgroundColor;
+	private float m_fDisabledCheckTransparancy;
 	
 	private List m_changeListeners;
 	
@@ -61,17 +58,15 @@ public class Toggle extends Widget {
 	public Toggle(String _sCaption, boolean _bChecked) {
 		m_sCaption = _sCaption;
 		m_bChecked = _bChecked;
-		m_captionFont = (Font)Theme.getValue(getClass(), "captionFont");
-		m_captionFontColor = (GLColor)Theme.getValue(getClass(), "captionFontColor");
-		m_nCaptionAlignment = Theme.getIntegerValue(getClass(), "captionAlignment");
 		m_checkColor = (GLColor)Theme.getValue(getClass(), "checkColor");
 		m_checkBackgroundColor = (GLColor)Theme.getValue(getClass(), "checkBackgroundColor");
 		m_fCheckTransparancy = Theme.getFloatValue(getClass(), "checkTransparancy");
-		m_focusedCaptionFont = (Font)Theme.getValue(getClass(), "focusedCaptionFont");
-		m_focusedCaptionFontColor = (GLColor)Theme.getValue(getClass(), "focusedCaptionFontColor");
-		m_focusedCheckColor = (GLColor)Theme.getValue(getClass(), "focusedCheckColor");
-		m_focusedCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), "focusedCheckBackgroundColor");
-		m_fFocusedCheckTransparancy = Theme.getFloatValue(getClass(), "focusedCheckTransparancy");
+		m_focusedCheckColor = (GLColor)Theme.getValue(getClass(), "checkColor#focused");
+		m_focusedCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), "checkBackgroundColor#focused");
+		m_fFocusedCheckTransparancy = Theme.getFloatValue(getClass(), "checkTransparancy#focused");
+		m_disabledCheckColor = (GLColor)Theme.getValue(getClass(), "checkColor#disabled");
+		m_disabledCheckBackgroundColor = (GLColor)Theme.getValue(getClass(), "checkBackgroundColor#disabled");
+		m_fDisabledCheckTransparancy = Theme.getFloatValue(getClass(), "checkTransparancy#disabled");
 		setFocusable(true);
 		
 		m_changeListeners = new ArrayList();
@@ -92,30 +87,6 @@ public class Toggle extends Widget {
 	public void setChecked(boolean _bChecked) {
 		m_bChecked = _bChecked;
 	}
-	
-	public Font getCaptionFont() {
-		return m_captionFont;
-	}
-	
-	public void setCaptionFont(Font _font) {
-		m_captionFont = _font;
-	}
-	
-	public GLColor getCaptionFontColor() {
-		return m_captionFontColor;
-	}
-	
-	public void setCaptionFontColor(GLColor _color) {
-		m_captionFontColor = _color;
-	}
-	
-	public int getCaptionAlignment() {
-		return m_nCaptionAlignment;
-	}
-	
-	public void setCaptionAlignment(int _nCaptionAlignment) {
-		m_nCaptionAlignment = _nCaptionAlignment;
-	}	
 	
 	public GLColor getCheckColor() {
 		return m_checkColor;
@@ -141,22 +112,6 @@ public class Toggle extends Widget {
 		m_fCheckTransparancy = _fTransparancy;
 	}
 	
-	public Font getFocusedCaptionFont() {
-		return m_focusedCaptionFont;
-	}
-	
-	public void setFocusedCaptionFont(Font _font) {
-		m_focusedCaptionFont = _font;
-	}
-	
-	public GLColor getFocusedCaptionFontColor() {
-		return m_focusedCaptionFontColor;
-	}
-	
-	public void setFocusedCaptionFontColor(GLColor _color) {
-		m_focusedCaptionFontColor = _color;
-	}
-	
 	public GLColor getFocusedCheckColor() {
 		return m_focusedCheckColor;
 	}
@@ -179,6 +134,30 @@ public class Toggle extends Widget {
 	
 	public void setFocusedCheckTransparancy(float _fTransparancy) {
 		m_fFocusedCheckTransparancy = _fTransparancy;
+	}
+	
+	public GLColor getDisabledCheckColor() {
+		return m_disabledCheckColor;
+	}
+	
+	public void setDisabledCheckColor(GLColor _color) {
+		m_disabledCheckColor = _color;
+	}
+	
+	public GLColor getDisabledCheckBackgroundColor() {
+		return m_disabledCheckBackgroundColor;
+	}
+	
+	public void setDisabledCheckBackgroundColor(GLColor _color) {
+		m_disabledCheckBackgroundColor = _color;
+	}
+	
+	public float getDisabledCheckTransparancy() {
+		return m_fDisabledCheckTransparancy;
+	}
+	
+	public void setDisabledCheckTransparancy(float _fTransparancy) {
+		m_fDisabledCheckTransparancy = _fTransparancy;
 	}
 	
 	public void addChangeListener(GuiChangeListener _listener) {
@@ -211,6 +190,15 @@ public class Toggle extends Widget {
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/05 01:07:02  tako
+ * Implemented enabled/disabled state for widgets.
+ * Renamed all caption properties to text properties leaving only one set of
+ * properties instead some widgets using text and others caption.
+ * Moved all text related properties to the Widget class even though that
+ * class never actually uses them but this saves lots of coding in the widgets
+ * that do need text properties.
+ * Changed some property names during object construction.
+ *
  * Revision 1.3  2003/11/25 16:28:00  tako
  * All code is now subject to the Lesser GPL.
  *
