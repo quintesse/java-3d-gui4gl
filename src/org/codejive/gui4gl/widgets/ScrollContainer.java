@@ -23,11 +23,13 @@ package org.codejive.gui4gl.widgets;
 
 import java.awt.Rectangle;
 
+import org.codejive.gui4gl.events.GuiChangeEvent;
+import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.layouts.Layouter;
 
 /**
  * @author tako
- * @version $Revision: 253 $
+ * @version $Revision: 255 $
  */
 public class ScrollContainer extends CompoundWidget {
 	protected Widget m_content;
@@ -46,20 +48,36 @@ public class ScrollContainer extends CompoundWidget {
 		m_horizontal.setOrientation(Orientation.HORIZONTAL);
 		m_horizontal.setVisible(false);
 		m_horizontal.setFocusable(false);
+		m_horizontal.addChangeListener(new GuiChangeListener() {
+			public void stateChanged(GuiChangeEvent _event) {
+				Long value = (Long)_event.getValue(); 
+				m_content.setLeft(-(int)value.longValue());
+			}
+		});
 		add(m_horizontal);
 
 		m_vertical = new ScrollBar();
 		m_vertical.setOrientation(Orientation.VERTICAL);
 		m_vertical.setVisible(false);
 		m_vertical.setFocusable(false);
+		m_vertical.addChangeListener(new GuiChangeListener() {
+			public void stateChanged(GuiChangeEvent _event) {
+				Long value = (Long)_event.getValue(); 
+				m_content.setTop(-(int)value.longValue());
+			}
+		});
 		add(m_vertical);
 
 		if (m_content.getWidth() > getWidth()) {
 			m_horizontal.setVisible(true);
+			m_horizontal.setTotalSize(m_content.getWidth());
+			m_horizontal.setVisibleAmount(m_container.getWidth());
 		}
 		
 		if (m_content.getHeight() > getHeight()) {
 			m_vertical.setVisible(true);
+			m_vertical.setTotalSize(m_content.getHeight());
+			m_vertical.setVisibleAmount(m_container.getHeight());
 		}
 		
 		setLayouter(new ScrollContainerLayouter());
@@ -100,6 +118,9 @@ public class ScrollContainer extends CompoundWidget {
 
 /*
  * $Log$
+ * Revision 1.2  2004/05/05 00:14:22  tako
+ * Scrolling now actually works.
+ *
  * Revision 1.1  2004/05/04 23:58:51  tako
  * First check-in of a new widget implementing a scroll pane.
  *
