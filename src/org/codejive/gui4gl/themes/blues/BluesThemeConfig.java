@@ -16,7 +16,7 @@ import org.codejive.utils4gl.TextureReader;
 
 /**
  * @author tako
- * @version $Revision: 108 $
+ * @version $Revision: 117 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
@@ -103,8 +103,6 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Text.class, "renderer", new TextRenderer());
 		Theme.setValue(Text.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
 		Theme.setValue(Text.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setValue(Text.class, "textFontFocusedColor", new GLColor(1.0f, .5f, .5f));
-		Theme.setValue(Text.class, "textCursorColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setIntegerValue(Text.class, "xPadding", 2);
 		Theme.setIntegerValue(Text.class, "yPadding", 2);
 		Theme.setIntegerValue(Text.class, "textAlignment", GLText.ALIGN_LEFT);
@@ -123,11 +121,25 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(ValueBar.class, "focusedYPadding", 1);
 		Theme.setValue(ValueBar.class, "focusedBarColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setFloatValue(ValueBar.class, "focusedBarTransparancy", 0.0f);
+		
+		// TextField
+		Theme.setValue(TextField.class, "renderer", new TextFieldRenderer());
+		Theme.setValue(TextField.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
+		Theme.setValue(TextField.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setValue(TextField.class, "textFontFocusedColor", new GLColor(1.0f, .5f, .5f));
+		Theme.setValue(TextField.class, "textCursorColor", new GLColor(1f, 1f, 0.0f, .8f));
+		Theme.setIntegerValue(TextField.class, "textCursorBlinkSpeed", 1000); // in millis
+		Theme.setIntegerValue(TextField.class, "xPadding", 2);
+		Theme.setIntegerValue(TextField.class, "yPadding", 2);
+		
 	}
 }
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/21 10:01:50  steven
+ * Config for the textfield
+ *
  * Revision 1.9  2003/11/21 01:27:46  tako
  * Added properties for the new Toggle widget.
  *
