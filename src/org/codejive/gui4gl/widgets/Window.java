@@ -168,7 +168,7 @@ public class Window extends Container {
 	public void activate() {
 		if (isVisible()) {
 			if (getFocusWidget() == null) {
-				Iterator i = getChildren().iterator();
+				Iterator i = getChildren();
 				while (i.hasNext()) {
 					AbstractWidget w = (AbstractWidget)i.next();
 					if (w.isFocusable()) {
