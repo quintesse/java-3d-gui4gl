@@ -17,7 +17,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 81 $
+ * @version $Revision: 84 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
@@ -58,10 +58,10 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		float barTransparancy;
 		if (bar.hasFocus()) {
 			barColor = bar.getFocusedBarColor();
-			barTransparancy = bar.getFocusedTransparancy();
+			barTransparancy = bar.getFocusedBarTransparancy();
 		} else {
 			barColor = bar.getBarColor();
-			barTransparancy = bar.getTransparancy();
+			barTransparancy = bar.getBarTransparancy();
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
 		RenderHelper.drawRectangle(gl, barRect);
@@ -82,6 +82,9 @@ public class ValueBarRenderer implements WidgetRendererModel {
 }
 /*
  * $Log$
+ * Revision 1.4  2003/11/19 00:49:49  tako
+ * Now using correct transparancy properties for the bar.
+ *
  * Revision 1.3  2003/11/19 00:29:18  tako
  * Added support to render the bar with transparancy.
  *
