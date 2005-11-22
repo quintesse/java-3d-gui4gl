@@ -24,16 +24,14 @@ package org.codejive.gui4gl.themes;
 import java.awt.Rectangle;
 
 import org.codejive.utils4gl.RenderContext;
-import org.codejive.gui4gl.widgets.*;
+import org.codejive.utils4gl.Renderable;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 320 $
  */
-public interface WidgetRendererModel {
-	public void initRendering(Widget _widget, RenderContext _context);
-	public void render(Widget _widget, RenderContext _context);
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context);
+public interface WidgetRendererModel extends Renderable {
+	public Rectangle getMinimalBounds(RenderContext _context);
 }
 
 /*
