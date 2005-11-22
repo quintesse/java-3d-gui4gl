@@ -23,10 +23,11 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 import org.codejive.utils4gl.textures.Texture;
 import org.codejive.gui4gl.themes.WidgetRendererModel;
 import org.codejive.gui4gl.themes.RenderHelper;
@@ -34,40 +35,47 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
-	/* (non-Javadoc)
-	 * @see org.codejive.world3d.gui.WidgetRenderer#initRendering(org.codejive.world3d.gui.Widget, org.codejive.world3d.RenderContext)
-	 */
-	public void initRendering(Widget _widget, RenderContext _context) {
-		// No code necessary
+	private Widget m_widget;
+	private boolean m_bReady;
+	
+	public WidgetRenderer(Widget _widget) {
+		m_widget = (Widget)_widget;
+		m_bReady = false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.codejive.gui4gl.themes.WidgetRenderer#render(org.codejive.gui4gl.widgets.AbstractWidget, org.codejive.world3d.RenderContext)
-	 */
-	public void render(Widget _widget, RenderContext _context) {
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+
+	public void initRendering(RenderContext _context) {
+		// No code necessary
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
 		GL gl = _context.getGl();
 
 		GLColor backgroundColor;
 		float fTransparancy;
 		Texture backgroundImage;
 
-		if (_widget.hasFocus()) {
-			backgroundColor = (GLColor)_widget.getAttribute("backgroundColor#focused");
-			fTransparancy = _widget.getFloatAttribute("transparancy#focused");
-			backgroundImage = (Texture)_widget.getAttribute("backgroundImage#focused");
+		if (m_widget.hasFocus()) {
+			backgroundColor = (GLColor)m_widget.getAttribute("backgroundColor#focused");
+			fTransparancy = m_widget.getFloatAttribute("transparancy#focused");
+			backgroundImage = (Texture)m_widget.getAttribute("backgroundImage#focused");
 		} else {
-			if (_widget.isEnabled()) {
-				backgroundColor = (GLColor)_widget.getAttribute("backgroundColor");
-				fTransparancy = _widget.getFloatAttribute("transparancy");
-				backgroundImage = (Texture)_widget.getAttribute("backgroundImage");
+			if (m_widget.isEnabled()) {
+				backgroundColor = (GLColor)m_widget.getAttribute("backgroundColor");
+				fTransparancy = m_widget.getFloatAttribute("transparancy");
+				backgroundImage = (Texture)m_widget.getAttribute("backgroundImage");
 			} else {
-				backgroundColor = (GLColor)_widget.getAttribute("backgroundColor#disabled");
-				fTransparancy = _widget.getFloatAttribute("transparancy#disabled");
-				backgroundImage = (Texture)_widget.getAttribute("backgroundImage#disabled");
+				backgroundColor = (GLColor)m_widget.getAttribute("backgroundColor#disabled");
+				fTransparancy = m_widget.getFloatAttribute("transparancy#disabled");
+				backgroundImage = (Texture)m_widget.getAttribute("backgroundImage#disabled");
 			}
 		}
 		
@@ -87,14 +95,14 @@ public class WidgetRenderer implements WidgetRendererModel {
 		} else {
 			gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f - fTransparancy);
 		}
-		RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
+		RenderHelper.drawRectangle(gl, m_widget.getCurrentBounds());
 
 		gl.glEnd();
 		gl.glDisable(GL.GL_BLEND);
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return _widget.getBounds();
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_widget.getBounds();
 	}
 
 }

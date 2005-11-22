@@ -23,49 +23,63 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.gui4gl.themes.RenderHelper;
 import org.codejive.gui4gl.themes.WidgetRendererModel;
-import org.codejive.gui4gl.widgets.Orientation;
 import org.codejive.gui4gl.widgets.ScrollBar;
 import org.codejive.gui4gl.widgets.Widget;
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author Tako
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class ScrollBarRenderer implements WidgetRendererModel {
+	private ScrollBar.InnerBar m_bar;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
 	
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(ScrollBar.class, _widget, _context);
+	public ScrollBarRenderer(Widget _widget) {
+		m_bar = (ScrollBar.InnerBar)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(ScrollBar.class, m_bar);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(ScrollBar.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+	
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 
 		GL gl = _context.getGl();
 
-		ScrollBar.InnerBar bar = (ScrollBar.InnerBar)_widget;
-		Rectangle handleRect = bar.getHandleBounds();
+		Rectangle handleRect = m_bar.getHandleBounds();
 		
 		gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glBegin(GL.GL_QUADS);
 
 		GLColor barColor;
 		float barTransparancy;
-		if (bar.hasFocus()) {
-			barColor = (GLColor)bar.getAttribute("barColor#focused");
-			barTransparancy = bar.getFloatAttribute("barTransparancy#focused");
+		if (m_bar.hasFocus()) {
+			barColor = (GLColor)m_bar.getAttribute("barColor#focused");
+			barTransparancy = m_bar.getFloatAttribute("barTransparancy#focused");
 		} else {
-			if (bar.isEnabled()) {
-				barColor = (GLColor)bar.getAttribute("barColor");
-				barTransparancy = bar.getFloatAttribute("barTransparancy");
+			if (m_bar.isEnabled()) {
+				barColor = (GLColor)m_bar.getAttribute("barColor");
+				barTransparancy = m_bar.getFloatAttribute("barTransparancy");
 			} else {
-				barColor = (GLColor)bar.getAttribute("barColor#disabled");
-				barTransparancy = bar.getFloatAttribute("barTransparancy#disabled");
+				barColor = (GLColor)m_bar.getAttribute("barColor#disabled");
+				barTransparancy = m_bar.getFloatAttribute("barTransparancy#disabled");
 			}
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
@@ -76,8 +90,8 @@ public class ScrollBarRenderer implements WidgetRendererModel {
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(ScrollBar.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 

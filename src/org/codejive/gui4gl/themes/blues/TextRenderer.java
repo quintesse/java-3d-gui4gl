@@ -23,10 +23,11 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.*;
 import org.codejive.gui4gl.themes.*;
@@ -34,52 +35,66 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class TextRenderer implements WidgetRendererModel {
 
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(Text.class, _widget, _context);
+	private Text m_text;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
+	
+	public TextRenderer(Widget _widget) {
+		m_text = (Text)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(Text.class, m_text);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(Text.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 
 		GL gl = _context.getGl();
 
-		Text text = (Text)_widget;
-		
 		Font textFont;
 		GLColor textFontColor;
-		if(text.hasFocus()) {
-			textFont = (Font)text.getAttribute("textFont#focused");
-			textFontColor = (GLColor)text.getAttribute("textFontColor#focused");
+		if(m_text.hasFocus()) {
+			textFont = (Font)m_text.getAttribute("textFont#focused");
+			textFontColor = (GLColor)m_text.getAttribute("textFontColor#focused");
 		} else {
-			if (text.isEnabled()) {
-				textFont = (Font)text.getAttribute("textFont");
-				textFontColor = (GLColor)text.getAttribute("textFontColor");
+			if (m_text.isEnabled()) {
+				textFont = (Font)m_text.getAttribute("textFont");
+				textFontColor = (GLColor)m_text.getAttribute("textFontColor");
 			} else {
-				textFont = (Font)text.getAttribute("textFont#disabled");
-				textFontColor = (GLColor)text.getAttribute("textFontColor#disabled");
+				textFont = (Font)m_text.getAttribute("textFont#disabled");
+				textFontColor = (GLColor)m_text.getAttribute("textFontColor#disabled");
 			}
 		}
-		int nTextAlignment = text.getIntegerAttribute("textAlignment");
+		int nTextAlignment = m_text.getIntegerAttribute("textAlignment");
 		// TODO Decide if this should be a widget property instead of a render attribute
 		//int nTextAlignment = text.getTextAlignment();
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
 
-		String sText = text.getText();
+		String sText = m_text.getText();
 		if (sText != null) {
 			// Caption text			
-			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, textFont, textFontColor, true, nTextAlignment, sText, "...");
+			GLText.drawText(_context, m_text.getInnerBounds(), 0, 0, textFont, textFontColor, true, nTextAlignment, sText, "...");
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(Text.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 

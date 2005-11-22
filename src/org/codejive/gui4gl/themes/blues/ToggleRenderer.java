@@ -23,10 +23,11 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.*;
 import org.codejive.gui4gl.themes.*;
@@ -34,16 +35,32 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class ToggleRenderer implements WidgetRendererModel {
 
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(Toggle.class, _widget, _context);
+	private Toggle m_toggle;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
+	
+	public ToggleRenderer(Widget _widget) {
+		m_toggle = (Toggle)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(Toggle.class, m_toggle);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(Toggle.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 
 		GL gl = _context.getGl();
 
@@ -53,26 +70,25 @@ public class ToggleRenderer implements WidgetRendererModel {
 		GLColor checkBackgroundColor;
 		float fcheckTransparancy;
 		
-		Toggle toggle = (Toggle)_widget;
-		if (toggle.hasFocus()) {
-			captionFont = (Font)toggle.getAttribute("textFont#focused");
-			captionFontColor = (GLColor)toggle.getAttribute("textFontColor#focused");
-			checkColor = (GLColor)toggle.getAttribute("checkColor#focused");
-			checkBackgroundColor = (GLColor)toggle.getAttribute("checkBackgroundColor#focused");
-			fcheckTransparancy = toggle.getFloatAttribute("checkTransparancy#focused");
+		if (m_toggle.hasFocus()) {
+			captionFont = (Font)m_toggle.getAttribute("textFont#focused");
+			captionFontColor = (GLColor)m_toggle.getAttribute("textFontColor#focused");
+			checkColor = (GLColor)m_toggle.getAttribute("checkColor#focused");
+			checkBackgroundColor = (GLColor)m_toggle.getAttribute("checkBackgroundColor#focused");
+			fcheckTransparancy = m_toggle.getFloatAttribute("checkTransparancy#focused");
 		} else {
-			if (toggle.isEnabled()) {
-				captionFont = (Font)toggle.getAttribute("textFont");
-				captionFontColor = (GLColor)toggle.getAttribute("textFontColor");
-				checkColor = (GLColor)toggle.getAttribute("checkColor");
-				checkBackgroundColor = (GLColor)toggle.getAttribute("checkBackgroundColor");
-				fcheckTransparancy = toggle.getFloatAttribute("checkTransparancy");
+			if (m_toggle.isEnabled()) {
+				captionFont = (Font)m_toggle.getAttribute("textFont");
+				captionFontColor = (GLColor)m_toggle.getAttribute("textFontColor");
+				checkColor = (GLColor)m_toggle.getAttribute("checkColor");
+				checkBackgroundColor = (GLColor)m_toggle.getAttribute("checkBackgroundColor");
+				fcheckTransparancy = m_toggle.getFloatAttribute("checkTransparancy");
 			} else {
-				captionFont = (Font)toggle.getAttribute("textFont#disabled");
-				captionFontColor = (GLColor)toggle.getAttribute("textFontColor#disabled");
-				checkColor = (GLColor)toggle.getAttribute("checkColor#disabled");
-				checkBackgroundColor = (GLColor)toggle.getAttribute("checkBackgroundColor#disabled");
-				fcheckTransparancy = toggle.getFloatAttribute("checkTransparancy#disabled");
+				captionFont = (Font)m_toggle.getAttribute("textFont#disabled");
+				captionFontColor = (GLColor)m_toggle.getAttribute("textFontColor#disabled");
+				checkColor = (GLColor)m_toggle.getAttribute("checkColor#disabled");
+				checkBackgroundColor = (GLColor)m_toggle.getAttribute("checkBackgroundColor#disabled");
+				fcheckTransparancy = m_toggle.getFloatAttribute("checkTransparancy#disabled");
 			}
 		}
 
@@ -83,10 +99,10 @@ public class ToggleRenderer implements WidgetRendererModel {
 		gl.glBegin(GL.GL_QUADS);
 
 		gl.glColor4f(checkBackgroundColor.getRed(), checkBackgroundColor.getGreen(), checkBackgroundColor.getBlue(), 1.0f - fcheckTransparancy);
-		Rectangle bounds = new Rectangle(toggle.getInnerBounds());
+		Rectangle bounds = new Rectangle(m_toggle.getInnerBounds());
 		RenderHelper.drawRectangle(gl, bounds.x, bounds.y + 1, bounds.height - 2, bounds.height - 2);
 		
-		if (toggle.isChecked()) {
+		if (m_toggle.isChecked()) {
 			gl.glColor4f(checkColor.getRed(), checkColor.getGreen(), checkColor.getBlue(), 1.0f - fcheckTransparancy);
 			RenderHelper.drawRectangle(gl, bounds.x + 1, bounds.y + 2, bounds.height - 4, bounds.height - 4);
 		}
@@ -94,10 +110,10 @@ public class ToggleRenderer implements WidgetRendererModel {
 		gl.glEnd();
 		gl.glDisable(GL.GL_BLEND);
 		
-		String sCaption = toggle.getCaption();
+		String sCaption = m_toggle.getCaption();
 		if (sCaption != null) {
 			// Caption text
-			int nCaptionAlignment = toggle.getIntegerAttribute("textAlignment");
+			int nCaptionAlignment = m_toggle.getIntegerAttribute("textAlignment");
 			bounds.x += bounds.height + 5;
 			GLText.drawText(_context, bounds, 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
@@ -105,8 +121,8 @@ public class ToggleRenderer implements WidgetRendererModel {
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(Toggle.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 

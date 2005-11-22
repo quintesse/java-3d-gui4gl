@@ -24,7 +24,7 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.Font;
@@ -35,26 +35,40 @@ import org.codejive.gui4gl.widgets.ValueBar;
 import org.codejive.gui4gl.widgets.Widget;
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author steven
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
+	private ValueBar m_bar;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
 	
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(ValueBar.class, _widget, _context);
+	public ValueBarRenderer(Widget _widget) {
+		m_bar = (ValueBar)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(ValueBar.class, m_bar);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(ValueBar.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+	
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 
 		GL gl = _context.getGl();
 
-		ValueBar bar = (ValueBar)_widget;
-		
-		Rectangle barRect = _widget.getInnerBounds();
+		Rectangle barRect = m_bar.getInnerBounds();
 		
 		int left = barRect.x;
 		int top = barRect.y;
@@ -68,30 +82,30 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		GLColor textFontColor = null;
 
 		String sValueAsString = "";
-		if(bar.isShowValue()) {
-			if(bar.hasFocus()) {
-				textFont = (Font)bar.getAttribute("textFont#focused");
-				textFontColor = (GLColor)bar.getAttribute("textFontColor#focused");
+		if(m_bar.isShowValue()) {
+			if(m_bar.hasFocus()) {
+				textFont = (Font)m_bar.getAttribute("textFont#focused");
+				textFontColor = (GLColor)m_bar.getAttribute("textFontColor#focused");
 			} else {
-				if (bar.isEnabled()) {
-					textFont = (Font)bar.getAttribute("textFont");
-					textFontColor = (GLColor)bar.getAttribute("textFontColor");
+				if (m_bar.isEnabled()) {
+					textFont = (Font)m_bar.getAttribute("textFont");
+					textFontColor = (GLColor)m_bar.getAttribute("textFontColor");
 				} else {
-					textFont = (Font)bar.getAttribute("textFont#disabled");
-					textFontColor = (GLColor)bar.getAttribute("textFontColor#disabled");
+					textFont = (Font)m_bar.getAttribute("textFont#disabled");
+					textFontColor = (GLColor)m_bar.getAttribute("textFontColor#disabled");
 				}
 			}
 			
-			sValueAsString = String.valueOf(bar.getValue());
+			sValueAsString = String.valueOf(m_bar.getValue());
 		}
 		
 		
-		int orientation = bar.getActualOrientation();
+		int orientation = m_bar.getActualOrientation();
 		if (orientation == Orientation.VERTICAL) {
 			
-			if(bar.isShowValue()) {
+			if(m_bar.isShowValue()) {
 				int h = (int)textFont.getSize(_context);
-				switch(bar.getAlignment()) {
+				switch(m_bar.getAlignment()) {
 					case GLText.ALIGN_LEFT : // = top
 						textYPos = top + h;
 						height -= h;
@@ -109,19 +123,19 @@ public class ValueBarRenderer implements WidgetRendererModel {
 			}
 			
 			
-			height = getPixelValueForBar(bar, height);
+			height = getPixelValueForBar(m_bar, height);
 			top += (barRect.height - height);
 		} else {
 			
-			if(bar.isShowValue()) {
+			if(m_bar.isShowValue()) {
 				int w = Math.max(
-					(int)textFont.getTextWidth(_context, String.valueOf(bar.getMinValue())),
-					(int)textFont.getTextWidth(_context, String.valueOf(bar.getMaxValue()))
+					(int)textFont.getTextWidth(_context, String.valueOf(m_bar.getMinValue())),
+					(int)textFont.getTextWidth(_context, String.valueOf(m_bar.getMaxValue()))
 				);
 				
-				switch(bar.getAlignment()) {					
+				switch(m_bar.getAlignment()) {					
 					case GLText.ALIGN_LEFT :
-						textXPos = left + w - (int)textFont.getTextWidth(_context, String.valueOf(bar.getValue()));
+						textXPos = left + w - (int)textFont.getTextWidth(_context, String.valueOf(m_bar.getValue()));
 						width -= w;
 						left += w;
 						break;
@@ -130,13 +144,13 @@ public class ValueBarRenderer implements WidgetRendererModel {
 						width -= w;
 						break;
 					case GLText.ALIGN_CENTER :
-						textXPos = left + width/2 - (int)(textFont.getTextWidth(_context, String.valueOf(bar.getValue())) / 2);
+						textXPos = left + width/2 - (int)(textFont.getTextWidth(_context, String.valueOf(m_bar.getValue())) / 2);
 						break;
 				}
 				textYPos = top - 1 + height / 2 + (int)(textFont.getSize(_context)/2f);
 			}
 			
-			width = getPixelValueForBar(bar, width);
+			width = getPixelValueForBar(m_bar, width);
 		}
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
@@ -144,16 +158,16 @@ public class ValueBarRenderer implements WidgetRendererModel {
 
 		GLColor barColor;
 		float barTransparancy;
-		if (bar.hasFocus()) {
-			barColor = (GLColor)bar.getAttribute("barColor#focused");
-			barTransparancy = bar.getFloatAttribute("barTransparancy#focused");
+		if (m_bar.hasFocus()) {
+			barColor = (GLColor)m_bar.getAttribute("barColor#focused");
+			barTransparancy = m_bar.getFloatAttribute("barTransparancy#focused");
 		} else {
-			if (bar.isEnabled()) {
-				barColor = (GLColor)bar.getAttribute("barColor");
-				barTransparancy = bar.getFloatAttribute("barTransparancy");
+			if (m_bar.isEnabled()) {
+				barColor = (GLColor)m_bar.getAttribute("barColor");
+				barTransparancy = m_bar.getFloatAttribute("barTransparancy");
 			} else {
-				barColor = (GLColor)bar.getAttribute("barColor#disabled");
-				barTransparancy = bar.getFloatAttribute("barTransparancy#disabled");
+				barColor = (GLColor)m_bar.getAttribute("barColor#disabled");
+				barTransparancy = m_bar.getFloatAttribute("barTransparancy#disabled");
 			}
 		}
 		gl.glColor4f(barColor.getRed(), barColor.getGreen(), barColor.getBlue(), 1.0f - barTransparancy);
@@ -162,8 +176,8 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		gl.glEnd();
 		
 		
-		if(bar.isShowValue()) {
-			gl.glColor3fv(textFontColor.toArray3f());
+		if(m_bar.isShowValue()) {
+			gl.glColor3fv(textFontColor.toArray3f(), 0);
 			gl.glRasterPos2i(textXPos, textYPos);
 			textFont.renderText(_context, sValueAsString);
 		}
@@ -180,8 +194,8 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		return o >= 0 ? (o <= _maxWidth ? o:_maxWidth) : 0;
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(ValueBar.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 /*

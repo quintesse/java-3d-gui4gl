@@ -23,10 +23,11 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.*;
 import org.codejive.gui4gl.themes.*;
@@ -34,37 +35,52 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class ButtonRenderer implements WidgetRendererModel {
 
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(Button.class, _widget, _context);
+	private Button m_button;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
+	
+	public ButtonRenderer(Widget _widget) {
+		m_button = (Button)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(Button.class, m_button);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(Button.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+	
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 
 		GL gl = _context.getGl();
 
 		Font captionFont;
 		GLColor captionFontColor;
 		
-		Button button = (Button)_widget;
-		if (button.isSelected()) {
-			captionFont = (Font)button.getAttribute("textFont#selected");
-			captionFontColor = (GLColor)button.getAttribute("textFontColor#selected");
+		if (m_button.isSelected()) {
+			captionFont = (Font)m_button.getAttribute("textFont#selected");
+			captionFontColor = (GLColor)m_button.getAttribute("textFontColor#selected");
 		} else {
-			if (button.hasFocus()) {
-				captionFont = (Font)button.getAttribute("textFont#focused");
-				captionFontColor = (GLColor)button.getAttribute("textFontColor#focused");
+			if (m_button.hasFocus()) {
+				captionFont = (Font)m_button.getAttribute("textFont#focused");
+				captionFontColor = (GLColor)m_button.getAttribute("textFontColor#focused");
 			} else {
-				if (button.isEnabled()) {
-					captionFont = (Font)button.getAttribute("textFont");
-					captionFontColor = (GLColor)button.getAttribute("textFontColor");
+				if (m_button.isEnabled()) {
+					captionFont = (Font)m_button.getAttribute("textFont");
+					captionFontColor = (GLColor)m_button.getAttribute("textFontColor");
 				} else {
-					captionFont = (Font)button.getAttribute("textFont#disabled");
-					captionFontColor = (GLColor)button.getAttribute("textFontColor#disabled");
+					captionFont = (Font)m_button.getAttribute("textFont#disabled");
+					captionFontColor = (GLColor)m_button.getAttribute("textFontColor#disabled");
 				}
 			}
 		}
@@ -75,28 +91,28 @@ public class ButtonRenderer implements WidgetRendererModel {
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glBegin(GL.GL_QUADS);
 
-		if (button.isSelected()) {
-			GLColor selectedBackgroundColor = (GLColor)button.getAttribute("backgroundColor#selected");
-			float fselectedTransparancy = button.getFloatAttribute("transparancy#selected");
+		if (m_button.isSelected()) {
+			GLColor selectedBackgroundColor = (GLColor)m_button.getAttribute("backgroundColor#selected");
+			float fselectedTransparancy = m_button.getFloatAttribute("transparancy#selected");
 			gl.glColor4f(selectedBackgroundColor.getRed(), selectedBackgroundColor.getGreen(), selectedBackgroundColor.getBlue(), 1.0f - fselectedTransparancy);
-			RenderHelper.drawRectangle(gl, _widget.getCurrentBounds());
+			RenderHelper.drawRectangle(gl, m_button.getCurrentBounds());
 		}
 
 		gl.glEnd();
 		gl.glDisable(GL.GL_BLEND);
 		
-		String sCaption = button.getCaption();
+		String sCaption = m_button.getCaption();
 		if (sCaption != null) {
 			// Caption text
-			int nCaptionAlignment = button.getIntegerAttribute("textAlignment");
-			GLText.drawText(_context, _widget.getInnerBounds(), 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
+			int nCaptionAlignment = m_button.getIntegerAttribute("textAlignment");
+			GLText.drawText(_context, m_button.getInnerBounds(), 0, 0, captionFont, captionFontColor, true, nCaptionAlignment, sCaption, "...");
 		}
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(Button.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 

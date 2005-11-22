@@ -23,10 +23,11 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 
 import org.codejive.gui4gl.fonts.Font;
 import org.codejive.gui4gl.themes.*;
@@ -34,38 +35,51 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
+	private TextField m_textField;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
 	
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(TextField.class, _widget, _context);
+	public TextFieldRenderer(Widget _widget) {
+		m_textField = (TextField)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(TextField.class, m_textField);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(TextField.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+	
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
+	}
+
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 
 		GL gl = _context.getGl();
 
-		TextField textField = (TextField)_widget;
-		
 		Font textFont;
 		GLColor textFontColor;
-		if(textField.hasFocus()) {
-			textFont = (Font)textField.getAttribute("textFont#focused");
-			textFontColor = (GLColor)textField.getAttribute("textFontColor#focused");
+		if(m_textField.hasFocus()) {
+			textFont = (Font)m_textField.getAttribute("textFont#focused");
+			textFontColor = (GLColor)m_textField.getAttribute("textFontColor#focused");
 		} else {
-			if (textField.isEnabled()) {
-				textFont = (Font)textField.getAttribute("textFont");
-				textFontColor = (GLColor)textField.getAttribute("textFontColor");
+			if (m_textField.isEnabled()) {
+				textFont = (Font)m_textField.getAttribute("textFont");
+				textFontColor = (GLColor)m_textField.getAttribute("textFontColor");
 			} else {
-				textFont = (Font)textField.getAttribute("textFont#disabled");
-				textFontColor = (GLColor)textField.getAttribute("textFontColor#disabled");
+				textFont = (Font)m_textField.getAttribute("textFont#disabled");
+				textFontColor = (GLColor)m_textField.getAttribute("textFontColor#disabled");
 			}
 		}
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
-		drawTextWithCursor(_context, _widget.getInnerBounds(), 0, 0, textFont, textFontColor, textField);
+		drawTextWithCursor(_context, m_textField.getInnerBounds(), 0, 0, textFont, textFontColor, m_textField);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
@@ -83,7 +97,7 @@ public class TextFieldRenderer implements WidgetRendererModel {
 		
 		float fWidth = _bounds.width - 2 * _nXPadding - fCursorWidth; // make sure cursor always has room.
 		
-		gl.glColor3fv(_color.toArray3f());
+		gl.glColor3fv(_color.toArray3f(), 0);
 
 		// note that the viewoffset may not be enough to show the cursor, which we adjust for here, since only here we know what fits.
 		int nViewOffset = _textField.getViewOffset();
@@ -149,8 +163,8 @@ public class TextFieldRenderer implements WidgetRendererModel {
 		}
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(TextField.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 

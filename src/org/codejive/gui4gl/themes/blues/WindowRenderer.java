@@ -23,10 +23,11 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.*;
 import org.codejive.gui4gl.themes.*;
@@ -34,21 +35,33 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 322 $
  */
 public class WindowRenderer implements WidgetRendererModel {
+	private Window m_window;
+	private WidgetRendererModel m_superRenderer;
+	private boolean m_bReady;
 	private Rectangle m_tmpBounds;
 	
-	public WindowRenderer() {
+	public WindowRenderer(Widget _widget) {
+		m_window = (Window)_widget;
+		m_superRenderer = RenderHelper.findSuperClassRenderer(Window.class, m_window);
+		assert(m_superRenderer != null);
+		m_bReady = false;
 		m_tmpBounds = new Rectangle();
 	}
 	
-	public void initRendering(Widget _widget, RenderContext _context) {
-		RenderHelper.initSuperClass(Window.class, _widget, _context);
+	public boolean readyForRendering() {
+		return m_bReady;
+	}
+	
+	public void initRendering(RenderContext _context) {
+		m_superRenderer.initRendering(_context);
+		m_bReady = true;
 	}
 
-	public void render(Widget _widget, RenderContext _context) {
-		RenderHelper.renderSuperClass(Window.class, _widget, _context);
+	public void render(RenderContext _context, RenderObserver _observer) {
+		m_superRenderer.render(_context, _observer);
 		
 		GL gl = _context.getGl();
 
@@ -57,33 +70,32 @@ public class WindowRenderer implements WidgetRendererModel {
 		float fTitlebarTransparancy;
 		GLColor captionFontColor;
 		int nCaptionXPadding, nCaptionYPadding;
-		Window window = (Window)_widget;
-		if (window.isActive()) {
-			captionFont = (Font)window.getAttribute("textFont#active");
-			captionFontColor = (GLColor)window.getAttribute("textFontColor#active");
-			titlebarColor = (GLColor)window.getAttribute("titlebarColor#active");
-			fTitlebarTransparancy = window.getFloatAttribute("titlebarTransparancy#active");
-			nCaptionXPadding = window.getIntegerAttribute("captionXPadding#active");
-			nCaptionYPadding = window.getIntegerAttribute("captionYPadding#active");
+		if (m_window.isActive()) {
+			captionFont = (Font)m_window.getAttribute("textFont#active");
+			captionFontColor = (GLColor)m_window.getAttribute("textFontColor#active");
+			titlebarColor = (GLColor)m_window.getAttribute("titlebarColor#active");
+			fTitlebarTransparancy = m_window.getFloatAttribute("titlebarTransparancy#active");
+			nCaptionXPadding = m_window.getIntegerAttribute("captionXPadding#active");
+			nCaptionYPadding = m_window.getIntegerAttribute("captionYPadding#active");
 		} else {
-			if (window.isEnabled()) {
-				captionFont = (Font)window.getAttribute("textFont");
-				captionFontColor = (GLColor)window.getAttribute("textFontColor");
-				titlebarColor = (GLColor)window.getAttribute("titlebarColor");
-				fTitlebarTransparancy = window.getFloatAttribute("titlebarTransparancy");
-				nCaptionXPadding = window.getIntegerAttribute("captionXPadding");
-				nCaptionYPadding = window.getIntegerAttribute("captionYPadding");
+			if (m_window.isEnabled()) {
+				captionFont = (Font)m_window.getAttribute("textFont");
+				captionFontColor = (GLColor)m_window.getAttribute("textFontColor");
+				titlebarColor = (GLColor)m_window.getAttribute("titlebarColor");
+				fTitlebarTransparancy = m_window.getFloatAttribute("titlebarTransparancy");
+				nCaptionXPadding = m_window.getIntegerAttribute("captionXPadding");
+				nCaptionYPadding = m_window.getIntegerAttribute("captionYPadding");
 			} else {
-				captionFont = (Font)window.getAttribute("textFont#disabled");
-				captionFontColor = (GLColor)window.getAttribute("textFontColor#disabled");
-				titlebarColor = (GLColor)window.getAttribute("titlebarColor#disabled");
-				fTitlebarTransparancy = window.getFloatAttribute("titlebarTransparancy#disabled");
-				nCaptionXPadding = window.getIntegerAttribute("captionXPadding#disabled");
-				nCaptionYPadding = window.getIntegerAttribute("captionYPadding#disabled");
+				captionFont = (Font)m_window.getAttribute("textFont#disabled");
+				captionFontColor = (GLColor)m_window.getAttribute("textFontColor#disabled");
+				titlebarColor = (GLColor)m_window.getAttribute("titlebarColor#disabled");
+				fTitlebarTransparancy = m_window.getFloatAttribute("titlebarTransparancy#disabled");
+				nCaptionXPadding = m_window.getIntegerAttribute("captionXPadding#disabled");
+				nCaptionYPadding = m_window.getIntegerAttribute("captionYPadding#disabled");
 			}
 		}
 
-		String sTitle = window.getTitle();
+		String sTitle = m_window.getTitle();
 		if (sTitle != null) {
 			gl.glDisable(GL.GL_TEXTURE_2D);
 			gl.glEnable(GL.GL_BLEND);
@@ -92,23 +104,23 @@ public class WindowRenderer implements WidgetRendererModel {
 
 			// Title bar
 			gl.glColor4f(titlebarColor.getRed(), titlebarColor.getGreen(), titlebarColor.getBlue(), 1.0f - fTitlebarTransparancy);
-			m_tmpBounds.setBounds(window.getCurrentBounds());
-			m_tmpBounds.height = window.getIntegerAttribute("titlebarHeight");
+			m_tmpBounds.setBounds(m_window.getCurrentBounds());
+			m_tmpBounds.height = m_window.getIntegerAttribute("titlebarHeight");
 			RenderHelper.drawRectangle(gl, m_tmpBounds);
 	
 			gl.glEnd();
 			gl.glDisable(GL.GL_BLEND);
 	
 			// Title text
-			int nCaptionAlignment = window.getIntegerAttribute("textAlignment");
+			int nCaptionAlignment = m_window.getIntegerAttribute("textAlignment");
 			GLText.drawText(_context, m_tmpBounds, nCaptionXPadding, nCaptionYPadding, captionFont, captionFontColor, false, nCaptionAlignment, sTitle, "...");
 
 			gl.glEnable(GL.GL_TEXTURE_2D);
 		}
 	}
 
-	public Rectangle getMinimalBounds(Widget _widget, RenderContext _context) {
-		return RenderHelper.getMinimalBoundsSuperClass(Window.class, _widget, _context);
+	public Rectangle getMinimalBounds(RenderContext _context) {
+		return m_superRenderer.getMinimalBounds(_context);
 	}
 }
 
