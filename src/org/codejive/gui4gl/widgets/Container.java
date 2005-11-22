@@ -33,7 +33,7 @@ import org.codejive.gui4gl.layouts.Layouter;
  * over the component widgets that get added to it.
  * 
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 305 $
  */
 public class Container extends CompoundWidget {
 	
@@ -73,7 +73,7 @@ public class Container extends CompoundWidget {
 		return m_focusWidget;
 	}
 	
-	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		if (getFocusWidget() != null) {
 			Widget w;
 			switch (_event.getKeyCode()) {
