@@ -32,7 +32,7 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * other widgets.
  * 
  * @author Tako
- * @version $Revision: 261 $
+ * @version $Revision: 312 $
  */
 public class Toplevel extends Container {
 	private boolean m_bDraggable;
@@ -97,7 +97,7 @@ public class Toplevel extends Container {
 		}
 	}
 
-	protected void processMousePressedEvent(GuiMouseEvent _event) {
+	public void processMousePressedEvent(GuiMouseEvent _event) {
 		activate();
 		super.processMousePressedEvent(_event);
 	}
