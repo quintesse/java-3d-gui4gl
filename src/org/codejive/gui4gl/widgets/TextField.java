@@ -37,9 +37,9 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * work as expected, moving the cursor from left to right.
  * 
  * @author steven
- * @version $Revision: 261 $
+ * @version $Revision: 310 $
  */
-public class TextField extends Widget {
+public class TextField extends WidgetBase {
 	private String m_sText;
 	
 	private List m_changeListeners;
@@ -139,7 +139,7 @@ public class TextField extends Widget {
 		m_changeListeners.add(_listener);
 	}
 	
-	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		if (!_event.isConsumed()) {
 			switch (_event.getKeyCode()) {
 				case KeyEvent.VK_LEFT:
@@ -204,7 +204,7 @@ public class TextField extends Widget {
 		}
 	}	
 	
-	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {
 			// TODO Handling clicks to position the cursor will have to wait until
