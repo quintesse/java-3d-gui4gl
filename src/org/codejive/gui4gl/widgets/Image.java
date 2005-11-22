@@ -27,9 +27,9 @@ import org.codejive.utils4gl.textures.Texture;
  * This widget simply displays an image using a single non-repeating Texture.
  * 
  * @author gertjan
- * @version $Revision: 261 $
+ * @version $Revision: 306 $
  */
-public class Image extends Widget {
+public class Image extends WidgetBase {
 	private Texture m_image;
 	
 	/**
