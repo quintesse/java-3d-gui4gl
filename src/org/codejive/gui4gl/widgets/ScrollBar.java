@@ -33,6 +33,8 @@ import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.layouts.Layouter;
+import org.codejive.utils4gl.RenderContext;
+import org.codejive.utils4gl.RenderObserver;
 
 /**
  * This widget implements a scroll bar. A scroll bar is most commonly used
@@ -55,7 +57,7 @@ import org.codejive.gui4gl.layouts.Layouter;
  * or "window" within a range.
  * 
  * @author Tako
- * @version $Revision: 261 $
+ * @version $Revision: 308 $
  */
 public class ScrollBar extends CompoundWidget {
 	private int m_nOrientation;
@@ -277,7 +279,7 @@ public class ScrollBar extends CompoundWidget {
 		doStep(m_nVisibleAmount);
 	}
 	
-	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if (!_event.isConsumed()) {
@@ -328,15 +330,16 @@ public class ScrollBar extends CompoundWidget {
 	 * start value is where the handle starts and the end value is where it ends. 
 	 * 
 	 * @author tako
-	 * @version $Revision: 261 $
+	 * @version $Revision: 308 $
 	 */
-	public class InnerBar extends Widget {
+	public class InnerBar extends WidgetBase {
 		private Rectangle m_handleBounds, m_lessBounds, m_moreBounds;
 		
 		private boolean m_bDragHandle;
 		private float m_fDragOffset;
 		
 		protected InnerBar() {
+			super();
 			setFocusable(true);
 			m_handleBounds = new Rectangle();
 			m_lessBounds = new Rectangle();
@@ -431,7 +434,7 @@ public class ScrollBar extends CompoundWidget {
 			return m_moreBounds;
 		}
 		
-		protected void processMousePressedEvent(GuiMouseEvent _event) {
+		public void processMousePressedEvent(GuiMouseEvent _event) {
 			super.processMousePressedEvent(_event);
 			if (!_event.isConsumed()) {
 				Rectangle inner = getInnerBounds();
@@ -459,12 +462,12 @@ public class ScrollBar extends CompoundWidget {
 			}
 		}
 		
-		protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+		public void processMouseReleasedEvent(GuiMouseEvent _event) {
 			super.processMouseReleasedEvent(_event);
 			m_bDragHandle = false;
 		}
 		
-		protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+		public void processMouseDraggedEvent(GuiMouseEvent _event) {
 			super.processMouseDraggedEvent(_event);
 			if (!_event.isConsumed() && m_bDragHandle) {
 				Rectangle bounds = getInnerBounds();
