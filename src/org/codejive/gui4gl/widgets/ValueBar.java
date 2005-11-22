@@ -40,9 +40,9 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * or "window" within a range.
  * 
  * @author steven
- * @version $Revision: 261 $
+ * @version $Revision: 313 $
  */
-public class ValueBar extends Widget {
+public class ValueBar extends WidgetBase {
 	private float m_fMin;
 	private float m_fMax;
 	private float m_fValue;
@@ -280,7 +280,7 @@ public class ValueBar extends Widget {
 		m_changeListeners.add(_listener);
 	}
 	
-	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		GuiChangeEvent e;
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
@@ -309,12 +309,12 @@ public class ValueBar extends Widget {
 		}
 	}
 	
-	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		handleBarChangeEvent(_event);
 	}
 	
-	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+	public void processMouseDraggedEvent(GuiMouseEvent _event) {
 		super.processMouseDraggedEvent(_event);
 		handleBarChangeEvent(_event);
 	}
