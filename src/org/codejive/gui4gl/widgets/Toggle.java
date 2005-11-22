@@ -37,9 +37,9 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * state whenever it gets activated.
  *  
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 311 $
  */
-public class Toggle extends Widget {
+public class Toggle extends WidgetBase {
 	private String m_sCaption;
 	private boolean m_bChecked;
 	
@@ -107,7 +107,7 @@ public class Toggle extends Widget {
 		m_changeListeners.add(_listener);
 	}
 	
-	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_ENTER:
@@ -121,7 +121,7 @@ public class Toggle extends Widget {
 		}
 	}
 	
-	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {
 			setChecked(!isChecked());
