@@ -21,13 +21,13 @@
  */
 package org.codejive.gui4gl.fonts;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author steven
- * @version $Revision: 197 $
+ * @version $Revision: 301 $
  */
 public class FixedPitchTextureFont implements Font {
 	
@@ -137,10 +137,10 @@ public class FixedPitchTextureFont implements Font {
 		final GL gl = _context.getGl();
 
 		// get the current position
-		gl.glGetIntegerv(GL.GL_CURRENT_RASTER_POSITION, m_rasterPos);
+		gl.glGetIntegerv(GL.GL_CURRENT_RASTER_POSITION, m_rasterPos, 0);
 
 		// get the viewport because we need to invert the Y coordinate
-		gl.glGetIntegerv(GL.GL_VIEWPORT, m_viewPort);
+		gl.glGetIntegerv(GL.GL_VIEWPORT, m_viewPort, 0);
 		
 		float x = m_rasterPos[0];
 		float y = m_viewPort[3] - m_rasterPos[1];

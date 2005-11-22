@@ -27,11 +27,11 @@ import org.codejive.gui4gl.fonts.Font;
 import org.codejive.utils4gl.GLColor;
 import org.codejive.utils4gl.RenderContext;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 301 $
  */
 public class GLText {
 	public static final int ALIGN_LEFT = 0;
@@ -52,7 +52,7 @@ public class GLText {
 		float fHeight = _bounds.height - 2 * _nYPadding;
 		
 		// Determine if the text will fit the bounds
-		gl.glColor3fv(_color.toArray3f());
+		gl.glColor3fv(_color.toArray3f(), 0);
 		int p = 0;
 		int l = _sText.length();
 		// Continue while there are still characters and vertical space left

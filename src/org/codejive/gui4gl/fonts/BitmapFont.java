@@ -21,13 +21,13 @@
  */
 package org.codejive.gui4gl.fonts;
 
-import net.java.games.jogl.util.GLUT;
+import com.sun.opengl.utils.GLUT;
 
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 158 $
+ * @version $Revision: 301 $
  */
 public class BitmapFont implements Font {
 	private int m_nFont;
@@ -103,7 +103,7 @@ public class BitmapFont implements Font {
 	}
 	
 	public void renderText(RenderContext _context, String _sText) {
-		_context.getGlut().glutBitmapString(_context.getGl(), m_nFont, _sText);
+		_context.getGlut().glutBitmapString(m_nFont, _sText);
 	}
 }
 
