@@ -39,9 +39,9 @@ import org.codejive.utils4gl.RenderContext;
  * SPACE or ENTER). When activated the widget will fire a GuiAction event.
  * 
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 303 $
  */
-public class Button extends Widget {
+public class Button extends WidgetBase {
 	private String m_sCaption;
 	
 	private List m_actionListeners;
@@ -123,7 +123,7 @@ public class Button extends Widget {
 		}
 	}
 	
-	protected void processKeyPressedEvent(GuiKeyEvent _event) {
+	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_ENTER:
@@ -135,7 +135,7 @@ public class Button extends Widget {
 		}
 	}
 	
-	protected void processKeyReleasedEvent(GuiKeyEvent _event) {
+	public void processKeyReleasedEvent(GuiKeyEvent _event) {
 		m_bSelected = false;
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
@@ -151,17 +151,17 @@ public class Button extends Widget {
 		}
 	}
 
-	protected void processMousePressedEvent(GuiMouseEvent _event) {
+	public void processMousePressedEvent(GuiMouseEvent _event) {
 		m_bSelected = true;
 		super.processMousePressedEvent(_event);
 	}
 	
-	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+	public void processMouseReleasedEvent(GuiMouseEvent _event) {
 		m_bSelected = false;
 		super.processMouseReleasedEvent(_event);
 	}
 	
-	protected void processMouseClickedEvent(GuiMouseEvent _event) {
+	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {
 			click();
