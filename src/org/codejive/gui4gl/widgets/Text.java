@@ -26,9 +26,9 @@ package org.codejive.gui4gl.widgets;
  * the user.
  * 
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 309 $
  */
-public class Text extends Widget {
+public class Text extends WidgetBase {
 	private String m_sText;
 	
 	/**
