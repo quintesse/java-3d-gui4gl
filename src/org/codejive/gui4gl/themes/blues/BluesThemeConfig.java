@@ -21,7 +21,7 @@
  */
 package org.codejive.gui4gl.themes.blues;
 
-import net.java.games.jogl.util.GLUT;
+import com.sun.opengl.utils.GLUT;
 
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.*;
@@ -32,31 +32,31 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 250 $
+ * @version $Revision: 321 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 
 	public void configure(RenderContext _context) {
 		// Widget
-		Theme.setValue(Widget.class, "renderer", new WidgetRenderer());
-		Theme.setValue(Widget.class, "backgroundColor", new GLColor(0.45f, 0.45f, 1.0f));
-		Theme.setFloatValue(Widget.class, "transparancy", 1.0f);
-		Theme.setValue(Widget.class, "backgroundImage", null);
-		Theme.setValue(Widget.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
-		Theme.setValue(Widget.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
-		Theme.setIntegerValue(Widget.class, "textAlignment", GLText.ALIGN_LEFT);
-		Theme.setIntegerValue(Widget.class, "xPadding", 0);
-		Theme.setIntegerValue(Widget.class, "yPadding", 0);
-		Theme.setValue(Widget.class, "backgroundColor#focused", new GLColor(0.65f, 0.65f, 1.0f));
-		Theme.setFloatValue(Widget.class, "transparancy#focused", 0.6f);
-		Theme.setValue(Widget.class, "textFontColor#focused", new GLColor(0.96f, 1.0f, 0.2f));
-		Theme.setValue(Widget.class, "textFontColor#disabled", new GLColor(0.5f, 0.5f, 0.5f));
+		Theme.setValue(WidgetBase.class, "renderer", WidgetRenderer.class);
+		Theme.setValue(WidgetBase.class, "backgroundColor", new GLColor(0.45f, 0.45f, 1.0f));
+		Theme.setFloatValue(WidgetBase.class, "transparancy", 1.0f);
+		Theme.setValue(WidgetBase.class, "backgroundImage", null);
+		Theme.setValue(WidgetBase.class, "textFont", new BitmapFont(GLUT.BITMAP_HELVETICA_12));
+		Theme.setValue(WidgetBase.class, "textFontColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setIntegerValue(WidgetBase.class, "textAlignment", GLText.ALIGN_LEFT);
+		Theme.setIntegerValue(WidgetBase.class, "xPadding", 0);
+		Theme.setIntegerValue(WidgetBase.class, "yPadding", 0);
+		Theme.setValue(WidgetBase.class, "backgroundColor#focused", new GLColor(0.65f, 0.65f, 1.0f));
+		Theme.setFloatValue(WidgetBase.class, "transparancy#focused", 0.6f);
+		Theme.setValue(WidgetBase.class, "textFontColor#focused", new GLColor(0.96f, 1.0f, 0.2f));
+		Theme.setValue(WidgetBase.class, "textFontColor#disabled", new GLColor(0.5f, 0.5f, 0.5f));
 	
 		// Screen
 		Theme.setFloatValue(Screen.class, "transparancy", 1.0f);
 				
 		// Window
-		Theme.setValue(Window.class, "renderer", new WindowRenderer());
+		Theme.setValue(Window.class, "renderer", WindowRenderer.class);
 		Theme.setFloatValue(Window.class, "transparancy", 0.6f);
 		Theme.setIntegerValue(Window.class, "titlebarHeight", 25);
 		Theme.setValue(Window.class, "titlebarColor", new GLColor(0.16f, 0.16f, 1.0f));
@@ -69,14 +69,14 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Window.class, "textFontColor#active", new GLColor(.96f, 1.0f, 0.2f));
 		
 		// Button
-		Theme.setValue(Button.class, "renderer", new ButtonRenderer());
+		Theme.setValue(Button.class, "renderer", ButtonRenderer.class);
 		Theme.setIntegerValue(Button.class, "xPadding", 2);
 		Theme.setIntegerValue(Button.class, "yPadding", 2);
 		Theme.setValue(Button.class, "backgroundColor#selected", new GLColor(1.0f, 0.0f, 0.0f));
 		Theme.setFloatValue(Button.class, "transparancy#selected", 0.5f);
 		
 		// Toggle
-		Theme.setValue(Toggle.class, "renderer", new ToggleRenderer());
+		Theme.setValue(Toggle.class, "renderer", ToggleRenderer.class);
 		Theme.setIntegerValue(Toggle.class, "xPadding", 2);
 		Theme.setIntegerValue(Toggle.class, "yPadding", 2);
 		Theme.setValue(Toggle.class, "checkColor", new GLColor(0.65f, 0.65f, 1.0f));
@@ -85,12 +85,12 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(Toggle.class, "checkBackgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 
 		// Text
-		Theme.setValue(Text.class, "renderer", new TextRenderer());
+		Theme.setValue(Text.class, "renderer", TextRenderer.class);
 		Theme.setIntegerValue(Text.class, "xPadding", 2);
 		Theme.setIntegerValue(Text.class, "yPadding", 2);
 		
 		// ValueBar
-		Theme.setValue(ValueBar.class, "renderer", new ValueBarRenderer());
+		Theme.setValue(ValueBar.class, "renderer", ValueBarRenderer.class);
 		Theme.setValue(ValueBar.class, "backgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setFloatValue(ValueBar.class, "transparancy", 0.0f);
 		Theme.setIntegerValue(ValueBar.class, "xPadding", 1);
@@ -110,7 +110,7 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setIntegerValue(ScrollBar.class, "yPadding", 1);
 		Theme.setValue(ScrollBar.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
 		Theme.setFloatValue(ScrollBar.class, "transparancy#focused", 0.0f);
-		Theme.setValue(ScrollBar.class, "innerBar.renderer", new ScrollBarRenderer());
+		Theme.setValue(ScrollBar.class, "innerBar.renderer", ScrollBarRenderer.class);
 		Theme.setValue(ScrollBar.class, "innerBar.barColor", new GLColor(0.65f, 0.65f, 1.0f));
 		Theme.setFloatValue(ScrollBar.class, "innerBar.barTransparancy", 0.0f);
 		Theme.setValue(ScrollBar.class, "innerBar.barColor#focused", new GLColor(0.45f, 0.45f, 1.0f));
@@ -122,7 +122,7 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(ScrollBar.class, "moreButton.backgroundColor#focused", new GLColor(0.45f, 0.45f, 1.0f));
 		
 		// TextField
-		Theme.setValue(TextField.class, "renderer", new TextFieldRenderer());
+		Theme.setValue(TextField.class, "renderer", TextFieldRenderer.class);
 		Theme.setValue(TextField.class, "backgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
 		Theme.setFloatValue(TextField.class, "transparancy", 0.0f);
 		Theme.setIntegerValue(TextField.class, "xPadding", 2);
@@ -135,7 +135,17 @@ public class BluesThemeConfig implements ThemeConfig {
 		Theme.setValue(TextField.class, "textFontColor#focused", new GLColor(0.0f, 0.0f, 0.0f));
 		
 		// Image
-		Theme.setValue(Image.class, "renderer", new ImageRenderer());
+		Theme.setValue(Image.class, "renderer", ImageRenderer.class);
+		
+		// ListBox
+		Theme.setValue(ListBox.class, "renderer", ListBoxRenderer.class);
+		Theme.setValue(ListBox.class, "itemRenderer", ListBoxItemRenderer.class);
+		Theme.setValue(ListBox.class, "backgroundColor", new GLColor(1.0f, 1.0f, 1.0f));
+		Theme.setFloatValue(ListBox.class, "transparancy", 0.0f);
+		Theme.setValue(ListBox.class, "backgroundColor#focused", new GLColor(.96f, 1.0f, 0.2f));
+		Theme.setFloatValue(ListBox.class, "transparancy#focused", 0.0f);
+		// ListBox.StringListBoxItem
+		Theme.setFloatValue(ListBox.StringListBoxItem.class, "transparancy", 0.0f);
 	}
 }
 
