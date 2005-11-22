@@ -49,7 +49,7 @@ import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.themes.Theme;
 import org.codejive.gui4gl.widgets.Button;
 import org.codejive.gui4gl.widgets.Image;
-//import org.codejive.gui4gl.widgets.ListBox;
+import org.codejive.gui4gl.widgets.ListBox;
 import org.codejive.gui4gl.widgets.Screen;
 import org.codejive.gui4gl.widgets.ScrollBar;
 import org.codejive.gui4gl.widgets.ScrollContainer;
@@ -64,11 +64,13 @@ import org.codejive.utils4gl.SimpleFrameRateCounter;
 import org.codejive.utils4gl.textures.Texture;
 import org.codejive.utils4gl.textures.TextureReader;
 
-import net.java.games.jogl.*;
+import javax.media.opengl.*;
+import javax.media.opengl.glu.*;
+import com.sun.opengl.utils.*;
 
 /**
  * @author tako
- * @version $Revision: 266 $
+ * @version $Revision: 302 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -90,7 +92,7 @@ public class SimpleGui implements GLEventListener {
 		m_display = _display;
 	}
 	
-	public void display(GLDrawable gLDrawable) {
+	public void display(GLAutoDrawable gLDrawable) {
 		final GL gl = gLDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
@@ -101,13 +103,12 @@ public class SimpleGui implements GLEventListener {
 		m_screen.render(m_context, null);
 	}
 
-	public void displayChanged(GLDrawable gLDrawable, boolean modeChanged, boolean deviceChanged) {
+	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged) {
 		// Not used
 	}
 
-	public void init(GLDrawable gLDrawable) {
+	public void init(GLAutoDrawable gLDrawable) {
 		final GL gl = gLDrawable.getGL();
-		final GLU glu = gLDrawable.getGLU();
 
 		gl.glEnable(GL.GL_CULL_FACE);
 		gl.glEnable(GL.GL_DEPTH_TEST);
@@ -116,7 +117,7 @@ public class SimpleGui implements GLEventListener {
 		gl.glEnable(GL.GL_NORMALIZE);
 
 		// Set up a render context
-		m_context = new RenderContext(gl, glu);
+		m_context = new RenderContext(gl);
 		// Determine the Theme to use
 		Theme.setDefaultTheme(m_context);
 		// Create a screen that will hold all our windows
@@ -165,9 +166,9 @@ public class SimpleGui implements GLEventListener {
 		m_fpsCounter = new SimpleFrameRateCounter();
 	}
 
-	public void reshape(GLDrawable gLDrawable, int x, int y, int width, int height) {
+	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
 		final GL gl = gLDrawable.getGL();
-		final GLU glu = gLDrawable.getGLU();
+		final GLU glu = new GLU();
 
 		if (height <= 0) // avoid a divide by zero error!
 			height = 1;
@@ -270,13 +271,22 @@ b.addKeyListener(new GuiKeyAdapter() {
 			tf.setBounds(5, 165, 290, 20);
 			add(tf);
 
-/*			ListBox lb = new ListBox();
+			ListBox lb = new ListBox();
 			lb.addItem("Aap");
 			lb.addItem("Noot");
 			lb.addItem("Mies");
+			lb.addItem("Wim");
+			lb.addItem("Zus");
+			lb.addItem("Jet");
+			lb.addItem("Aap");
+			lb.addItem("Noot");
+			lb.addItem("Mies");
+			lb.addItem("Wim");
+			lb.addItem("Zus");
+			lb.addItem("Jet");
 			lb.setBounds(5, 190, 290, 80);
 			add(lb);
-*/
+
 			addKeyListener(new GuiKeyAdapter() {
 				public void keyPressed(GuiKeyEvent _event) {
 					switch (_event.getKeyCode()) {
