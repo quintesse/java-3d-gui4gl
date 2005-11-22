@@ -27,7 +27,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.event.MouseInputListener;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
@@ -45,7 +45,7 @@ import org.codejive.utils4gl.RenderObserver;
  * system-events to the widgets that want/need them.
  * 
  * @author tako
- * @version $Revision: 264 $
+ * @version $Revision: 307 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -114,7 +114,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	protected void resize(RenderContext _context) {
 		GL gl = _context.getGl();
 		int viewport[] = new int[4];
-		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport);
+		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
 		setBounds(viewport[0], viewport[1], viewport[2], viewport[3]);
 	}
 
@@ -136,7 +136,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		gl.glLoadIdentity();
  
 		int viewport[] = new int[4];
-		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport);
+		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
 		_context.getGlu().gluOrtho2D(0, viewport[2], viewport[3], 0);
 		gl.glDepthFunc(GL.GL_ALWAYS);
 
