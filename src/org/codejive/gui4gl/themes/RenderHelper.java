@@ -24,13 +24,13 @@ package org.codejive.gui4gl.themes;
 import java.awt.Rectangle;
 
 import org.codejive.gui4gl.widgets.Widget;
-import org.codejive.utils4gl.RenderContext;
+import org.codejive.gui4gl.widgets.WidgetBase;
 
-import net.java.games.jogl.GL;
+import javax.media.opengl.GL;
 
 /**
  * @author tako
- * @version $Revision: 265 $
+ * @version $Revision: 319 $
  */
 public class RenderHelper {
 	
@@ -49,40 +49,26 @@ public class RenderHelper {
 		_gl.glVertex2f(_left + _width, _top);
 	}
 
-	protected static WidgetRendererModel findFirstSuperClassRenderer(Class _widgetClass, Widget _widget) {
-		WidgetRendererModel renderer = null;
+	protected static Class findSuperClassRendererClass(Class _widgetClass, Widget _widget) {
+		Class rendererClass = null;
 		Class superClass = _widgetClass.getSuperclass();
 		if (superClass != null) {
-			renderer = (WidgetRendererModel)Theme.getValue(_widget, superClass, "renderer");
-			if (renderer == null) {
-				renderer = findFirstSuperClassRenderer(superClass, _widget);
+			rendererClass = (Class)Theme.getValue(_widget, superClass, "renderer");
+			if (rendererClass == null) {
+				rendererClass = findSuperClassRendererClass(superClass, _widget);
 			}
+		}
+		return rendererClass;
+	}
+
+	public static WidgetRendererModel findSuperClassRenderer(Class _widgetClass, Widget _widget) {
+		WidgetRendererModel renderer = null;
+		Class rendererClass = findSuperClassRendererClass(_widgetClass, _widget);
+		if (rendererClass != null) {
+			renderer = WidgetBase.createRenderer(rendererClass, _widget);
 		}
 		return renderer;
 	}
-	
-	public static void initSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
-		if (renderer != null) {
-			renderer.initRendering(_widget, _context);
-		}
-	}
-
-	public static void renderSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
-		if (renderer != null) {
-			renderer.render(_widget, _context);
-		}
-	}	
-
-	public static Rectangle getMinimalBoundsSuperClass(Class _widgetClass, Widget _widget, RenderContext _context) {
-		Rectangle bounds = null;
-		WidgetRendererModel renderer = findFirstSuperClassRenderer(_widgetClass, _widget);
-		if (renderer != null) {
-			bounds = renderer.getMinimalBounds(_widget, _context);
-		}
-		return bounds;
-	}	
 }
 
 /*
