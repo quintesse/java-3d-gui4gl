@@ -36,7 +36,7 @@ import org.codejive.utils4gl.RenderContext;
  * and/or keyboard.
  * 
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 317 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -99,7 +99,7 @@ public class Window extends Toplevel {
 		}
 	}
 	
-	protected void processMousePressedEvent(GuiMouseEvent _event) {
+	public void processMousePressedEvent(GuiMouseEvent _event) {
 		super.processMousePressedEvent(_event);
 		if (!_event.isConsumed()) {
 			Rectangle r = new Rectangle();
@@ -112,12 +112,12 @@ public class Window extends Toplevel {
 		}
 	}
 
-	protected void processMouseReleasedEvent(GuiMouseEvent _event) {
+	public void processMouseReleasedEvent(GuiMouseEvent _event) {
 		super.processMouseReleasedEvent(_event);
 		m_bDragging = false;
 	}
 
-	protected void processMouseDraggedEvent(GuiMouseEvent _event) {
+	public void processMouseDraggedEvent(GuiMouseEvent _event) {
 		super.processMouseDraggedEvent(_event);
 		if (!_event.isConsumed()) {
 			if (m_bDragging) {
