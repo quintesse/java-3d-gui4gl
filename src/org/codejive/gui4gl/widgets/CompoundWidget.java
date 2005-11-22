@@ -39,9 +39,9 @@ import org.codejive.utils4gl.RenderObserver;
  * type of the component widgets are entirely under the user's control.
  *  
  * @author tako
- * @version $Revision: 261 $
+ * @version $Revision: 304 $
  */
-public class CompoundWidget extends Widget {
+public class CompoundWidget extends WidgetBase {
 	protected LinkedList m_children;
 	protected Map m_childNames;
 	protected Widget m_focusWidget;
@@ -153,7 +153,7 @@ public class CompoundWidget extends Widget {
 		return found;
 	}
 
-	protected Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
+	public Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
 		Widget result = null;
 		if (isVisible()) {
 			if (getClippingBounds().contains(_nXPos, _nYPos)) {
