@@ -21,13 +21,13 @@
  */
 package org.codejive.gui4gl.fonts;
 
-import com.sun.opengl.utils.GLUT;
+import com.sun.opengl.util.GLUT;
 
 import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 301 $
+ * @version $Revision: 341 $
  */
 public class BitmapFont implements Font {
 	private int m_nFont;

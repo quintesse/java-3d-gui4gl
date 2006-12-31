@@ -21,7 +21,7 @@
  */
 package org.codejive.gui4gl.themes.blues;
 
-import com.sun.opengl.utils.GLUT;
+import com.sun.opengl.util.GLUT;
 
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.*;
@@ -32,7 +32,7 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 321 $
+ * @version $Revision: 341 $
  */
 public class BluesThemeConfig implements ThemeConfig {
 

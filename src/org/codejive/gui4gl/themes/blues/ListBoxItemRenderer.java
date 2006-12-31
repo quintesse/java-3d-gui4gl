@@ -24,7 +24,7 @@ package org.codejive.gui4gl.themes.blues;
 import java.awt.Rectangle;
 
 import javax.media.opengl.GL;
-import com.sun.opengl.utils.GLUT;
+import com.sun.opengl.util.GLUT;
 
 import org.codejive.gui4gl.GLText;
 import org.codejive.gui4gl.fonts.BitmapFont;
