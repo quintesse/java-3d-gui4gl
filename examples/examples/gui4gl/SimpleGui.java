@@ -66,11 +66,12 @@ import org.codejive.utils4gl.textures.TextureReader;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
-import com.sun.opengl.utils.*;
+
+import com.sun.opengl.util.Animator;
 
 /**
  * @author tako
- * @version $Revision: 302 $
+ * @version $Revision: 342 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -108,6 +109,7 @@ public class SimpleGui implements GLEventListener {
 	}
 
 	public void init(GLAutoDrawable gLDrawable) {
+		gLDrawable.setGL(gLDrawable.getGL());
 		final GL gl = gLDrawable.getGL();
 
 		gl.glEnable(GL.GL_CULL_FACE);
@@ -115,7 +117,8 @@ public class SimpleGui implements GLEventListener {
 		gl.glDepthFunc(GL.GL_LEQUAL);
 		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 		gl.glEnable(GL.GL_NORMALIZE);
-
+		gl.setSwapInterval(0);
+		
 		// Set up a render context
 		m_context = new RenderContext(gl);
 		// Determine the Theme to use
@@ -444,7 +447,7 @@ class GLDisplay {
 		this.width = _width;
 		this.height = _height;
 		
-		glCanvas = GLDrawableFactory.getFactory().createGLCanvas(new GLCapabilities());
+		glCanvas = new GLCanvas(new GLCapabilities());
 		glCanvas.setSize(width, height);
 		glCanvas.setIgnoreRepaint(true);
 
@@ -453,6 +456,7 @@ class GLDisplay {
 		frame.getContentPane().add(glCanvas, BorderLayout.CENTER);
 
 		animator = new Animator(glCanvas);
+		animator.setRunAsFastAsPossible(true);
 	}
 
 	public void start() {
