@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 236 $
+ * @version $Revision: 361 $
  */
 public class GuiChangeEvent extends GuiEvent {
 	private Object m_value;
@@ -42,15 +42,16 @@ public class GuiChangeEvent extends GuiEvent {
 		return m_value;
 	}
 	
+	@Override
 	public String toString() {
 		return super.toString() + " (value=" + m_value + ")";
 	}
 	
-	public static void fireChangeEvent(List _listeners, GuiChangeEvent _event) {
+	public static void fireChangeEvent(List<GuiChangeListener> _listeners, GuiChangeEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiChangeListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiChangeListener listener = (GuiChangeListener)i.next();
+				GuiChangeListener listener = i.next();
 				listener.stateChanged(_event);
 			}
 		}

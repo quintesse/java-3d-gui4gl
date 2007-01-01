@@ -33,7 +33,7 @@ import org.codejive.utils4gl.RenderContext;
  * add scrollbars when the contained widget is larger than the container.
  * 
  * @author tako
- * @version $Revision: 258 $
+ * @version $Revision: 361 $
  */
 public class ScrollContainer extends CompoundWidget {
 	protected Widget m_content;
@@ -80,14 +80,17 @@ public class ScrollContainer extends CompoundWidget {
 		setLayouter(new ScrollContainerLayouter());
 	}
 	
+	@Override
 	public boolean hasFocus() {
 		return false;
 	}
 	
+	@Override
 	public void setFocus() {
 		// Don't allow this
 	}
 	
+	@Override
 	protected void updateInnerBounds(RenderContext _context) {
 		super.updateInnerBounds(_context);
 		if (m_content.getWidth() > getWidth()) {

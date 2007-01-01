@@ -71,7 +71,7 @@ import com.sun.opengl.util.Animator;
 
 /**
  * @author tako
- * @version $Revision: 342 $
+ * @version $Revision: 361 $
  */
 public class SimpleGui implements GLEventListener {
 	GLDisplay m_display;
@@ -155,6 +155,7 @@ public class SimpleGui implements GLEventListener {
 		// (no windows active for example) we need to register
 		// a listener for them
 		m_screen.addKeyListener(new GuiKeyAdapter() {
+			@Override
 			public void keyPressed(GuiKeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					m_display.stop();
@@ -291,6 +292,7 @@ b.addKeyListener(new GuiKeyAdapter() {
 			add(lb);
 
 			addKeyListener(new GuiKeyAdapter() {
+				@Override
 				public void keyPressed(GuiKeyEvent _event) {
 					switch (_event.getKeyCode()) {
 						case KeyEvent.VK_ESCAPE:
@@ -572,6 +574,7 @@ class GLDisplay {
 	}
 
 	private class MyShutdownWindowAdapter extends WindowAdapter {
+		@Override
 		public void windowClosing(WindowEvent e) {
 			stop();
 		}

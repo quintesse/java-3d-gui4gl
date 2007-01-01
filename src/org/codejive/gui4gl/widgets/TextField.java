@@ -37,12 +37,12 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * work as expected, moving the cursor from left to right.
  * 
  * @author steven
- * @version $Revision: 310 $
+ * @version $Revision: 361 $
  */
 public class TextField extends WidgetBase {
 	private String m_sText;
 	
-	private List m_changeListeners;
+	private List<GuiChangeListener> m_changeListeners;
 
 	private int m_nCursorPos;
 	private int m_nViewOffset;
@@ -59,7 +59,7 @@ public class TextField extends WidgetBase {
 	 * @param _sText The text to use as the contents for the new widget
 	 */
 	public TextField(String _sText) {
-		m_changeListeners = new LinkedList();
+		m_changeListeners = new LinkedList<GuiChangeListener>();
 		setFocusable(true);
 		setText(_sText);
 	}
@@ -139,6 +139,7 @@ public class TextField extends WidgetBase {
 		m_changeListeners.add(_listener);
 	}
 	
+	@Override
 	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		if (!_event.isConsumed()) {
 			switch (_event.getKeyCode()) {
@@ -173,9 +174,10 @@ public class TextField extends WidgetBase {
 					_event.consume();
 					if(m_nCursorPos < m_sText.length()) {
 						setText(m_sText.substring(0, m_nCursorPos) + m_sText.substring(m_nCursorPos + 1));
-						break;
 					}
-					// fallthrough to work as backspace when at end of text
+					// Move this break into the if above to have DELETE work as backspace when at end of text
+					break;
+					
 				case KeyEvent.VK_BACK_SPACE :
 					_event.consume();
 					if(m_nCursorPos > 0) {
@@ -204,6 +206,7 @@ public class TextField extends WidgetBase {
 		}
 	}	
 	
+	@Override
 	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {

@@ -39,7 +39,7 @@ import org.codejive.utils4gl.RenderObserver;
 
 /**
  * @author steven
- * @version $Revision: 322 $
+ * @version $Revision: 361 $
  *
  */
 public class ValueBarRenderer implements WidgetRendererModel {
@@ -63,6 +63,7 @@ public class ValueBarRenderer implements WidgetRendererModel {
 		m_bReady = true;
 	}
 
+	@SuppressWarnings("null")
 	public void render(RenderContext _context, RenderObserver _observer) {
 		m_superRenderer.render(_context, _observer);
 

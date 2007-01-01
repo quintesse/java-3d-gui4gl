@@ -32,7 +32,7 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * other widgets.
  * 
  * @author Tako
- * @version $Revision: 312 $
+ * @version $Revision: 361 $
  */
 public class Toplevel extends Container {
 	private boolean m_bDraggable;
@@ -44,6 +44,7 @@ public class Toplevel extends Container {
 		m_bDraggable = true;
 	}
 	
+	@Override
 	public Toplevel getToplevel() {
 		return this;
 	}
@@ -82,9 +83,9 @@ public class Toplevel extends Container {
 	public void activate() {
 		if (isEnabled() && isVisible() && isFocusable()) {
 			if (getFocusWidget() == null) {
-				Iterator i = getChildren();
+				Iterator<Widget> i = getChildren();
 				while (i.hasNext()) {
-					Widget w = (Widget)i.next();
+					Widget w = i.next();
 					if (w.isFocusable()) {
 						w.setFocus();
 						break;
@@ -97,6 +98,7 @@ public class Toplevel extends Container {
 		}
 	}
 
+	@Override
 	public void processMousePressedEvent(GuiMouseEvent _event) {
 		activate();
 		super.processMousePressedEvent(_event);

@@ -30,7 +30,7 @@ import javax.media.opengl.GL;
 
 /**
  * @author tako
- * @version $Revision: 319 $
+ * @version $Revision: 361 $
  */
 public class RenderHelper {
 	
@@ -49,11 +49,12 @@ public class RenderHelper {
 		_gl.glVertex2f(_left + _width, _top);
 	}
 
-	protected static Class findSuperClassRendererClass(Class _widgetClass, Widget _widget) {
-		Class rendererClass = null;
+	@SuppressWarnings("unchecked")
+	protected static Class<WidgetRendererModel> findSuperClassRendererClass(Class<? extends Widget> _widgetClass, Widget _widget) {
+		Class<WidgetRendererModel> rendererClass = null;
 		Class superClass = _widgetClass.getSuperclass();
 		if (superClass != null) {
-			rendererClass = (Class)Theme.getValue(_widget, superClass, "renderer");
+			rendererClass = (Class<WidgetRendererModel>)Theme.getValue(_widget, superClass, "renderer");
 			if (rendererClass == null) {
 				rendererClass = findSuperClassRendererClass(superClass, _widget);
 			}
@@ -61,9 +62,9 @@ public class RenderHelper {
 		return rendererClass;
 	}
 
-	public static WidgetRendererModel findSuperClassRenderer(Class _widgetClass, Widget _widget) {
+	public static WidgetRendererModel findSuperClassRenderer(Class<? extends Widget> _widgetClass, Widget _widget) {
 		WidgetRendererModel renderer = null;
-		Class rendererClass = findSuperClassRendererClass(_widgetClass, _widget);
+		Class<WidgetRendererModel> rendererClass = findSuperClassRendererClass(_widgetClass, _widget);
 		if (rendererClass != null) {
 			renderer = WidgetBase.createRenderer(rendererClass, _widget);
 		}

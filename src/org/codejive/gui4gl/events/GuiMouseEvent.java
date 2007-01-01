@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 236 $
+ * @version $Revision: 361 $
  */
 public class GuiMouseEvent extends GuiEvent {
 	private int m_nButton;
@@ -78,55 +78,56 @@ public class GuiMouseEvent extends GuiEvent {
 		return m_nClickCount;
 	}
 	
+	@Override
 	public String toString() {
 		return super.toString() + " (modifiers=" + m_nModifiers + ", x=" + m_nXPos + ", y=" + m_nYPos + ", dx=" + m_nDeltaXPos + ", dy=" + m_nDeltaYPos + ", clicks=" + m_nClickCount + ")";
 	}
 	
-	public static void fireMousePressed(List _listeners, GuiMouseEvent _event) {
+	public static void fireMousePressed(List<GuiMouseListener> _listeners, GuiMouseEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiMouseListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiMouseListener listener = (GuiMouseListener)i.next();
+				GuiMouseListener listener = i.next();
 				listener.mousePressed(_event);
 			}
 		}
 	}
 	
-	public static void fireMouseReleased(List _listeners, GuiMouseEvent _event) {
+	public static void fireMouseReleased(List<GuiMouseListener> _listeners, GuiMouseEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiMouseListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiMouseListener listener = (GuiMouseListener)i.next();
+				GuiMouseListener listener = i.next();
 				listener.mouseReleased(_event);
 			}
 		}
 	}
 	
-	public static void fireMouseClicked(List _listeners, GuiMouseEvent _event) {
+	public static void fireMouseClicked(List<GuiMouseListener> _listeners, GuiMouseEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiMouseListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiMouseListener listener = (GuiMouseListener)i.next();
+				GuiMouseListener listener = i.next();
 				listener.mouseClicked(_event);
 			}
 		}
 	}
 	
-	public static void fireMouseMoved(List _listeners, GuiMouseEvent _event) {
+	public static void fireMouseMoved(List<GuiMouseListener> _listeners, GuiMouseEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiMouseListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiMouseListener listener = (GuiMouseListener)i.next();
+				GuiMouseListener listener = i.next();
 				listener.mouseMoved(_event);
 			}
 		}
 	}
 	
-	public static void fireMouseDragged(List _listeners, GuiMouseEvent _event) {
+	public static void fireMouseDragged(List<GuiMouseListener> _listeners, GuiMouseEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiMouseListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiMouseListener listener = (GuiMouseListener)i.next();
+				GuiMouseListener listener = i.next();
 				listener.mouseDragged(_event);
 			}
 		}

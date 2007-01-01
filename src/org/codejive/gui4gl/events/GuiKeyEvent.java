@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 236 $
+ * @version $Revision: 361 $
  */
 public class GuiKeyEvent extends GuiEvent {
 	private int m_nModifiers;
@@ -54,35 +54,36 @@ public class GuiKeyEvent extends GuiEvent {
 		return m_cKeyChar;
 	}
 	
+	@Override
 	public String toString() {
 		return super.toString() + " (modifiers=" + m_nModifiers + ", keycode=" + m_nKeyCode + ", keychar=" + m_cKeyChar + ")";
 	}
 	
-	public static void fireKeyPressed(List _listeners, GuiKeyEvent _event) {
+	public static void fireKeyPressed(List<GuiKeyListener> _listeners, GuiKeyEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiKeyListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiKeyListener listener = (GuiKeyListener)i.next();
+				GuiKeyListener listener = i.next();
 				listener.keyPressed(_event);
 			}
 		}
 	}
 	
-	public static void fireKeyReleased(List _listeners, GuiKeyEvent _event) {
+	public static void fireKeyReleased(List<GuiKeyListener> _listeners, GuiKeyEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiKeyListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiKeyListener listener = (GuiKeyListener)i.next();
+				GuiKeyListener listener = i.next();
 				listener.keyReleased(_event);
 			}
 		}
 	}
 	
-	public static void fireKeyTyped(List _listeners, GuiKeyEvent _event) {
+	public static void fireKeyTyped(List<GuiKeyListener> _listeners, GuiKeyEvent _event) {
 		if (!_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiKeyListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiKeyListener listener = (GuiKeyListener)i.next();
+				GuiKeyListener listener = i.next();
 				listener.keyTyped(_event);
 			}
 		}

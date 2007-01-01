@@ -33,46 +33,56 @@ import org.codejive.gui4gl.layouts.Layouter;
  * over the component widgets that get added to it.
  * 
  * @author tako
- * @version $Revision: 305 $
+ * @version $Revision: 361 $
  */
 public class Container extends CompoundWidget {
 	
+	@Override
 	public Layouter getLayouter() {
 		return super.getLayouter();
 	}
 	
+	@Override
 	public void setLayouter(Layouter _layouter) {
 		super.setLayouter(_layouter);
 	}
 	
+	@Override
 	public void add(Widget _child) {
 		super.add(_child);
 	}
 
+	@Override
 	protected Widget getChild(String _sName) {
-		return (Widget)m_childNames.get(_sName);
+		return m_childNames.get(_sName);
 	}
 
-	public Iterator getChildren() {
+	@Override
+	public Iterator<Widget> getChildren() {
 		return super.getChildren();
 	}
 
+	@Override
 	public Widget findChild(String _sName) {
 		return super.findChild(_sName);
 	}
 
+	@Override
 	public boolean hasFocus() {
 		return false;
 	}
 	
+	@Override
 	public void setFocus() {
 		// Don't allow this
 	}
 	
+	@Override
 	public Widget getFocusWidget() {
 		return m_focusWidget;
 	}
 	
+	@Override
 	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		if (getFocusWidget() != null) {
 			Widget w;

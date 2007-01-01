@@ -35,7 +35,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 322 $
+ * @version $Revision: 361 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
 	private TextField m_textField;
@@ -140,9 +140,8 @@ public class TextFieldRenderer implements WidgetRendererModel {
 				if(fLength > fRightWidth) {
 					s.deleteCharAt(s.length() - 1);
 					break;
-				} else {
-					p++;
 				}
+				p++;
 			}
 			gl.glRasterPos2f(fCursorXPos, fYPos);
 			_font.renderText(_context, s.toString());

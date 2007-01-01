@@ -37,13 +37,13 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * state whenever it gets activated.
  *  
  * @author tako
- * @version $Revision: 311 $
+ * @version $Revision: 361 $
  */
 public class Toggle extends WidgetBase {
 	private String m_sCaption;
 	private boolean m_bChecked;
 	
-	private List m_changeListeners;
+	private List<GuiChangeListener> m_changeListeners;
 	
 	/**
 	 * Creates a new unselected Toggle without a caption.  
@@ -62,7 +62,7 @@ public class Toggle extends WidgetBase {
 		m_bChecked = _bChecked;
 		setFocusable(true);
 		
-		m_changeListeners = new ArrayList();
+		m_changeListeners = new ArrayList<GuiChangeListener>();
 	}
 
 	/**
@@ -107,6 +107,7 @@ public class Toggle extends WidgetBase {
 		m_changeListeners.add(_listener);
 	}
 	
+	@Override
 	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
@@ -121,6 +122,7 @@ public class Toggle extends WidgetBase {
 		}
 	}
 	
+	@Override
 	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {

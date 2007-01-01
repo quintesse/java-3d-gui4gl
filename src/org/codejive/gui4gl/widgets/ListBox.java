@@ -62,13 +62,14 @@ public class ListBox extends CompoundWidget {
 		setFocusable(true);
 	}
 	
-	public Iterator getItems() {
+	public Iterator<Widget> getItems() {
 		return this.getChildren();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addItem(ListBoxItem _item) {
-		Class itemRendererClass = (Class)getAttribute("itemRenderer");
-		WidgetRendererModel renderer = WidgetBase.createRenderer(itemRendererClass, (Widget)_item);
+		Class<WidgetRendererModel> itemRendererClass = (Class<WidgetRendererModel>)getAttribute("itemRenderer");
+		WidgetRendererModel renderer = WidgetBase.createRenderer(itemRendererClass, _item);
 		_item.setRenderer(renderer);
 		add(_item);
 	}

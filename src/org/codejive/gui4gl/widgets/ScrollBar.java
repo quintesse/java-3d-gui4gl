@@ -33,8 +33,6 @@ import org.codejive.gui4gl.events.GuiChangeListener;
 import org.codejive.gui4gl.events.GuiKeyEvent;
 import org.codejive.gui4gl.events.GuiMouseEvent;
 import org.codejive.gui4gl.layouts.Layouter;
-import org.codejive.utils4gl.RenderContext;
-import org.codejive.utils4gl.RenderObserver;
 
 /**
  * This widget implements a scroll bar. A scroll bar is most commonly used
@@ -57,7 +55,7 @@ import org.codejive.utils4gl.RenderObserver;
  * or "window" within a range.
  * 
  * @author Tako
- * @version $Revision: 308 $
+ * @version $Revision: 361 $
  */
 public class ScrollBar extends CompoundWidget {
 	private int m_nOrientation;
@@ -68,7 +66,7 @@ public class ScrollBar extends CompoundWidget {
 	protected InnerBar m_innerBar;
 	protected Button m_lessButton, m_moreButton;
 	
-	private List m_changeListeners;
+	private List<GuiChangeListener> m_changeListeners;
 	
 	/**
 	 * Constructs a new ScrollBar with a total size of 100 with all of it visible
@@ -133,7 +131,7 @@ public class ScrollBar extends CompoundWidget {
 		add(m_moreButton);
 		
 		setLayouter(new ScrollBarLayouter());
-		m_changeListeners = new LinkedList();
+		m_changeListeners = new LinkedList<GuiChangeListener>();
 	}
 
 	/**
@@ -279,6 +277,7 @@ public class ScrollBar extends CompoundWidget {
 		doStep(m_nVisibleAmount);
 	}
 	
+	@Override
 	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
@@ -330,7 +329,7 @@ public class ScrollBar extends CompoundWidget {
 	 * start value is where the handle starts and the end value is where it ends. 
 	 * 
 	 * @author tako
-	 * @version $Revision: 308 $
+	 * @version $Revision: 361 $
 	 */
 	public class InnerBar extends WidgetBase {
 		private Rectangle m_handleBounds, m_lessBounds, m_moreBounds;
@@ -434,6 +433,7 @@ public class ScrollBar extends CompoundWidget {
 			return m_moreBounds;
 		}
 		
+		@Override
 		public void processMousePressedEvent(GuiMouseEvent _event) {
 			super.processMousePressedEvent(_event);
 			if (!_event.isConsumed()) {
@@ -462,11 +462,13 @@ public class ScrollBar extends CompoundWidget {
 			}
 		}
 		
+		@Override
 		public void processMouseReleasedEvent(GuiMouseEvent _event) {
 			super.processMouseReleasedEvent(_event);
 			m_bDragHandle = false;
 		}
 		
+		@Override
 		public void processMouseDraggedEvent(GuiMouseEvent _event) {
 			super.processMouseDraggedEvent(_event);
 			if (!_event.isConsumed() && m_bDragHandle) {

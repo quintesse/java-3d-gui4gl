@@ -35,7 +35,7 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author tako
- * @version $Revision: 322 $
+ * @version $Revision: 361 $
  */
 public class WidgetRenderer implements WidgetRendererModel {
 
@@ -43,7 +43,7 @@ public class WidgetRenderer implements WidgetRendererModel {
 	private boolean m_bReady;
 	
 	public WidgetRenderer(Widget _widget) {
-		m_widget = (Widget)_widget;
+		m_widget = _widget;
 		m_bReady = false;
 	}
 

@@ -39,11 +39,11 @@ import org.codejive.utils4gl.RenderObserver;
  * type of the component widgets are entirely under the user's control.
  *  
  * @author tako
- * @version $Revision: 304 $
+ * @version $Revision: 361 $
  */
 public class CompoundWidget extends WidgetBase {
-	protected LinkedList m_children;
-	protected Map m_childNames;
+	protected LinkedList<Widget> m_children;
+	protected Map<String, Widget> m_childNames;
 	protected Widget m_focusWidget;
 	protected Layouter m_layouter;
 
@@ -51,8 +51,8 @@ public class CompoundWidget extends WidgetBase {
 	 * Creates a new CompoundWidget.
 	 */
 	public CompoundWidget() {
-		m_children = new LinkedList();
-		m_childNames = new HashMap();
+		m_children = new LinkedList<Widget>();
+		m_childNames = new HashMap<String, Widget>();
 		m_focusWidget = null;
 		m_layouter = null;
 		setFocusable(true);
@@ -115,15 +115,17 @@ public class CompoundWidget extends WidgetBase {
 	 * @return The requested widget or null if a widget with that name could not be found
 	 */
 	protected Widget getChild(String _sName) {
-		return (Widget)m_childNames.get(_sName);
+		return m_childNames.get(_sName);
 	}
 
 	/**
 	 * Returns an iterator over this widget's children.
 	 * @return An iterator over a collection of child widgets
 	 */
-	protected Iterator getChildren() {
-		List x = new LinkedList(m_children);
+	protected Iterator<Widget> getChildren() {
+		// TODO Figure out why if making a copy is really necessary.
+		// Maybe using an unmodifiableList would be enough?
+		List<Widget> x = new LinkedList<Widget>(m_children);
 		return x.iterator();
 	}
 
@@ -140,9 +142,9 @@ public class CompoundWidget extends WidgetBase {
 		if (child == null) {
 			// Now see if any of our children is a CompoundWidget and try to find
 			// the requested widget inside it
-			Iterator i = getChildren();
+			Iterator<Widget> i = getChildren();
 			while ((found == null) && i.hasNext()) {
-				child = (Widget)i.next();
+				child = i.next();
 				if (child instanceof CompoundWidget) {
 					found = ((CompoundWidget)child).findChild(_sName);
 				}
@@ -153,13 +155,14 @@ public class CompoundWidget extends WidgetBase {
 		return found;
 	}
 
+	@Override
 	public Widget getWidgetUnderPoint(int _nXPos, int _nYPos) {
 		Widget result = null;
 		if (isVisible()) {
 			if (getClippingBounds().contains(_nXPos, _nYPos)) {
-				Iterator i = getChildren();
+				Iterator<Widget> i = getChildren();
 				while (i.hasNext()) {
-					Widget w = (Widget)i.next();
+					Widget w = i.next();
 					Widget under = w.getWidgetUnderPoint(_nXPos, _nYPos);
 					if (under != null) {
 						result = under;
@@ -225,9 +228,9 @@ public class CompoundWidget extends WidgetBase {
 			p = m_children.size();
 		}
 		if (p >= 0) {
-			ListIterator i = m_children.listIterator(p);
+			ListIterator<Widget> i = m_children.listIterator(p);
 			while (i.hasPrevious() && (prevWidget == null)) {
-				Widget w = (Widget)i.previous();
+				Widget w = i.previous();
 				if (w.isFocusable()) {
 					prevWidget = w;
 					if (w instanceof CompoundWidget) {
@@ -273,9 +276,9 @@ public class CompoundWidget extends WidgetBase {
 			p = 0;
 		}
 		if (p >= 0) {
-			ListIterator i = m_children.listIterator(p);
+			ListIterator<Widget> i = m_children.listIterator(p);
 			while (i.hasNext() && (nextWidget == null)) {
-				Widget w = (Widget)i.next();
+				Widget w = i.next();
 				if (w.isFocusable()) {
 					nextWidget = w;
 					if (w instanceof CompoundWidget) {
@@ -303,6 +306,7 @@ public class CompoundWidget extends WidgetBase {
 		return nextWidget;
 	}
 
+	@Override
 	protected void calculateBounds(RenderContext _context) {
 		super.calculateBounds(_context);
 		if (m_layouter != null) {
@@ -310,6 +314,7 @@ public class CompoundWidget extends WidgetBase {
 		}
 	}
 	
+	@Override
 	public void initRendering(RenderContext _context) {
 		super.initRendering(_context);
 		if (isVisible()) {
@@ -318,22 +323,23 @@ public class CompoundWidget extends WidgetBase {
 	}
 
 	protected void initChildren(RenderContext _context) {
-		Iterator i = getChildren();
+		Iterator<Widget> i = getChildren();
 		while (i.hasNext()) {
-			Widget w = (Widget)i.next();
+			Widget w = i.next();
 			w.initRendering(_context);
 		}
 	}
 
+	@Override
 	protected void renderWidget(RenderContext _context, RenderObserver _observer) {
 		super.renderWidget(_context, _observer);
 		renderChildren(_context, _observer);
 	}
 
 	protected void renderChildren(RenderContext _context, RenderObserver _observer) {
-		Iterator i = getChildren();
+		Iterator<Widget> i = getChildren();
 		while (i.hasNext()) {
-			Widget w = (Widget)i.next();
+			Widget w = i.next();
 			w.render(_context, _observer);
 		}
 	}

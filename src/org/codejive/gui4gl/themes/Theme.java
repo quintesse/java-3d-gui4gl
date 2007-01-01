@@ -30,34 +30,38 @@ import org.codejive.utils4gl.RenderContext;
 
 /**
  * @author tako
- * @version $Revision: 252 $
+ * @version $Revision: 361 $
  */
 public class Theme {
-	private HashMap m_values;
+	private HashMap<String, Object> m_values;
 	
 	public Theme() {
-		m_values = new HashMap();
+		m_values = new HashMap<String, Object>();
 	}
 	
-	private HashMap getValues() {
+	private HashMap<String, Object> getValues() {
 		return m_values;
 	}
 	
-	private static Object getClassValue(Class _class, String _sKey) {
+	private static Object getClassValue(Class<? extends Widget> _class, String _sKey) {
 		return getTheme().getValues().get(_class.getName() + ":" + _sKey);
 	}
 	
-	private static Object getClassesValue(Class _class, String _sKey) {
+	@SuppressWarnings("unchecked")
+	private static Object getClassesValue(Class<? extends Widget> _class, String _sKey) {
 		// First try to find an exact match for class and key
 		Object value = getClassValue(_class, _sKey);
 		if ((value == null) && (_class.getSuperclass() != null)) {
-			// Then try all the super classes
-			value = getClassesValue(_class.getSuperclass(), _sKey);
+			// Then try all the super classes (up to the Widget base class)
+			Class<?> sc = _class.getSuperclass();
+			if (Widget.class.isAssignableFrom(sc)) {
+				value = getClassesValue((Class<? extends Widget>) sc, _sKey);
+			}
 		}
 		return value;
 	}
 	
-	public static Object getValue(Widget _widget, Class _class, String _sKey) {
+	public static Object getValue(Widget _widget, Class<? extends Widget> _class, String _sKey) {
 		// First try to find an exact match for the key
 		Object value = getClassesValue(_class, _sKey);
 		if (value == null) {
@@ -86,7 +90,7 @@ public class Theme {
 		}
 		// If the parent didn't supply a value we try local settings
 		if (value == null) {
-			Class cls = _widget.getClass();
+			Class<? extends Widget> cls = _widget.getClass();
 			value = getClassesValue(cls, _sKey);
 		}
 		return value;
@@ -107,7 +111,7 @@ public class Theme {
 		return value;
 	}
 	
-	public static void setValue(Class _class, String _sKey, Object _value) {
+	public static void setValue(Class<? extends Widget> _class, String _sKey, Object _value) {
 		getTheme().getValues().put(_class.getName() + ":" + _sKey, _value);
 	}
 	
@@ -116,7 +120,7 @@ public class Theme {
 		return value.intValue();
 	}
 
-	public static void setIntegerValue(Class _class, String _sKey, int _nValue) {
+	public static void setIntegerValue(Class<? extends Widget> _class, String _sKey, int _nValue) {
 		setValue(_class, _sKey, new Integer(_nValue));
 	}
 	
@@ -125,7 +129,7 @@ public class Theme {
 		return value.floatValue();
 	}
 	
-	public static void setFloatValue(Class _class, String _sKey, float _fValue) {
+	public static void setFloatValue(Class<? extends Widget> _class, String _sKey, float _fValue) {
 		setValue(_class, _sKey, new Float(_fValue));
 	}
 	
@@ -134,7 +138,7 @@ public class Theme {
 		return value.booleanValue();
 	}
 	
-	public static void setBooleanValue(Class _class, String _sKey, boolean _bValue) {
+	public static void setBooleanValue(Class<? extends Widget> _class, String _sKey, boolean _bValue) {
 		setValue(_class, _sKey, new Boolean(_bValue));
 	}
 	

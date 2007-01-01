@@ -23,7 +23,6 @@ package org.codejive.gui4gl.themes.blues;
 
 import java.awt.Rectangle;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.media.opengl.GL;
 
@@ -64,14 +63,14 @@ public class ListBoxRenderer implements WidgetRendererModel {
 
 		gl.glDisable(GL.GL_TEXTURE_2D);
 
-		Iterator items = m_box.getItems();
+		Iterator<Widget> items = m_box.getItems();
 		if (items != null) {
 			Rectangle bounds = m_box.getInnerBounds();
-			int x = (int)bounds.getX();
+			//int x = (int)bounds.getX();
 			int y = (int)bounds.getY();
-			int w = (int)bounds.getWidth();
+			//int w = (int)bounds.getWidth();
 			while (items.hasNext()) {
-				Widget item = (Widget)items.next();
+				Widget item = items.next();
 				WidgetRendererModel renderer = item.getRenderer();
 				Rectangle itemBounds = renderer.getMinimalBounds(_context);
 				item.setBounds(0, 0, 100, 50);

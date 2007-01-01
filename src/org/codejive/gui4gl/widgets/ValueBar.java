@@ -40,7 +40,7 @@ import org.codejive.gui4gl.events.GuiMouseEvent;
  * or "window" within a range.
  * 
  * @author steven
- * @version $Revision: 313 $
+ * @version $Revision: 361 $
  */
 public class ValueBar extends WidgetBase {
 	private float m_fMin;
@@ -51,7 +51,7 @@ public class ValueBar extends WidgetBase {
 	private boolean m_bShowValue = false;
 	private int m_lAlignment = GLText.ALIGN_CENTER;
 
-	private List m_changeListeners;
+	private List<GuiChangeListener> m_changeListeners;
 	
 	/**
 	 * Creates a new ValueBar.
@@ -122,7 +122,7 @@ public class ValueBar extends WidgetBase {
 		setAlignment(_lAlignment);
 		setShowValue(_bShowValue);
 		
-		m_changeListeners = new LinkedList();
+		m_changeListeners = new LinkedList<GuiChangeListener>();
 		setFocusable(true);
 	}
 	
@@ -280,6 +280,7 @@ public class ValueBar extends WidgetBase {
 		m_changeListeners.add(_listener);
 	}
 	
+	@Override
 	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		GuiChangeEvent e;
 		switch (_event.getKeyCode()) {
@@ -309,11 +310,13 @@ public class ValueBar extends WidgetBase {
 		}
 	}
 	
+	@Override
 	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		handleBarChangeEvent(_event);
 	}
 	
+	@Override
 	public void processMouseDraggedEvent(GuiMouseEvent _event) {
 		super.processMouseDraggedEvent(_event);
 		handleBarChangeEvent(_event);

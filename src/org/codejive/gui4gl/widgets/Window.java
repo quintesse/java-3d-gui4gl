@@ -36,7 +36,7 @@ import org.codejive.utils4gl.RenderContext;
  * and/or keyboard.
  * 
  * @author tako
- * @version $Revision: 317 $
+ * @version $Revision: 361 $
  */
 public class Window extends Toplevel {
 	private String m_sTitle;
@@ -92,6 +92,7 @@ public class Window extends Toplevel {
 		m_bCenterParent = _bCenter;
 	}
 	
+	@Override
 	public void setVisible(boolean _bVisible) {
 		super.setVisible(_bVisible);
 		if (!_bVisible && (getParent() != null) && (getToplevel() == getScreen().getActiveToplevel())) {
@@ -99,6 +100,7 @@ public class Window extends Toplevel {
 		}
 	}
 	
+	@Override
 	public void processMousePressedEvent(GuiMouseEvent _event) {
 		super.processMousePressedEvent(_event);
 		if (!_event.isConsumed()) {
@@ -112,11 +114,13 @@ public class Window extends Toplevel {
 		}
 	}
 
+	@Override
 	public void processMouseReleasedEvent(GuiMouseEvent _event) {
 		super.processMouseReleasedEvent(_event);
 		m_bDragging = false;
 	}
 
+	@Override
 	public void processMouseDraggedEvent(GuiMouseEvent _event) {
 		super.processMouseDraggedEvent(_event);
 		if (!_event.isConsumed()) {
@@ -129,6 +133,7 @@ public class Window extends Toplevel {
 		}
 	}
 	
+	@Override
 	protected void updateInnerBounds(RenderContext _context) {
 		super.updateInnerBounds(_context);
 		if (getTitle() != null) {
@@ -140,6 +145,7 @@ public class Window extends Toplevel {
 		}
 	}
 
+	@Override
 	protected void initWidget(RenderContext _context) {
 		super.initWidget(_context);
 		if (isCenterParent()) {

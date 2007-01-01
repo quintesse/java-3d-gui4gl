@@ -39,12 +39,12 @@ import org.codejive.utils4gl.RenderContext;
  * SPACE or ENTER). When activated the widget will fire a GuiAction event.
  * 
  * @author tako
- * @version $Revision: 303 $
+ * @version $Revision: 361 $
  */
 public class Button extends WidgetBase {
 	private String m_sCaption;
 	
-	private List m_actionListeners;
+	private List<GuiActionListener> m_actionListeners;
 	private boolean m_bSelected;
 	
 	/**
@@ -62,7 +62,7 @@ public class Button extends WidgetBase {
 		m_sCaption = _sCaption;
 		setFocusable(true);
 		
-		m_actionListeners = new ArrayList();
+		m_actionListeners = new ArrayList<GuiActionListener>();
 		m_bSelected = false;
 	}
 
@@ -108,6 +108,7 @@ public class Button extends WidgetBase {
 		return m_bSelected;
 	}
 	
+	@Override
 	protected void updateInnerBounds(RenderContext _context) {
 		if (isSelected()) {
 //			 FIXME: should handle padding!!
@@ -123,6 +124,7 @@ public class Button extends WidgetBase {
 		}
 	}
 	
+	@Override
 	public void processKeyPressedEvent(GuiKeyEvent _event) {
 		switch (_event.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
@@ -135,6 +137,7 @@ public class Button extends WidgetBase {
 		}
 	}
 	
+	@Override
 	public void processKeyReleasedEvent(GuiKeyEvent _event) {
 		m_bSelected = false;
 		switch (_event.getKeyCode()) {
@@ -151,16 +154,19 @@ public class Button extends WidgetBase {
 		}
 	}
 
+	@Override
 	public void processMousePressedEvent(GuiMouseEvent _event) {
 		m_bSelected = true;
 		super.processMousePressedEvent(_event);
 	}
 	
+	@Override
 	public void processMouseReleasedEvent(GuiMouseEvent _event) {
 		m_bSelected = false;
 		super.processMouseReleasedEvent(_event);
 	}
 	
+	@Override
 	public void processMouseClickedEvent(GuiMouseEvent _event) {
 		super.processMouseClickedEvent(_event);
 		if (!_event.isConsumed()) {

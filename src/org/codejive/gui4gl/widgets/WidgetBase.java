@@ -22,6 +22,7 @@
 package org.codejive.gui4gl.widgets;
 
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import org.codejive.gui4gl.themes.*;
  * @author tako
  * @version $Revision: 1.23 $
  */
-public class WidgetBase implements Renderable, Widget {
+public class WidgetBase implements Widget {
 	private Screen m_screen;
 	private Toplevel m_toplevel;
 	private CompoundWidget m_parent;
@@ -50,12 +51,12 @@ public class WidgetBase implements Renderable, Widget {
 	private boolean m_bVisible;
 	private boolean m_bCanHaveFocus;
 
-	private Map m_attributes;
+	private Map<String, Object> m_attributes;
 	
 	private WidgetRendererModel m_renderer;
 
-	private List m_keyListeners;
-	private List m_mouseListeners;
+	private List<GuiKeyListener> m_keyListeners;
+	private List<GuiMouseListener> m_mouseListeners;
 
 	public class Padding {
 		public int xPadding, yPadding;
@@ -83,12 +84,12 @@ public class WidgetBase implements Renderable, Widget {
 		m_bVisible = true;
 		m_bCanHaveFocus = false;
 		
-		m_attributes = new HashMap();
+		m_attributes = new HashMap<String, Object>();
 		
 		m_renderer = null;
 		
-		m_keyListeners = new ArrayList();
-		m_mouseListeners = new ArrayList();
+		m_keyListeners = new ArrayList<GuiKeyListener>();
+		m_mouseListeners = new ArrayList<GuiMouseListener>();
 		
 		m_bounds = new Rectangle();
 		m_currentBounds = new Rectangle();
@@ -285,7 +286,7 @@ public class WidgetBase implements Renderable, Widget {
 		m_innerBounds.height -= 2 * nYPad;
 		
 		if (getParent() != null) {
-			Rectangle.intersect(m_innerBounds, getParent().getClippingBounds(), m_clippingBounds);
+			Rectangle2D.intersect(m_innerBounds, getParent().getClippingBounds(), m_clippingBounds);
 		} else {
 			m_clippingBounds.setBounds(m_innerBounds);
 		}
@@ -391,13 +392,13 @@ public class WidgetBase implements Renderable, Widget {
 		m_renderer = _renderer;
 	}
 	
-	public static WidgetRendererModel createRenderer(Class _rendererClass, Widget _subject) {
+	public static WidgetRendererModel createRenderer(Class<WidgetRendererModel> _rendererClass, Widget _subject) {
 		WidgetRendererModel renderer = null;
 		try {
 			Class types[] = { Widget.class };
-			Constructor constructor = _rendererClass.getConstructor(types);
+			Constructor<WidgetRendererModel> constructor = _rendererClass.getConstructor(types);
 			Object params[] = { _subject };
-			renderer = (WidgetRendererModel)constructor.newInstance(params);
+			renderer = constructor.newInstance(params);
 		} catch (Exception e) {
 			throw new WidgetException("Could not create widget renderer for " + _subject.getClass().getName(), e);
 		}
@@ -412,8 +413,9 @@ public class WidgetBase implements Renderable, Widget {
 		initWidget(_context);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void initWidget(RenderContext _context) {
-		Class rendererClass = (Class)getAttribute("renderer");
+		Class<WidgetRendererModel> rendererClass = (Class<WidgetRendererModel>) getAttribute("renderer");
 		WidgetRendererModel renderer = createRenderer(rendererClass, this);
 		setRenderer(renderer);
 

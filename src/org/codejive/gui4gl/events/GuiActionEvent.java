@@ -28,7 +28,7 @@ import org.codejive.gui4gl.widgets.Widget;
 
 /**
  * @author Tako
- * @version $Revision: 236 $
+ * @version $Revision: 361 $
  */
 public class GuiActionEvent extends GuiEvent {
 
@@ -36,11 +36,11 @@ public class GuiActionEvent extends GuiEvent {
 		super(_source);
 	}
 
-	public static void fireActionPerformed(List _listeners, GuiActionEvent _event) {
+	public static void fireActionPerformed(List<GuiActionListener> _listeners, GuiActionEvent _event) {
 		if ((_listeners != null) && !_listeners.isEmpty()) {
-			Iterator i = _listeners.iterator();
+			Iterator<GuiActionListener> i = _listeners.iterator();
 			while (i.hasNext() && !_event.isConsumed()) {
-				GuiActionListener listener = (GuiActionListener)i.next();
+				GuiActionListener listener = i.next();
 				listener.actionPerformed(_event);
 			}
 		}

@@ -45,7 +45,7 @@ import org.codejive.utils4gl.RenderObserver;
  * system-events to the widgets that want/need them.
  * 
  * @author tako
- * @version $Revision: 307 $
+ * @version $Revision: 361 $
  */
 public class Screen extends Container implements KeyListener, MouseInputListener {
 	private Widget m_widgetUnderMouse;
@@ -61,10 +61,12 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		m_nLastXPos = m_nLastYPos = -1;
 	}
 	
+	@Override
 	public Screen getScreen() {
 		return this;
 	}
 	
+	@Override
 	public Toplevel getToplevel() {
 		return null;
 	}
@@ -74,13 +76,16 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 	 * @return The currently focused TopLevel object
 	 */
 	public Toplevel getActiveToplevel() {
+		Toplevel top;
 		if (getFocusWidget() != null) {
-			return getFocusWidget().getToplevel();
+			top = getFocusWidget().getToplevel();
 		} else {
-			return null;
+			top = null;
 		}
+		return top;
 	}
 	
+	@Override
 	public void add(Widget _child) {
 		if (_child instanceof Toplevel) {
 			super.add(_child);
@@ -89,27 +94,37 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		}
 	}
 	
+	
+	@Override
 	public void setFocus() {
 		if (isFocusable()) {
 			setFocusWidget(null);
 		}
 	}
 	
+	
+	@Override
 	public Widget getPreviousFocusWidget(Widget _widget) {
 		return null;
 	}
+	
 
+	@Override
 	public Widget getNextFocusWidget(Widget _widget) {
 		return null;
 	}
 	
+	@Override
 	public Widget nextFocus() {
 		return null;
 	}
 	
+	
+	@Override
 	public Widget previousFocus() {
 		return null;
 	}
+	
 	
 	protected void resize(RenderContext _context) {
 		GL gl = _context.getGl();
@@ -118,14 +133,18 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		setBounds(viewport[0], viewport[1], viewport[2], viewport[3]);
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see org.codejive.world3d.Renderable#initRendering(org.codejive.world3d.RenderContext)
 	 */
+	@Override
 	public void initRendering(RenderContext _context) {
 		resize(_context);
 		super.initRendering(_context);
 	}
+	
 
+	@Override
 	public void render(RenderContext _context, RenderObserver _observer) {
 		GL gl = _context.getGl();
 
@@ -169,6 +188,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 			processKeyReleasedEvent(e);
 		}
 	}
+	
 		
 	public void keyTyped(KeyEvent _event) {
 		Widget w = getFocusWidget();
@@ -180,6 +200,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 			processKeyTypedEvent(e);
 		}
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
@@ -189,6 +210,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		handleMouseHover(w);
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
 	 */
@@ -196,6 +218,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		handleMouseHover(null);
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 	 */
@@ -212,6 +235,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		}
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
@@ -237,6 +261,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		m_widgetPressed = null;
 	}
 	
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
@@ -244,6 +269,7 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		// We do our own click handling
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 	 */
@@ -251,12 +277,14 @@ public class Screen extends Container implements KeyListener, MouseInputListener
 		handleMouseMove(_event);
 	}
 	
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
 	 */
 	public void mouseDragged(MouseEvent _event) {
 		handleMouseMove(_event);
 	}
+	
 	
 	protected void handleMouseHover(Widget _widget) {
 		if (_widget != m_widgetUnderMouse) {
