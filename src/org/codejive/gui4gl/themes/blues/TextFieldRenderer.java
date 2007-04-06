@@ -35,12 +35,14 @@ import org.codejive.gui4gl.widgets.*;
 
 /**
  * @author steven
- * @version $Revision: 361 $
+ * @version $Revision: 365 $
  */
 public class TextFieldRenderer implements WidgetRendererModel {
 	private TextField m_textField;
 	private WidgetRendererModel m_superRenderer;
 	private boolean m_bReady;
+	private int m_nLastCursorPos = -1;
+	private long m_lTimeOfLastChange = 0;
 	
 	public TextFieldRenderer(Widget _widget) {
 		m_textField = (TextField)_widget;
@@ -78,12 +80,21 @@ public class TextFieldRenderer implements WidgetRendererModel {
 			}
 		}
 
+		// The cursor blinks, so let's check if we should draw it or not
+		if (m_nLastCursorPos != m_textField.getCursorPos()) {
+			m_nLastCursorPos = m_textField.getCursorPos();
+			m_lTimeOfLastChange = System.currentTimeMillis();
+		}
+		int spd = m_textField.getIntegerAttribute("cursorBlinkSpeed");
+		boolean drawCursor = m_textField.hasFocus() && ((spd == 0) || (System.currentTimeMillis() - m_lTimeOfLastChange) % spd < (spd/2));
+		GLColor cursorColor = (GLColor)m_textField.getAttribute("cursorColor");
+		
 		gl.glDisable(GL.GL_TEXTURE_2D);
-		drawTextWithCursor(_context, m_textField.getInnerBounds(), 0, 0, textFont, textFontColor, m_textField);
+		drawTextWithCursor(_context, m_textField.getInnerBounds(), 0, 0, textFont, textFontColor, drawCursor, cursorColor, m_textField);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
-	private static void drawTextWithCursor(RenderContext _context, Rectangle _bounds, int _nXPadding, int _nYPadding, Font _font, GLColor _color, TextField _textField) {
+	private static void drawTextWithCursor(RenderContext _context, Rectangle _bounds, int _nXPadding, int _nYPadding, Font _font, GLColor _color, boolean _bDrawCursor, GLColor _cursorColor, TextField _textField) {
 		GL gl = _context.getGl();
 
 		float fFontHeight = _font.getSize(_context);
@@ -148,17 +159,12 @@ public class TextFieldRenderer implements WidgetRendererModel {
 		}
 		
 		// Only show a cursor if we have focus
-		if(_textField.hasFocus()) {
-			// The cursor blinks, so let's check if we should draw it or not
-			int spd = _textField.getIntegerAttribute("cursorBlinkSpeed");
-			if(System.currentTimeMillis() % spd < (spd/2)) {
-				// Draw cursor
-				GLColor c = (GLColor)_textField.getAttribute("cursorColor");
-				gl.glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-				gl.glBegin(GL.GL_QUADS);
-				RenderHelper.drawRectangle(_context.getGl(), (int)fCursorXPos, (int)(fYPos - fFontHeight), (int)fCursorWidth, (int)(fFontHeight + fFontPadding));
-				gl.glEnd();
-			}
+		if(_bDrawCursor) {
+			// Draw cursor
+			gl.glColor4f(_cursorColor.getRed(), _cursorColor.getGreen(), _cursorColor.getBlue(), _cursorColor.getAlpha());
+			gl.glBegin(GL.GL_QUADS);
+			RenderHelper.drawRectangle(_context.getGl(), (int)fCursorXPos, (int)(fYPos - fFontHeight), (int)fCursorWidth, (int)(fFontHeight + fFontPadding));
+			gl.glEnd();
 		}
 	}
 
