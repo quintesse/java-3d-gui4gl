@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jardesc>
+    <jar path="C:/TEMP/webstarttest/SimpleGui.jar"/>
+    <options overwrite="false" compress="true" exportErrors="true" exportWarnings="true" saveDescription="true" descriptionLocation="/gui4gl/examples/SimpleGui.jardesc" useSourceFolders="false" buildIfNeeded="true"/>
+    <manifest manifestVersion="1.0" usesManifest="true" reuseManifest="false" saveManifest="true" generateManifest="true" manifestLocation="/gui4gl/examples/SimpleGui.manifest" mainClassHandleIdentifier="=gui4gl/examples&lt;examples.gui4gl{SimpleGui.java[SimpleGui">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportOutputFolder="false" exportJavaFiles="false">
+        <file path="/gui4gl/COPYING"/>
+        <javaElement handleIdentifier="=gui4gl/examples&lt;examples.gui4gl"/>
+        <file path="/gui4gl/AUTHORS"/>
+    </selectedElements>
+</jardesc>
